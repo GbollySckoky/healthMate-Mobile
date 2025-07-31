@@ -1,16 +1,20 @@
 import { Link } from 'expo-router';
-import { View, Text, StyleSheet } from 'react-native';
-import '../global.css'
+import { View, Dimensions, StyleSheet, ScrollView } from 'react-native';
+// import '../global.css'
 
 export default function HomeScreen() {
+ 
   return (
       <View style={styles.container} className='bg-red-900'>
-      <Text>
-        <Link href='/(tabs)/home'>
+  
+          <View>
+        <Link href='/(tabs)/home' className='bg-red-900'>
         Homes
         </Link>
        
-        </Text>
+        </View>
+          {/* </ScrollView> */}
+     
     </View>
   );
 }

@@ -1,106 +1,164 @@
 import { Card, CardText, CardTitle, MinCard, SubTitle, Texts, Title, Wrapper } from '@/components/typography/Typography'
 import React from 'react'
 import { Text, View, ScrollView, TouchableOpacity  } from 'react-native'
-import { healthOverview } from './data'
+import { healthOverview } from '../data'
 import { StyleSheet } from 'react-native'
-// import { Clock4 } from 'lucide-react';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Image } from 'expo-image'
-import Ionicons from '@expo/vector-icons/Ionicons';
+import Entypo from '@expo/vector-icons/Entypo';
 import Feather from '@expo/vector-icons/Feather';
+import RadioInput from '@/components/Input/RadioInput'
+import AntDesign from '@expo/vector-icons/AntDesign';
+import { router } from 'expo-router'
 
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
 
+const HomePage = () => {
+  const trackData = [
+    {
+      med: 'Take Vitamin C',
+      time: '10:55am',
+      id: '1',
+      icon: <MaterialCommunityIcons name="pill" size={24} color="black" />
+    },
+    {
+      med: 'Track Sleep',
+      time: '10:55am',
+      id: '2',
+      icon: <Entypo name="moon" size={24} color="#FFC847" />
+    },
+  ]
 
+  const handleInput = () => {
+        
+  }
 
-const Home = () => {
+  // Define appointment data
+  const appointmentData = {
+    id: 'dr-james-uche-june15',
+    doctorName: 'Dr James Uche',
+    date: 'June 15',
+    time: '2:00pm',
+    type: 'Video Call Consultation',
+    status: 'Starts in 15mins'
+  }
+
+  const handleAppointmentPress = () => {
+    router.push(`/appointment/${appointmentData.id}`)
+  }
+
+  const handleSeeAllAppointments = () => {
+    // router.push('/all-appointments')
+  }
+
   return (
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} style={{backgroundColor: 'white'}}>
     <Wrapper>
+      <View style={{borderBottomWidth: 1, borderColor: '#717680', paddingBottom: 20}}>
         <Title>
-          Good Evening, Sarah
+          Good Evening, Sarah 👋
         </Title>
         <Texts>
           Let's take a step toward a healthier you today.
         </Texts>
-        {/* Your Activities */}
-        <SubTitle>
-          Your Health Overview
-        </SubTitle>
-        <ScrollView 
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={style.Flex}
-          style={style.Flex}>
-            {healthOverview.map((health) => {
-              const {title, id,text, value} = health;
-              return(
-                <MinCard key={id} style={style.MinCard}>
-                  <CardTitle>
-                    {title}
-                  </CardTitle>
-                  <Title>
-                    {value}
-                  </Title>
-                  <CardText>
-                    {text}
-                  </CardText>
-                </MinCard>
-              )
-            })}
-        </ScrollView >
+      </View>
 
-        {/* Reacent Appointment */}
-        <SubTitle>
-        Recent Appointments
-        </SubTitle>
-        <Card>
-          <View style={style.Flex}>
-              <View style={{width: 50}}>
-              <Image 
-              style={style.image}
-              source={{ uri: "https://picsum.photos/seed/696/3000/2000" }}
-              placeholder={{ blurhash }}
-              contentFit="cover"
-              transition={1000}
-              />
-              </View>
-              <View style={style.Flexs}>
-                <View style={{marginLeft: 5}}>
-                  <SubTitle>
-                    Dr James Uche
-                  </SubTitle>
-                  <View style={[style.flex,{marginTop: 5}]}>
-                    <View style={{marginRight: 6}}>
-                      <Feather name="clock" size={16} color="#717680" />
-                    </View>
-                    <Texts>
-                      2:00pm | June 15
-                    </Texts>
-                  </View>
-                  <View style={[style.flex,{marginTop: 5}]}>
-                    <View style={{marginRight: 6}}>
-                      <Feather name="video" size={16} color="#717680" />
-                    </View>
-                    <Texts>
-                      Video Call Consultation 
-                    </Texts>
-                  </View>
+        {/* Your Activities */}
+        <View style={{marginTop: 25}}>
+          <SubTitle>
+            Your Health Overview
+          </SubTitle>
+          <ScrollView 
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={style.Flex}
+            style={style.Flex}>
+              {healthOverview.map((health) => {
+                const {title, id,text, value, icon} = health;
+                return(
+                  <MinCard key={id} style={style.MinCard}>
+                    <Text style={{paddingBottom: 10}}>
+                      {icon}
+                    </Text>
+                    <CardTitle>
+                      {title}
+                    </CardTitle>
+                    <Title>
+                      {value}
+                    </Title>
+                    <CardText>
+                      {text}
+                    </CardText>
+                  </MinCard>
+                )
+              })}
+          </ScrollView >
+        </View>
+        
+        {/* Recent Appointments - Fixed Header */}
+        <View style={style.flexs}>
+          <SubTitle>
+            Recent Appointments
+          </SubTitle>
+          <TouchableOpacity style={style.linkFlex} onPress={handleSeeAllAppointments}>
+            <Text style={style.linkText}>See All</Text>
+            <AntDesign name="arrowright" size={17} color="#DD2590" />
+          </TouchableOpacity>
+        </View>
+
+        {/* Clickable Appointment Card */}
+        <TouchableOpacity onPress={handleAppointmentPress} activeOpacity={0.7}>
+          <Card>
+            <View style={style.Flex}>
+                <View style={{width: 50}}>
+                <Image 
+                style={style.image}
+                source={{ uri: "https://picsum.photos/seed/696/3000/2000" }}
+                placeholder={{ blurhash }}
+                contentFit="cover"
+                transition={1000}
+                />
                 </View>
-                <Text 
-                style={{color:'#5924DC', backgroundColor: '#F4F3FF', borderRadius: 10, padding: 5, fontWeight: 500, fontSize: 12}}>
-                  Starts in 15mins
-                </Text>
-              </View>
-          </View>
-          <View style={style.ButtonRow}>
-            <TouchableOpacity style={style.rescheduleBtn}>
-              <Text style={style.buttonText}>Reschedule</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={style.joinBtn}>
-              <Text style={style.buttonText}>Join Call</Text>
-            </TouchableOpacity>
-          </View>
-        </Card>
+                <View style={style.Flexs}>
+                  <View style={{marginLeft: 5}}>
+                    <SubTitle>
+                      {appointmentData.doctorName}
+                    </SubTitle>
+                    <View style={[style.flex,{marginTop: 5}]}>
+                      <View style={{marginRight: 6}}>
+                        <Feather name="clock" size={16} color="#717680" />
+                      </View>
+                      <Texts>
+                        {appointmentData.time} | {appointmentData.date}
+                      </Texts>
+                    </View>
+                    <View style={[style.flex,{marginTop: 5}]}>
+                      <View style={{marginRight: 6}}>
+                        <Feather name="video" size={16} color="#717680" />
+                      </View>
+                      <Texts>
+                        {appointmentData.type}
+                      </Texts>
+                    </View>
+                  </View>
+                  <Text 
+                  style={{color:'#5924DC', backgroundColor: '#F4F3FF', borderRadius: 10, padding: 10, fontWeight: 500, fontSize: 12, height: 30}}>
+                    {appointmentData.status}
+                  </Text>
+                </View>
+            </View>
+            <View style={style.ButtonRow}>
+              <TouchableOpacity style={style.rescheduleBtn}>
+                <Text style={[style.buttonText, {color: '#252B37'}]}>Reschedule</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={style.joinBtn}>
+                <Text style={[style.buttonText, { color: '#F2F2F2'}]}>Join Call</Text>
+              </TouchableOpacity>
+            </View>
+          </Card>
+        </TouchableOpacity>
+
         {/* Streak */}
         <View style={style.SubCard}>
           <SubTitle>
@@ -113,16 +171,56 @@ const Home = () => {
           Every log brings you closer to better health.
           </CardTitle>
         </View>
+       
+       {/* Reminder */}
+       <View>
+        <View style={style.flexs}>
+          <SubTitle>
+            Today's Reminders
+          </SubTitle>
+          <TouchableOpacity style={style.linkFlex}>
+            <Text style={style.linkText}> View All </Text>
+             <AntDesign name="arrowright" size={17} color="#DD2590" />
+          </TouchableOpacity>
+        </View>
+        <View>
+            {trackData.map((data) => {
+              const {id, med, time, icon} = data;
+              return(
+                <View key={id} style={{paddingTop: 15, paddingBottom: 15 ,borderBottomWidth: 1, borderBottomColor: '#717680'}}>
+                  <View style={{flexDirection: 'row', alignContent: 'center',justifyContent: 'space-between'}}>
+                    <View style={{flexDirection: 'row', alignContent:'center'}}>
+                      <Text style={{backgroundColor: '#FDF2FA', padding:5, borderRadius: 4}}>
+                        {icon}
+                      </Text>
+                      <View style={{paddingLeft: 15}}>
+                        <Text style={{fontWeight: 500, fontSize: 14}}>{med}</Text>
+                        <Text style={{color: '#717680', fontWeight: 400, fontSize: 12, paddingTop: 3}}>{time}</Text>
+                      </View>
+                    </View>
+                    <RadioInput 
+                    selected={true}
+                    onPress={handleInput}
+                    />
+                  </View>
+                </View>
+              )
+            })}
+        </View>
+       </View>
     </Wrapper>
-    
+    </ScrollView>
   )
 }
-export default Home
+
+export default HomePage
 
 export const style = StyleSheet.create({
   Flex: {
     flexDirection: 'row',
-    alignContent:'center'
+    alignContent:'center',
+    marginTop: 5,
+    marginBottom: 2
   },
   flex: {
     flexDirection: 'row',
@@ -130,7 +228,6 @@ export const style = StyleSheet.create({
     marginTop: 3
   },
   MinCard: {
-    // width: 200,
     padding: 15,
     borderColor: '#F1F1F1',
     borderWidth: 1,
@@ -145,7 +242,6 @@ export const style = StyleSheet.create({
     shadowRadius: 3,
   },
   SubCard: {
-    // width: 200,
     padding: 15,
     borderColor: '#F1F1F1',
     borderWidth: 1,
@@ -158,17 +254,19 @@ export const style = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
+    marginTop: 15
   },
   image: {
-    width: 45,
-    height: 40,
+    width: 50,
+    height: 50,
     backgroundColor: '#0553',
     borderRadius: 100,
   },
   Flexs:{
     flexDirection: 'row',
     flex: 1,
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    alignContent: 'center'
   },
   Text: {
     fontFamily: 'Libre-Franklin',
@@ -186,25 +284,38 @@ export const style = StyleSheet.create({
   rescheduleBtn: {
     paddingVertical: 8,
     paddingHorizontal: 16,
-    backgroundColor: '#EEE',
+    backgroundColor: '#FAFAFA',
     borderRadius: 8,
-    borderColor: '#D6D7DA',
+    borderColor:  '#D6D7DA',
     borderWidth: 1,
     marginTop: 14,
   },
   joinBtn: {
     paddingVertical: 8,
     paddingHorizontal: 16,
-    backgroundColor: '#F670C8',
+    backgroundColor: '#DD2591',
     borderRadius: 8,
     marginTop: 14,
-    color: '#FAFAFA'
   },
   buttonText: {
-    color: '#252B37',
     fontSize: 14,
     fontWeight: '600',
-    
   },
-  
+  flexs:{
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignContent: 'center',
+    marginTop: 10,
+    marginBottom: 10
+  },
+  linkFlex:{
+    flexDirection: 'row',
+    alignContent: 'center'
+  },
+  linkText: {
+    color: '#DD2590', 
+    fontWeight: 400, 
+    fontSize: 12,
+    marginRight:3
+  }
 });

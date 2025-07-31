@@ -3,7 +3,7 @@ import { Text, ViewStyle, View } from "react-native"
 import { StyleSheet } from "react-native"
 
 export const Title = ({children}:{children: React.ReactNode}) => {
-    return <Text style={style.Title}> {children}</Text>
+    return <Text style={style.Title}>{children}</Text>
 }
 
 export const Texts = ({children}:{children: React.ReactNode}) => (
@@ -13,13 +13,13 @@ export const Texts = ({children}:{children: React.ReactNode}) => (
 )
 
 export const SubTitle = ({children}:{children: React.ReactNode}) => {
-    return <Text className="font-semibold text-[14px] text-[#414651]">
+    return <Text style={style.SubTitle}>
         {children}
     </Text>
 }   
 
 export const Card = ({children}: {children:React.ReactNode}) => (
-    <View style={style.Card} >
+    <View style={style.Card}>
         {children}
     </View>
 )
@@ -70,7 +70,7 @@ export const style = StyleSheet.create({
         fontWeight: 400
     },
     SubTitle: {
-        fontFamily: 'Libre-Franklin',
+        // fontFamily: 'Libre-Franklin',
         fontSize: 14,
         color: '#414651',
         fontWeight: 600
@@ -81,6 +81,7 @@ export const style = StyleSheet.create({
         color: '#414651',
         fontStyle: 'normal',
         fontWeight: 400
+        // backgroundColor: 'red'
     },
     CardText: {
         fontFamily: 'Inter',
@@ -92,7 +93,8 @@ export const style = StyleSheet.create({
         padding: 15,
         borderColor: '#F1F1',
         borderWidth: 1,
-        borderRadius: 10 ,
-    }
+        borderRadius: 10,
+        backgroundColor: 'white'
+    },
 })
 
