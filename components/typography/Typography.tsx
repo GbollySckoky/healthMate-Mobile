@@ -1,9 +1,12 @@
 import React from "react"
-import { Text, ViewStyle, View } from "react-native"
-import { StyleSheet } from "react-native"
+import { Text, ViewStyle, View, TouchableOpacity, StyleSheet } from "react-native"
 
 export const Title = ({children}:{children: React.ReactNode}) => {
     return <Text style={style.Title}>{children}</Text>
+}
+
+export const MinTitle = ({children}:{children: React.ReactNode}) => {
+    return <Text style={style.MinTitle}>{children}</Text>
 }
 
 export const Texts = ({children}:{children: React.ReactNode}) => (
@@ -14,6 +17,12 @@ export const Texts = ({children}:{children: React.ReactNode}) => (
 
 export const SubTitle = ({children}:{children: React.ReactNode}) => {
     return <Text style={style.SubTitle}>
+        {children}
+    </Text>
+}   
+
+export const SubTitles = ({children}:{children: React.ReactNode}) => {
+    return <Text style={style.SubTitles}>
         {children}
     </Text>
 }   
@@ -48,11 +57,42 @@ export const MinCard = ({children, style}: {children:React.ReactNode, style: Vie
     </View>
 )
 
+export const ButtonFlex = ({children}:{children: React.ReactNode}) => ( 
+    <View style={style.ButtonRow}>
+        {children}
+    </View>
+)
+
+export const BtnFlex = ({children}:{children: React.ReactNode}) => ( 
+    <View style={style.ButtonFlex}>
+        {children}
+    </View>
+)
+
+export const RescheduleBtn = ({children}:{children: React.ReactNode}) => (
+    <TouchableOpacity style={style.rescheduleBtn}>
+    <Text style={[style.buttonText, {color: '#252B37'}]}>{children}</Text>
+    </TouchableOpacity> 
+)
+
+export const JoinBtn = ({children}:{children: React.ReactNode}) => (
+    <TouchableOpacity style={style.joinBtn}>
+    <Text style={[style.buttonText, {color: 'white'}]}>{children}</Text>
+    </TouchableOpacity>
+)
+
+
 export const style = StyleSheet.create({
     Title:{
         fontSize: 18,
         fontWeight: 600,
         marginBottom: 5,
+        fontFamily: 'Libre-Franklin'
+    },
+    MinTitle:{
+        fontSize: 18,
+        fontWeight: 600,
+        // marginBottom: 5,
         fontFamily: 'Libre-Franklin'
     },
     Wrapper:{
@@ -61,6 +101,7 @@ export const style = StyleSheet.create({
         marginRight:'auto',
         marginTop: 15,
         color: '#414651',
+        paddingBottom: 20,
     },
     Text: {
         // fontFamily: 'Libre-Franklin',
@@ -68,6 +109,15 @@ export const style = StyleSheet.create({
         color: '#717680',
         fontStyle: 'normal',
         fontWeight: 400
+    },
+    SubTitles: {
+        // fontFamily: 'Libre-Franklin',
+        fontSize: 14,
+        color: '#414651',
+        fontStyle: 'normal',
+        fontWeight: 500,
+        marginBottom: 10,
+        marginTop: 10
     },
     SubTitle: {
         // fontFamily: 'Libre-Franklin',
@@ -96,5 +146,40 @@ export const style = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: 'white'
     },
+    ButtonRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignContent: 'center',
+        gap: 10,
+        borderTopColor: '#F8F8F8',
+        borderTopWidth: 2,
+        marginTop: 15
+    },
+    ButtonFlex: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        gap: 10,
+        marginTop: 45,
+    },
+    rescheduleBtn: {
+        flex: 1,
+        paddingVertical: 12,
+        backgroundColor: '#FAFAFA',
+        borderRadius: 8,
+        borderColor: '#D6D7DA',
+        borderWidth: 1,
+        alignItems: 'center',
+      },
+      joinBtn: {
+        flex: 1,
+        paddingVertical: 12,
+        backgroundColor: '#DD2591',
+        borderRadius: 8,
+        alignItems: 'center',
+      },
+      buttonText: {
+        fontSize: 14,
+        fontWeight: '600',
+      },
 })
 
