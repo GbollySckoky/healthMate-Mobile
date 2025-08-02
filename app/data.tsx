@@ -11,8 +11,8 @@ export const healthOverview = [
         value: '120/80 mmHg',
         text: 'Blood Pressure',
         id: 1,
-        icon:  <AntDesign name="hearto" size={24} color="red" />,
-        url: '/'
+        icon:  <AntDesign name="hearto" size={24} color="#DF0000" />,
+        url: '/blood-pressure'
     },
     {
         title: 'Mood',
@@ -134,5 +134,36 @@ export const sleepLogHistory = [
         date: 'Jun 22',
         status: 'Average',
         time: '22:45 - 07:00'
+    },
+]
+
+export const recenntReadings = [
+    {
+        icon: <FontAwesome name="stethoscope" size={24} color="#DF0000" />,
+        bloodRate: '120/80 mmHg',
+        date: 'Jun 22 ',
+        status: 'Normal',
+        time: '09:45'
+    },
+    {
+        icon: <FontAwesome name="stethoscope" size={24} color="#DF0000" />,
+        bloodRate: '118/79 mmHg',
+        date: 'Jun 23',
+        status: 'High',
+        time: '22:45 '
+    },
+    {
+        icon: <FontAwesome name="stethoscope" size={24} color="#DF0000" />,
+        bloodRate: '118/93 mmHg',
+        date: 'Jun 22',
+        status: 'High',
+        time: '7:00'
+    },
+    {
+        icon: <FontAwesome name="stethoscope" size={24} color="#DF0000" />,
+        hour: '120/80 mmHg',
+        date: 'Jun 22',
+        status: 'Normal',
+        time: '22:45'
     },
 ]

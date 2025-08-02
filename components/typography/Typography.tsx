@@ -93,6 +93,11 @@ export const ButtonRow = () => (
     </TouchableOpacity>
 )
 
+export const DetailsContainer = ({children}:{children: React.ReactNode}) => (
+    <View style={style.container}>
+        {children}
+    </View>
+)
 export const Status = ({children}: {children: React.ReactNode
 }) => (
     <Text style={style.status}>{children} </Text>
@@ -223,6 +228,14 @@ export const style = StyleSheet.create({
         fontWeight: 600,
         fontFamily: 'Libre-Franklin',
         paddingVertical: 4,
-    }
+    },
+    container:{
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 20,
+        paddingVertical:5,
+        flex: 1
+      },
 })
 

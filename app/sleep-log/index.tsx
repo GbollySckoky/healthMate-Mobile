@@ -7,7 +7,7 @@ import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { ScreenLayout } from '@/constant/ScreenLayout/ScreenLayout';
 import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
-import { Card, CardAmount, CardText, SubTitle, Wrapper } from '@/components/typography/Typography';
+import { Card, CardAmount, CardText, DetailsContainer, SubTitle, Wrapper } from '@/components/typography/Typography';
 import { sleepLogHistory } from '../data';
 
 
@@ -50,14 +50,14 @@ export default function MyBarChart() {
   return (
     <ScreenLayout>
       <NavHeader 
-        title='Sleep Log'
+        title='Blood Pressure Tracker'
         _goBack={() => router.push('/(tabs)/home')}
         backIcon={<Entypo name="chevron-small-left" size={24} color="black"  />}
-        text="Monitor your rest and improve your sleep routine"
+        text="Track your readings to monitor your heart health"
       />
       <ScreenOverFlowLayout>
         <Wrapper>
-          <View style={styles.container}>
+          <DetailsContainer>
             <FontAwesome name="moon-o" size={24} color="#C11574" style={styles.icon} />
             <CardText>
               Today’s sleep
@@ -72,26 +72,26 @@ export default function MyBarChart() {
               style={styles.colorText}>
               Excellent
             </Text>
-          </View>
+          </DetailsContainer>
           <View style={styles.container}>
-          <View style={styles.chartContainer}>
-            <Text style={styles.title}>Sleep Trends</Text>
-            <BarChart
-              style={styles.chart}
-              data={data}
-              width={screenWidth - 45}
-              height={300}
-              yAxisLabel=""
-              yAxisSuffix=""
-              chartConfig={chartConfig}
-              verticalLabelRotation={0}
-              fromZero={true}
-              showValuesOnTopOfBars={false}
-              withHorizontalLabels={true}
-              withVerticalLabels={true}
-              segments={5}
-            />
-          </View>
+            <View style={styles.chartContainer}>
+              <Text style={styles.title}>Sleep Trends</Text>
+              <BarChart
+                style={styles.chart}
+                data={data}
+                width={screenWidth - 45}
+                height={300}
+                yAxisLabel=""
+                yAxisSuffix=""
+                chartConfig={chartConfig}
+                verticalLabelRotation={0}
+                fromZero={true}
+                showValuesOnTopOfBars={false}
+                withHorizontalLabels={true}
+                withVerticalLabels={true}
+                segments={5}
+              />
+            </View>
           </View>
           {/* sleep log */}
           <Card>
@@ -115,9 +115,9 @@ export default function MyBarChart() {
                       </View>
                     </View>
                     <Text 
-                      style={{backgroundColor: `${status === 'Excellent' &&  '#ECFDF3' || status === 'Average' && '#FFFAEB' || status === 'Low' && '#FF6666'}`,
-                      color: `${status === 'Excellent' && '#027A48' || status === 'Average' && '#B54708' || status === 'Low' && '#FFFFFF'}`,
-                      paddingHorizontal: 20, paddingVertical: 10, borderRadius: 30   }}>
+                      style={{backgroundColor: `${status === 'Excellent' &&  '#ECFDF3' || status === 'Average' && '#FFFAEB' || status === 'Low' && '#FEF3F2'}`,
+                      color: `${status === 'Excellent' && '#027A48' || status === 'Average' && '#B54708' || status === 'Low' && '#B42318'}`,
+                      paddingHorizontal: 15, paddingVertical: 7, borderRadius: 30, fontFamily: 'Inter'   }}>
                         {status}</Text>
                   </View>
                 </View>
@@ -150,8 +150,8 @@ const styles = StyleSheet.create({
     color: '#027A48', 
     backgroundColor: "#ECFDF3", 
     borderRadius: 50, 
-    paddingHorizontal: 20, 
-    paddingVertical: 10, 
+    paddingHorizontal: 10, 
+    paddingVertical: 5, 
     fontFamily: 'Inter', 
     marginTop: 7
   },
@@ -180,7 +180,8 @@ const styles = StyleSheet.create({
     color: '#414651',
     marginBottom: 10,
     textAlign: 'left',
-    paddingTop: 10
+    paddingTop: 10,
+    fontFamily: 'Libre-Franklin'
   },
   chart: {
     marginVertical: 8,
