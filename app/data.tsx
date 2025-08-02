@@ -43,8 +43,8 @@ export const healthOverview = [
         value: '2/3 doses',
         text: 'Taken today',
         id: 5,
-        icon: <MaterialCommunityIcons name="pill" size={24} color="black" />,
-        url: "/"
+        icon: <MaterialCommunityIcons name="pill" size={24} color="#C11574" />,
+        url: "/medication"
     },
 ]
 
@@ -165,5 +165,24 @@ export const recenntReadings = [
         date: 'Jun 22',
         status: 'Normal',
         time: '22:45'
+    },
+]
+
+export const medicationDosage = [
+    {
+        icon: <MaterialCommunityIcons name="pill" size={24} color="#C11574"  />,
+        bloodRate: 'Metformin 1000mg',
+        date: 'Jun 22 ',
+        status: 'Taken',
+        dosage: '1 dose',
+        time: '9: 45am'
+    },
+    {
+        icon: <MaterialCommunityIcons name="pill" size={24} color="#C11574"  />,
+        bloodRate: 'Metformin 5000mg',
+        date: 'Jun 22 ',
+        status: 'Missed',
+        dosage: '2 dose',
+        time: '9: 45am'
     },
 ]

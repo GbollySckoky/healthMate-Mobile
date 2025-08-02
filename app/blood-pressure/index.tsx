@@ -150,7 +150,7 @@ const BloodPressure = () => {
                 </View>
               )
             })}
-          </Card>
+        </Card>
         </Wrapper>
       </ScreenOverFlowLayout>
     </ScreenLayout>
