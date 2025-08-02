@@ -35,6 +35,7 @@ export const styles = StyleSheet.create({
         borderColor: '#f2f2f2', 
         paddingVertical: 16, 
         paddingHorizontal: 8, 
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        // flex: 1
     }
 })

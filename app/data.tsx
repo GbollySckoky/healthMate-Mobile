@@ -36,7 +36,7 @@ export const healthOverview = [
         text: 'Healthy range',
         id: 4,
         icon: <FontAwesome name="balance-scale" size={24} color="blue" />,
-        url: "/"
+        url: "/weight"
     },
     {
         title: 'Medications',
@@ -184,5 +184,20 @@ export const medicationDosage = [
         status: 'Missed',
         dosage: '2 dose',
         time: '9: 45am'
+    },
+]
+
+export const recentWeight = [
+    {
+        icon: <MaterialCommunityIcons name="weight-lifter" size={24} color="#C11574" />,
+        weight: '100kg',
+        date: 'Jun 22 ',
+        time: '09:45am'
+    },
+    {
+        icon: <MaterialCommunityIcons name="weight-lifter" size={24} color="#C11574" />,
+        weight: '500kg',
+        date: 'Jun 22 ',
+        time: '10:45am'
     },
 ]
