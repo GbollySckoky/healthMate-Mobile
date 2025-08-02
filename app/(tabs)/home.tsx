@@ -1,7 +1,7 @@
-import { Card, CardText, CardTitle, MinCard, SubTitle, Texts, Title, Wrapper } from '@/components/typography/Typography'
+import { Card, CardText, CardTitle, MinCard, Status, SubTitle, Texts, Title, Wrapper } from '@/components/typography/Typography'
 import React from 'react'
-import { Text, View, ScrollView, TouchableOpacity  } from 'react-native'
-import { healthOverview } from '../data'
+import { Text, View, ScrollView, TouchableOpacity, Pressable  } from 'react-native'
+import { healthOverview,trackData } from '../data'
 import { StyleSheet } from 'react-native'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Image } from 'expo-image'
@@ -10,25 +10,15 @@ import Feather from '@expo/vector-icons/Feather';
 import RadioInput from '@/components/Input/RadioInput'
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { router } from 'expo-router'
+import { Link } from '@react-navigation/native'
+import { useLinkTo } from '@react-navigation/native';
+import { ScrollViewHorizontal } from '@/components/scrollView/ScrollViewHorizontal'
+
 
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
 
 const HomePage = () => {
-  const trackData = [
-    {
-      med: 'Take Vitamin C',
-      time: '10:55am',
-      id: '1',
-      icon: <MaterialCommunityIcons name="pill" size={24} color="black" />
-    },
-    {
-      med: 'Track Sleep',
-      time: '10:55am',
-      id: '2',
-      icon: <Entypo name="moon" size={24} color="#FFC847" />
-    },
-  ]
 
   const handleInput = () => {
         
@@ -49,13 +39,17 @@ const HomePage = () => {
   }
 
   const handleSeeAllAppointments = () => {
-    // router.push('/all-appointments')
+    router.push('/all-apointments')
   }
-
+  
+  const handleViewAllReminders = () => {
+    router.push('/all-reminders')
+  }
+  const linkTo = useLinkTo();
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} style={{backgroundColor: 'white'}}>
     <Wrapper>
-      <View style={{borderBottomWidth: 1, borderColor: '#717680', paddingBottom: 20}}>
+      <View style={{borderBottomWidth: 1, borderColor: '#F2F2F2', paddingBottom: 20}}>
         <Title>
           Good Evening, Sarah 👋
         </Title>
@@ -69,15 +63,12 @@ const HomePage = () => {
           <SubTitle>
             Your Health Overview
           </SubTitle>
-          <ScrollView 
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={style.Flex}
-            style={style.Flex}>
+          <ScrollViewHorizontal>
               {healthOverview.map((health) => {
-                const {title, id,text, value, icon} = health;
+                const {title, id,text, value, icon, url} = health;
                 return(
-                  <MinCard key={id} style={style.MinCard}>
+                  <Pressable onPress={() => linkTo(url)} key={id} >
+                  <MinCard  style={style.MinCard} >
                     <Text style={{paddingBottom: 10}}>
                       {icon}
                     </Text>
@@ -91,9 +82,10 @@ const HomePage = () => {
                       {text}
                     </CardText>
                   </MinCard>
+                  </Pressable>
                 )
               })}
-          </ScrollView >
+          </ScrollViewHorizontal >
         </View>
         
         {/* Recent Appointments - Fixed Header */}
@@ -102,8 +94,8 @@ const HomePage = () => {
             Recent Appointments
           </SubTitle>
           <TouchableOpacity style={style.linkFlex} onPress={handleSeeAllAppointments}>
-            <Text style={style.linkText}>See All</Text>
-            <AntDesign name="arrowright" size={17} color="#DD2590" />
+            <Text style={style.linkText}> See All </Text>
+             <AntDesign name="arrowright" size={17} color="#DD2590" />
           </TouchableOpacity>
         </View>
 
@@ -142,10 +134,9 @@ const HomePage = () => {
                       </Texts>
                     </View>
                   </View>
-                  <Text 
-                  style={{color:'#5924DC', backgroundColor: '#F4F3FF', borderRadius: 10, padding: 10, fontWeight: 500, fontSize: 12, height: 30}}>
+                  <Status>
                     {appointmentData.status}
-                  </Text>
+                  </Status>
                 </View>
             </View>
             <View style={style.ButtonRow}>
@@ -173,12 +164,11 @@ const HomePage = () => {
         </View>
        
        {/* Reminder */}
-       <View>
-        <View style={style.flexs}>
+       <View style={style.flexs}>
           <SubTitle>
             Today's Reminders
           </SubTitle>
-          <TouchableOpacity style={style.linkFlex}>
+          <TouchableOpacity style={style.linkFlex} onPress={handleViewAllReminders}>
             <Text style={style.linkText}> View All </Text>
              <AntDesign name="arrowright" size={17} color="#DD2590" />
           </TouchableOpacity>
@@ -187,7 +177,7 @@ const HomePage = () => {
             {trackData.map((data) => {
               const {id, med, time, icon} = data;
               return(
-                <View key={id} style={{paddingTop: 15, paddingBottom: 15 ,borderBottomWidth: 1, borderBottomColor: '#717680'}}>
+                <View key={id} style={{paddingTop: 15, paddingBottom: 15 ,borderBottomWidth: 1, borderBottomColor:'#F2F2F2'}}>
                   <View style={{flexDirection: 'row', alignContent: 'center',justifyContent: 'space-between'}}>
                     <View style={{flexDirection: 'row', alignContent:'center'}}>
                       <Text style={{backgroundColor: '#FDF2FA', padding:5, borderRadius: 4}}>
@@ -207,7 +197,6 @@ const HomePage = () => {
               )
             })}
         </View>
-       </View>
     </Wrapper>
     </ScrollView>
   )
@@ -304,18 +293,18 @@ export const style = StyleSheet.create({
   flexs:{
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignContent: 'center',
+    alignItems: 'center',
     marginTop: 10,
     marginBottom: 10
   },
   linkFlex:{
     flexDirection: 'row',
-    alignContent: 'center'
+    alignItems: 'center'
   },
   linkText: {
     color: '#DD2590', 
     fontWeight: 400, 
     fontSize: 12,
-    marginRight:3
+    // marginRight:3
   }
 });

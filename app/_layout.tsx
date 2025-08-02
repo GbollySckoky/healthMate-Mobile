@@ -2,11 +2,9 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import { useCallback } from 'react';
-import { View } from 'react-native';
+import { useCallback, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-// import '../global.css';
-// import 'nativewind/css'
+
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -21,7 +19,15 @@ export default function RootLayout() {
     }
   }, [fontsLoaded]);
 
-  if (!fontsLoaded) return null;
+  useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null; // Show nothing while fonts load
+  }
 
   return (
     <SafeAreaView style={{ flex: 1 }} onLayout={onLayoutRootView}>

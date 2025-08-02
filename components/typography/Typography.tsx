@@ -51,6 +51,12 @@ export const CardText = ({children}: {children:React.ReactNode}) => (
     </Text>
 )
 
+export const CardAmount = ({children}: {children:React.ReactNode}) => (
+    <Text style={style.cardAmount}>
+        {children}
+    </Text>
+)
+
 export const MinCard = ({children, style}: {children:React.ReactNode, style: ViewStyle}) => (
     <View style={style}>
         {children}
@@ -69,16 +75,27 @@ export const BtnFlex = ({children}:{children: React.ReactNode}) => (
     </View>
 )
 
-export const RescheduleBtn = ({children}:{children: React.ReactNode}) => (
-    <TouchableOpacity style={style.rescheduleBtn}>
+export const RescheduleBtn = ({children, _fn}:{children: React.ReactNode, _fn: () => void}) => (
+    <TouchableOpacity style={style.rescheduleBtn} onPress={_fn}>
     <Text style={[style.buttonText, {color: '#252B37'}]}>{children}</Text>
     </TouchableOpacity> 
 )
 
-export const JoinBtn = ({children}:{children: React.ReactNode}) => (
-    <TouchableOpacity style={style.joinBtn}>
+export const JoinBtn = ({children, _fn}:{children: React.ReactNode, _fn: () => void}) => (
+    <TouchableOpacity style={style.joinBtn} onPress={_fn}>
     <Text style={[style.buttonText, {color: 'white'}]}>{children}</Text>
     </TouchableOpacity>
+)
+
+export const ButtonRow = () => (
+    <TouchableOpacity style={style.rescheduleBtn}>
+        <Text style={[style.buttonText, {color: '#252B37'}]}>Reschedule</Text>
+    </TouchableOpacity>
+)
+
+export const Status = ({children}: {children: React.ReactNode
+}) => (
+    <Text style={style.status}>{children} </Text>
 )
 
 
@@ -102,6 +119,7 @@ export const style = StyleSheet.create({
         marginTop: 15,
         color: '#414651',
         paddingBottom: 20,
+        paddingTop:10
     },
     Text: {
         // fontFamily: 'Libre-Franklin',
@@ -111,7 +129,7 @@ export const style = StyleSheet.create({
         fontWeight: 400
     },
     SubTitles: {
-        // fontFamily: 'Libre-Franklin',
+        fontFamily: 'Libre-Franklin',
         fontSize: 14,
         color: '#414651',
         fontStyle: 'normal',
@@ -120,7 +138,7 @@ export const style = StyleSheet.create({
         marginTop: 10
     },
     SubTitle: {
-        // fontFamily: 'Libre-Franklin',
+        fontFamily: 'Libre-Franklin',
         fontSize: 14,
         color: '#414651',
         fontWeight: 600
@@ -141,10 +159,19 @@ export const style = StyleSheet.create({
     },
     Card: {
         padding: 15,
-        borderColor: '#F1F1',
+        borderColor: '#F2F2F2',
         borderWidth: 1,
         borderRadius: 10,
-        backgroundColor: 'white'
+        backgroundColor: '#fff',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.1,
+          shadowRadius: 2,
+          elevation: 3,
+        overflow: 'hidden',
     },
     ButtonRow: {
         flexDirection: 'row',
@@ -181,5 +208,21 @@ export const style = StyleSheet.create({
         fontSize: 14,
         fontWeight: '600',
       },
+    status:{
+        color:'#5924DC', 
+        backgroundColor: '#F4F3FF', 
+        borderRadius: 10, 
+        padding: 10, 
+        fontWeight: 500, 
+        fontSize: 12,
+        textAlign: 'center',
+        height: 30
+    },
+    cardAmount: {
+        fontSize: 20,
+        fontWeight: 600,
+        fontFamily: 'Libre-Franklin',
+        paddingVertical: 4,
+    }
 })
 

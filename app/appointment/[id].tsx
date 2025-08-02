@@ -1,11 +1,12 @@
 import React from 'react'
-import { useLocalSearchParams } from 'expo-router';
-import { View, Text, ScrollView } from 'react-native';
+import { router, useLocalSearchParams } from 'expo-router';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import Entypo from '@expo/vector-icons/Entypo';
 import { BtnFlex, Card, CardTitle, JoinBtn, MinTitle, RescheduleBtn, SubTitles, Title, Wrapper } from '@/components/typography/Typography';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
 import { Image } from 'expo-image';
-
+import Feather from '@expo/vector-icons/Feather';
+import {NavHeader}  from '@/components/Header/Header';
 
 const AppointmentDetails = () => {
     const {id} = useLocalSearchParams()
@@ -25,7 +26,8 @@ const AppointmentDetails = () => {
       },
       {
         text: 'Video Call Consultation ',
-        title: 'Consultation Type'
+        title: 'Consultation Type',
+        icon: <Feather name="video" size={13} color="#717680" style={styles.iconText} />
       },
       {
         text: 'I am have been having pains on my lower abdomen for weeks now, i have taken medications prescribed by a Pharmacist but it has gotten worser. when i try to urinate i feel a sharp pain.',
@@ -34,51 +36,165 @@ const AppointmentDetails = () => {
     ]
   console.log(id)
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} style={{backgroundColor: '#ffffff'}}> 
-
-      <View style={{flexDirection: 'row', alignContent: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#f2f2f2', paddingVertical: 16, paddingHorizontal: 8}}>
-        <View style={{flexDirection: 'row', alignContent: 'center'}}>
-          <Entypo name="chevron-small-left" size={24} color="black" style={{paddingRight: 15}} />
-          <Title>Appointment Details</Title>
-        </View>
-        <Entypo name="dots-three-vertical" size={15} color="black" />
-      </View>
-      <Wrapper>
-        <View style={{marginVertical: 20, flexDirection: 'row', alignContent:  'center'}}>
-          <Image source={profile} style={{width: 100, height: 100, borderRadius: 50}}/>
-          <View style={{marginLeft:20}}>
-            <MinTitle> Dr James Uche </MinTitle>
-            <Text 
-              style={{fontSize: 12, fontWeight: 400, color: '#C11574', paddingTop: 3, marginBottom: 5}}>General Practitioner</Text>
-            {/* <CardTitle> */}
-              <Text style={{flexDirection:'row', alignContent: 'center'}}>
-                <EvilIcons name="location" size={15} color="black" style={{marginRight: 5}}/>
-                Lagos Health Hospital
+    <View style={{backgroundColor: 'white'}}>
+      <NavHeader
+        title='Appointment Details'
+        _goBack={() => router.push('/(tabs)/home')}
+        _optionFn={() => router.push('/(tabs)/home')}
+        backIcon={<Entypo name="chevron-small-left" size={24} color="black"  />}
+        optionIcon={<Entypo name="dots-three-vertical" size={15} color="black" />}
+       />
+       <ScrollView 
+       contentContainerStyle={{ flexGrow: 1 }} 
+       showsVerticalScrollIndicator={false} 
+       style={{backgroundColor: '#ffffff'}}> 
+        <Wrapper>
+          <View style={styles.container}>
+            <Image source={profile} style={styles.profileImage} />
+            <View style={styles.infoContainer}>
+              <MinTitle>Dr James Uche</MinTitle>
+              <Text style={styles.specialtyText}>
+                General Practitioner
               </Text>
-             
-            {/* </CardTitle> */}
-          </View>
-          
-        </View>
-        {/* Card */}
-        <Card>
-          {data.map((data, index) => {
-            const {text, title} = data
-            return(
-              <View key={index} style={{borderBottomWidth: 1, borderColor: '#F2F2F2', padding: 10}}>
-                <SubTitles>{title}</SubTitles>
-                <CardTitle>{text}</CardTitle>
+              <View style={styles.locationContainer}>
+                <EvilIcons name="location" size={16} color="#666" />
+                <Text style={styles.locationText}>
+                  Lagos Health Hospital
+                </Text>
               </View>
-            )
-          })}
-        </Card>
-        <BtnFlex>
-            <RescheduleBtn> Reschedule</RescheduleBtn>
-            <JoinBtn>Join Call</JoinBtn>
-        </BtnFlex>
-      </Wrapper>
-    </ScrollView>
+            </View>
+          </View>
+          {/* Card */}
+          <Card>
+            {data.map((item, index) => {
+              const { text, title, icon } = item;
+              const isLastItem = index === data.length - 1;
+              
+              return (
+                <View 
+                  key={index} 
+                  style={[
+                    styles.enhancedItemContainer,
+                    isLastItem && styles.lastItem
+                  ]}
+                >
+                  <View style={styles.contentWrapper}>
+                    <Text style={styles.CardTitle}>{title}</Text>
+                    <Text>
+                      {icon && <Text style={styles.iconText}>{icon}</Text>}
+                      <Text style={styles.CardText}>{text}</Text>
+                    </Text>
+                  </View>
+                  {!isLastItem && <View style={styles.divider} />}
+                </View>
+              );
+            })}
+          </Card>
+          <BtnFlex>
+              <RescheduleBtn _fn={() => router.push('/')}> Reschedule</RescheduleBtn>
+              <JoinBtn _fn={() => router.push('/')}>Join Call</JoinBtn>
+          </BtnFlex>
+        </Wrapper>
+      </ScrollView>
+    </View>
   )
 }
 
 export default AppointmentDetails
+
+const styles =  StyleSheet.create({
+  container: {
+    marginBottom: 20,
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    padding: 16,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 3,
+    // marginTop: 10,
+
+  },
+  profileImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    borderWidth: 2,
+    borderColor: '#E8E8E8',
+  },
+  infoContainer: {
+    marginLeft: 16,
+    flex: 1,
+    justifyContent: 'center',
+  },
+  specialtyText: {
+    fontSize: 14,
+    fontWeight: '400',
+    color: '#C11574',
+    marginVertical: 5,
+  },
+  locationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  locationText: {
+    fontSize: 14,
+    color: '#666',
+    marginLeft: 4,
+    fontWeight: '400',
+  },
+  lastItem: {
+    borderBottomWidth: 0, // Remove border from last item
+  },
+  enhancedCard: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 3,
+    marginVertical: 8,
+  },
+  enhancedItemContainer: {
+    padding: 4,
+  },
+  contentWrapper: {
+    gap: 2, 
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#F5F5F5',
+    marginTop: 16,
+    // marginHorizontal: -4, // Slight inset for visual appeal
+  },
+  CardText: {
+    fontFamily: 'Inter',
+    fontSize: 12,
+    color: '#414651',
+    fontStyle: 'normal',
+    fontWeight: 400
+    // backgroundColor: 'red'
+},
+CardTitle: {
+  // fontFamily: 'Libre-Franklin',
+  fontSize: 14,
+  color: '#414651',
+  fontStyle: 'normal',
+  fontWeight: 500,
+  marginBottom: 5,
+  // marginTop: 10
+},
+iconText: {
+  paddingRight: 58, 
+  // backgroundColor: 'red'
+},
+});
