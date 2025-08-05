@@ -20,7 +20,7 @@ export const healthOverview = [
         text: 'Feeling Great',
         id: 2,
         icon: <Feather name="smile" size={24} color="#FFC847" />,
-        url: "/"
+        url: "/mood"
     },
     {
         title: 'Sleep',
@@ -199,5 +199,29 @@ export const recentWeight = [
         weight: '500kg',
         date: 'Jun 22 ',
         time: '10:45am'
+    },
+]
+
+export const recentMood = [
+    {
+        icon: '🙂',
+        mood: 'Happy',
+        date: 'Jun 22 ',
+        time: '09:45am',
+        status: 'Normal'
+    },
+    {
+        icon: '😂',
+        mood: 'Laughing',
+        date: 'Jun 22 ',
+        time: '10:45am',
+        status: 'Balanced'
+    },
+    {
+        icon: '😡',
+        mood: 'Angry',
+        date: 'Jun 22 ',
+        time: '10:45am',
+        status: 'Low'
     },
 ]

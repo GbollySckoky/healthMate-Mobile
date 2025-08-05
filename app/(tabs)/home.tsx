@@ -1,4 +1,4 @@
-import { Card, CardText, CardTitle, MinCard, Status, SubTitle, Texts, Title, Wrapper } from '@/components/typography/Typography'
+import { Card, CardText, CardTitle, MinCard, Status, SubTitle, Texts, Title, Wrapper } from '@/constant/typography/Typography'
 import React from 'react'
 import { Text, View, ScrollView, TouchableOpacity, Pressable  } from 'react-native'
 import { healthOverview,trackData } from '../data'
@@ -7,12 +7,12 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Image } from 'expo-image'
 import Entypo from '@expo/vector-icons/Entypo';
 import Feather from '@expo/vector-icons/Feather';
-import RadioInput from '@/components/Input/RadioInput'
+import RadioInput from '@/constant/Input/RadioInput'
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { router } from 'expo-router'
 import { Link } from '@react-navigation/native'
 import { useLinkTo } from '@react-navigation/native';
-import { ScrollViewHorizontal } from '@/components/scrollView/ScrollViewHorizontal'
+import { ScrollViewHorizontal } from '@/constant/scrollView/ScrollViewHorizontal'
 
 
 const blurhash =
@@ -59,7 +59,7 @@ const HomePage = () => {
       </View>
 
         {/* Your Activities */}
-        <View style={{marginTop: 25}}>
+        <View style={{marginTop: 20}}>
           <SubTitle>
             Your Health Overview
           </SubTitle>
@@ -69,18 +69,20 @@ const HomePage = () => {
                 return(
                   <Pressable onPress={() => linkTo(url)} key={id} >
                   <MinCard  style={style.MinCard} >
-                    <Text style={{paddingBottom: 10}}>
+                    <Text style={{paddingBottom: 15}}>
                       {icon}
                     </Text>
                     <CardTitle>
                       {title}
                     </CardTitle>
-                    <Title>
-                      {value}
-                    </Title>
-                    <CardText>
-                      {text}
-                    </CardText>
+                    <View style={{paddingTop: 4}}>
+                      <Title>
+                        {value}
+                      </Title>
+                      <CardText>
+                        {text}
+                      </CardText>
+                    </View>
                   </MinCard>
                   </Pressable>
                 )

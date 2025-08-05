@@ -5,10 +5,10 @@ import { View, Dimensions, StyleSheet, ScrollView } from 'react-native';
 export default function HomeScreen() {
  
   return (
-      <View style={styles.container} className='bg-red-900'>
+      <View>
   
           <View>
-        <Link href='/(tabs)/home' className='bg-red-900'>
+        <Link href='/(tabs)/home'>
         Homes
         </Link>
        

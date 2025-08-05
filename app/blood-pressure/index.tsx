@@ -1,7 +1,7 @@
-import { NavHeader } from '@/components/Header/Header';
+import { NavHeader } from '@/constant/Header/Header';
 import { ScreenLayout } from '@/constant/ScreenLayout/ScreenLayout';
-import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
-import { Card, CardAmount, CardText, DetailsContainer, SubTitle, Wrapper } from '@/components/typography/Typography';
+import { ScreenOverFlowLayout } from '@/constant/scrollView/ScreenOverFlowLayout';
+import { Card, CardAmount, CardText, DetailsContainer, SubTitle, Wrapper } from '@/constant/typography/Typography';
 import { router } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -9,6 +9,7 @@ import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import { recenntReadings } from '../data';
 import { LineChart } from 'react-native-chart-kit';
 import { useState } from 'react';
+import { Button } from '@/constant/button/Button';
 
 
 const { width } = Dimensions.get('window');
@@ -64,6 +65,9 @@ const BloodPressure = () => {
         },
       };
 
+      const handleClick = () => {
+
+      }
   return (
     <ScreenLayout>
     <NavHeader 
@@ -121,6 +125,7 @@ const BloodPressure = () => {
         </View>
         </View>
         {/* Recnnt Readings */}
+        <View style={{marginBottom: 40}}>
         <Card>
             <SubTitle>Recent Readings</SubTitle>
             {recenntReadings.map((recent, index) => {
@@ -151,8 +156,12 @@ const BloodPressure = () => {
               )
             })}
         </Card>
+        </View>
         </Wrapper>
       </ScreenOverFlowLayout>
+      <Button _fn={handleClick}>
+        Add New Reading
+      </Button>
     </ScreenLayout>
   )
 }

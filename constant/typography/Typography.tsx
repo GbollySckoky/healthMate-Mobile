@@ -15,6 +15,12 @@ export const Texts = ({children}:{children: React.ReactNode}) => (
     </Text>
 )
 
+export const HeaderText = ({children}:{children: React.ReactNode}) => {
+    <Text >
+        {children}
+    </Text>
+}
+
 export const SubTitle = ({children}:{children: React.ReactNode}) => {
     return <Text style={style.SubTitle}>
         {children}
@@ -108,8 +114,10 @@ export const style = StyleSheet.create({
     Title:{
         fontSize: 18,
         fontWeight: 600,
-        marginBottom: 5,
-        fontFamily: 'Libre-Franklin'
+        marginBottom: 3,
+        // backgroundColor: 'red',
+        fontFamily: 'Libre-Franklin',
+        // fontStyle: 'italic'
     },
     MinTitle:{
         fontSize: 18,
@@ -127,7 +135,7 @@ export const style = StyleSheet.create({
         paddingTop:10
     },
     Text: {
-        // fontFamily: 'Libre-Franklin',
+        fontFamily: 'Libre-Franklin',
         fontSize: 14,
         color: '#717680',
         fontStyle: 'normal',

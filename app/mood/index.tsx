@@ -4,17 +4,16 @@ import { ScreenOverFlowLayout } from '@/constant/scrollView/ScreenOverFlowLayout
 import { Card, CardAmount, CardText, DetailsContainer, SubTitle, Wrapper } from '@/constant/typography/Typography';
 import { router } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import { useState } from 'react';
 const { width } = Dimensions.get('window');
-import { recentWeight } from '../data';
-import Feather from '@expo/vector-icons/Feather';
+import { recentMood } from '../data';
 import { Button } from '@/constant/button/Button';
 
 
-const Weight = () => {
+
+const Mood = () => {
     const [readings, setReadings] = useState([
         { date: 'Jun 20', systolic: 82, diastolic: 62 },
         { date: 'Jun 21', systolic: 95, diastolic: 75 },
@@ -63,9 +62,11 @@ const Weight = () => {
           strokeWidth: 1,
         },
       };
+      
       const handleClick = () => {
 
       }
+      
   return (
     <ScreenLayout>
     <NavHeader 
@@ -77,34 +78,23 @@ const Weight = () => {
     <ScreenOverFlowLayout>
       <Wrapper>
         <DetailsContainer>
-            <FontAwesome name="balance-scale" size={24} color="#C11574" style={styles.icon} />
+            <Text style={{fontSize: 35, marginBottom: 3}}>🙂</Text>
           <CardText>
-            Current Weight
+            Today’s mood
           </CardText>
           <CardAmount>
-            65 kg
+            Happy
           </CardAmount>
           <CardText>
             Recorded on: Jun 22, 09:45
           </CardText>
+          <Text style={styles.colorText}>
+            Positive
+          </Text>
         </DetailsContainer>
-        {/* Weight Goal */}
-        <Card>
-            <View style={{flexDirection: 'row', alignItems:'center', marginBottom: 9}}>
-                <Feather name="target" size={20} color="#05A505" style={{marginRight:5}} />
-                <SubTitle>Goal Weight: 60Kg</SubTitle>
-            </View>
-            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',marginBottom:2}}>
-                <Text style={styles.text}>Progress to Goal</Text>
-                <Text style={styles.text}>70%</Text>
-            </View>
-            <View style={{backgroundColor: '#05A5051F',width: '100%', borderRadius: 40 , padding: 3, marginTop: 2}}>
-                <View style={{backgroundColor: '#05A505',width: '70%', borderRadius: 40 , padding: 3}}/>
-            </View>
-        </Card>
         {/* Chart */}
         <View style={styles.chartContainer}>
-            <Text style={styles.title}>Weight Trends</Text>
+            <Text style={styles.title}>Mood Trends</Text>
             <LineChart
                 data={chartData}
                 width={width - 48} // Adjust for card padding
@@ -121,13 +111,12 @@ const Weight = () => {
                 segments={6}
             />
         </View>
-        {/* Weight */}
         <View style={{marginBottom: 40}}>
         <Card>
             <SubTitle>Weight History</SubTitle>
-            {recentWeight.map((recent, index) => {
-              const {icon, date, time,weight} = recent;
-              const isLastItem = index === recentWeight.length - 1;
+            {recentMood.map((recent, index) => {
+              const {icon, date, time,mood, status} = recent;
+              const isLastItem = index === recentMood.length - 1;
               return(
                 <View 
                   key={index}
@@ -139,10 +128,16 @@ const Weight = () => {
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <Text style={{borderColor: '#f2f2f2', borderWidth: 1, padding: 6, borderRadius: 5}}> {icon} </Text>
                       <View style={{paddingLeft: 16}}>
-                      <Text style={{fontWeight: 500, fontSize: 14, fontFamily: 'Libre-Franklin'}}>{weight}</Text>
+                        <Text style={{fontWeight: 500, fontSize: 14, fontFamily: 'Libre-Franklin'}}>{mood}</Text>
                         <Text style={{fontWeight: '400', fontSize: 12, color: '#717680', paddingTop: 2, }}>{date} at {time}</Text>
                       </View>
                     </View>
+                    <Text 
+                      style={{backgroundColor: `${status === 'Normal' &&  '#ECFDF3' || status === 'Low' && '#FEF3F2'
+                        || status === 'Balanced' && '#FFFAEB' }`,
+                      color: `${status === 'Normal' && '#027A48' ||  status === 'Low' && '#B42318' || status === 'Balanced' && '#B54708'}`,
+                      paddingHorizontal: 15, paddingVertical: 7, borderRadius: 30, fontFamily: 'Inter'}}>
+                        {status}</Text>
                   </View>
                 </View>
               )
@@ -152,13 +147,13 @@ const Weight = () => {
         </Wrapper>
       </ScreenOverFlowLayout>
       <Button _fn={handleClick}>
-        Log New Weight
+        Log New Weight 
       </Button>
     </ScreenLayout>
   )
 }
 
-export default Weight
+export default Mood
 
 const styles = StyleSheet.create({
     icon:{
@@ -220,9 +215,4 @@ const styles = StyleSheet.create({
         paddingVertical: 18,
         // backgroundColor: 'red'
     },
-    text:{
-        fontWeight: 400,
-        fontSize: 12,
-        marginBottom: 4
-    }
 })

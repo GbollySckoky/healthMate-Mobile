@@ -1,14 +1,21 @@
-import { NavHeader } from '@/components/Header/Header';
+import { NavHeader } from '@/constant/Header/Header';
 import { ScreenLayout } from '@/constant/ScreenLayout/ScreenLayout';
-import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
-import { Card, CardAmount, CardText, DetailsContainer, SubTitle, Wrapper } from '@/components/typography/Typography';
+import { ScreenOverFlowLayout } from '@/constant/scrollView/ScreenOverFlowLayout';
+import { Card, CardAmount, CardText, DetailsContainer, SubTitle, Wrapper } from '@/constant/typography/Typography';
 import { router } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { StyleSheet, Text, View } from 'react-native';
 import { medicationDosage } from '../data';
+import { Button } from '@/constant/button/Button';
+
+
+
 
 const Medication = () => {
+  const handleClick = () => {
+
+  }
   return (
     <ScreenLayout>
     <NavHeader 
@@ -34,38 +41,43 @@ const Medication = () => {
             Taken
           </Text>
         </DetailsContainer>
-        <Card>
-            <SubTitle>Recent Readings</SubTitle>
-            {medicationDosage.map((recent, index) => {
-              const {icon, bloodRate, date, status, time} = recent;
-              const isLastItem = index ===medicationDosage.length - 1;
-              return(
-                <View 
-                  key={index}
-                  style={[
-                    styles.enhancedItemContainer,
-                    isLastItem && styles.lastItem
-                  ]}>
-                  <View style={styles.flex}>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <Text style={{borderColor: '#f2f2f2', borderWidth: 1, padding: 6, borderRadius: 5}}> {icon} </Text>
-                      <View style={{paddingLeft: 16}}>
-                        <Text style={{fontWeight: '500', fontSize: 14, color: '#414651', paddingTop: 2}}>{bloodRate}</Text>
-                        <Text style={{fontWeight: '400', fontSize: 12, color: '#717680', paddingTop: 2}}>{date} at {time}</Text>
+        <View style={{marginBottom: 40}}>
+          <Card>
+              <SubTitle>Recent Readings</SubTitle>
+              {medicationDosage.map((recent, index) => {
+                const {icon, bloodRate, date, status, time} = recent;
+                const isLastItem = index ===medicationDosage.length - 1;
+                return(
+                  <View 
+                    key={index}
+                    style={[
+                      styles.enhancedItemContainer,
+                      isLastItem && styles.lastItem
+                    ]}>
+                    <View style={styles.flex}>
+                      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <Text style={{borderColor: '#f2f2f2', borderWidth: 1, padding: 6, borderRadius: 5}}> {icon} </Text>
+                        <View style={{paddingLeft: 16}}>
+                          <Text style={{fontWeight: '500', fontSize: 14, color: '#414651', paddingTop: 2}}>{bloodRate}</Text>
+                          <Text style={{fontWeight: '400', fontSize: 12, color: '#717680', paddingTop: 2}}>{date} at {time}</Text>
+                        </View>
                       </View>
+                      <Text 
+                        style={{backgroundColor: `${status === 'Taken' &&  '#ECFDF3' || status === 'Missed' && '#FEF3F2'}`,
+                        color: `${status === 'Taken' && '#027A48' ||  status === 'Missed' && '#B42318'}`,
+                        paddingHorizontal: 15, paddingVertical: 7, borderRadius: 30, fontFamily: 'Inter'   }}>
+                          {status}</Text>
                     </View>
-                    <Text 
-                      style={{backgroundColor: `${status === 'Taken' &&  '#ECFDF3' || status === 'Missed' && '#FEF3F2'}`,
-                      color: `${status === 'Taken' && '#027A48' ||  status === 'Missed' && '#B42318'}`,
-                      paddingHorizontal: 15, paddingVertical: 7, borderRadius: 30, fontFamily: 'Inter'   }}>
-                        {status}</Text>
                   </View>
-                </View>
-              )
-            })}
-        </Card>
+                )
+              })}
+          </Card>
+        </View>
         </Wrapper>
       </ScreenOverFlowLayout>
+      <Button _fn={handleClick}>
+        Log New Medication
+      </Button>
     </ScreenLayout>
   )
 }

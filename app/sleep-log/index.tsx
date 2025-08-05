@@ -1,15 +1,15 @@
 import React from 'react';
 import { BarChart } from 'react-native-chart-kit';
 import { StyleSheet, View, Text, Dimensions  } from 'react-native';
-import { NavHeader } from '@/components/Header/Header';
+import { NavHeader } from '@/constant/Header/Header';
 import { router } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { ScreenLayout } from '@/constant/ScreenLayout/ScreenLayout';
-import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
-import { Card, CardAmount, CardText, DetailsContainer, SubTitle, Wrapper } from '@/components/typography/Typography';
+import { ScreenOverFlowLayout } from '@/constant/scrollView/ScreenOverFlowLayout';
+import { Card, CardAmount, CardText, DetailsContainer, SubTitle, Wrapper } from '@/constant/typography/Typography';
 import { sleepLogHistory } from '../data';
-
+import { Button } from '@/constant/button/Button';
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -45,6 +45,10 @@ const chartConfig = {
     fontFamily: "System"
   }
 };
+
+const handleClick = () => {
+
+}
 
 export default function MyBarChart() {
   return (
@@ -94,38 +98,43 @@ export default function MyBarChart() {
             </View>
           </View>
           {/* sleep log */}
-          <Card>
-            <SubTitle>Sleep Log History</SubTitle>
-            {sleepLogHistory.map((sleep, index) => {
-              const {icon, hour, date, status, time} = sleep;
-              const isLastItem = index === sleepLogHistory.length - 1;
-              return(
-                <View 
-                  key={index}
-                  style={[
-                    styles.enhancedItemContainer,
-                    isLastItem && styles.lastItem
-                  ]}>
-                  <View style={styles.flex}>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <Text style={{borderColor: '#f2f2f2', borderWidth: 1, padding: 6, borderRadius: 5}}> {icon} </Text>
-                      <View style={{paddingLeft: 16}}>
-                        <Text style={{fontWeight: '500', fontSize: 14, color: '#414651', paddingTop: 2}}>{hour}</Text>
-                        <Text style={{fontWeight: '400', fontSize: 12, color: '#717680', paddingTop: 2}}>{date} . {time}</Text>
+          <View style={{marginBottom: 40}}>
+            <Card>
+              <SubTitle>Sleep Log History</SubTitle>
+              {sleepLogHistory.map((sleep, index) => {
+                const {icon, hour, date, status, time} = sleep;
+                const isLastItem = index === sleepLogHistory.length - 1;
+                return(
+                  <View 
+                    key={index}
+                    style={[
+                      styles.enhancedItemContainer,
+                      isLastItem && styles.lastItem
+                    ]}>
+                    <View style={styles.flex}>
+                      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <Text style={{borderColor: '#f2f2f2', borderWidth: 1, padding: 6, borderRadius: 5}}> {icon} </Text>
+                        <View style={{paddingLeft: 16}}>
+                          <Text style={{fontWeight: '500', fontSize: 14, color: '#414651', paddingTop: 2}}>{hour}</Text>
+                          <Text style={{fontWeight: '400', fontSize: 12, color: '#717680', paddingTop: 2}}>{date} . {time}</Text>
+                        </View>
                       </View>
+                      <Text 
+                        style={{backgroundColor: `${status === 'Excellent' &&  '#ECFDF3' || status === 'Average' && '#FFFAEB' || status === 'Low' && '#FEF3F2'}`,
+                        color: `${status === 'Excellent' && '#027A48' || status === 'Average' && '#B54708' || status === 'Low' && '#B42318'}`,
+                        paddingHorizontal: 15, paddingVertical: 7, borderRadius: 30, fontFamily: 'Inter'   }}>
+                          {status}</Text>
                     </View>
-                    <Text 
-                      style={{backgroundColor: `${status === 'Excellent' &&  '#ECFDF3' || status === 'Average' && '#FFFAEB' || status === 'Low' && '#FEF3F2'}`,
-                      color: `${status === 'Excellent' && '#027A48' || status === 'Average' && '#B54708' || status === 'Low' && '#B42318'}`,
-                      paddingHorizontal: 15, paddingVertical: 7, borderRadius: 30, fontFamily: 'Inter'   }}>
-                        {status}</Text>
                   </View>
-                </View>
-              )
-            })}
-          </Card>
+                )
+              })}
+            </Card>
+          </View>
         </Wrapper>
       </ScreenOverFlowLayout>
+      <Button _fn={handleClick}>
+        Log New Sleep
+      </Button>
     </ScreenLayout>
   );
 }

@@ -1,19 +1,20 @@
-import { NavHeader } from '@/components/Header/Header'
+import { NavHeader } from '@/constant/Header/Header'
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import Entypo from '@expo/vector-icons/Entypo';
 import {router} from 'expo-router'
-import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
-import { Wrapper } from '@/components/typography/Typography';
-import RadioInput from '@/components/Input/RadioInput'
+import { ScreenOverFlowLayout } from '@/constant/scrollView/ScreenOverFlowLayout';
+import { Wrapper } from '@/constant/typography/Typography';
+import RadioInput from '@/constant/Input/RadioInput'
 import { trackData } from '../data';
 import { ScreenLayout } from '@/constant/ScreenLayout/ScreenLayout';
+
+
 
 const index = () => {
     const handleInput = () => {
 
     }
-
   return (
     <ScreenLayout>
         <NavHeader 

@@ -2,11 +2,11 @@ import React from 'react'
 import { router, useLocalSearchParams } from 'expo-router';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import Entypo from '@expo/vector-icons/Entypo';
-import { BtnFlex, Card, CardTitle, JoinBtn, MinTitle, RescheduleBtn, SubTitles, Title, Wrapper } from '@/components/typography/Typography';
+import { BtnFlex, Card, CardTitle, JoinBtn, MinTitle, RescheduleBtn, SubTitles, Title, Wrapper } from '@/constant/typography/Typography';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
 import { Image } from 'expo-image';
 import Feather from '@expo/vector-icons/Feather';
-import {NavHeader}  from '@/components/Header/Header';
+import {NavHeader}  from '@/constant/Header/Header';
 
 const AppointmentDetails = () => {
     const {id} = useLocalSearchParams()
