@@ -119,7 +119,7 @@ export const SubmitButton = ({children, _fn}: {children: React.ReactNode, _fn: (
 export const style = StyleSheet.create({
     Title:{
         fontSize: 18,
-        fontWeight: 600,
+        fontWeight: '600',
         marginBottom: 3,
         // backgroundColor: 'red',
         fontFamily: 'Libre-Franklin',
@@ -127,7 +127,7 @@ export const style = StyleSheet.create({
     },
     MinTitle:{
         fontSize: 18,
-        fontWeight: 600,
+        fontWeight: '600',
         // marginBottom: 5,
         fontFamily: 'Libre-Franklin'
     },
@@ -252,14 +252,15 @@ export const style = StyleSheet.create({
         flex: 1
     },
     closeBtn: {
-        width: '95%',
+        width: '100%',
         borderRadius: 10,
         backgroundColor: '#C11574',
         padding: 13,
         justifyContent: 'center',
         alignItems: 'center',
         margin: 'auto',
-        marginVertical: 15
+        marginTop: 30,
+        marginBottom: 20
     },
     closeBtnText: {
     fontSize: 14,

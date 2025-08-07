@@ -7,10 +7,10 @@ interface CalendarType{
   isOpen: boolean;
   onChangeText: (day: any) => void;
   onClose: () => void;
-  markedDates: any;
+  // markedDates: any;
 }
 
-export default function CustomCalendar ({isOpen, onChangeText, onClose, markedDates}: CalendarType)  {
+export default function CustomCalendar ({isOpen, onChangeText, onClose}: CalendarType)  {
   const [selected, setSelected] = useState('');
   
   LocaleConfig.locales['en'] = {
@@ -63,12 +63,12 @@ export default function CustomCalendar ({isOpen, onChangeText, onClose, markedDa
           <Calendar
             onDayPress={handleDayPress}
             markedDates={{
-              ...markedDates,
-              // [selected]: {
-              //   selected: true,
-              //   disableTouchEvent: false,
-              //   selectedColor: '#007AFF'
-              // }
+              // ...markedDates,
+              [selected]: {
+                selected: true,
+                disableTouchEvent: false,
+                selectedColor: '#C11574'
+              }
             }}
             style={styles.calendar}
             theme={{
@@ -77,7 +77,8 @@ export default function CustomCalendar ({isOpen, onChangeText, onClose, markedDa
               textSectionTitleColor: '#b6c1cd',
               selectedDayBackgroundColor: '#007AFF',
               selectedDayTextColor: '#ffffff',
-              todayTextColor: '#007AFF',
+              todayTextColor: '#ffffff',
+              todayBackgroundColor: '#FDF2FA',
               dayTextColor: '#2d4150',
               textDisabledColor: '#d9e1e8',
               dotColor: '#00adf5',
@@ -91,7 +92,7 @@ export default function CustomCalendar ({isOpen, onChangeText, onClose, markedDa
               textDayHeaderFontWeight: '300',
               textDayFontSize: 16,
               textMonthFontSize: 16,
-              textDayHeaderFontSize: 13
+              textDayHeaderFontSize: 13,
             }}
           />
         </View>

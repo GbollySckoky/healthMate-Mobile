@@ -12,9 +12,12 @@ const { width } = Dimensions.get('window');
 import { recentWeight } from '../data';
 import Feather from '@expo/vector-icons/Feather';
 import { Button } from '@/constant/button/Button';
+import WeightModal from './_component/WeightModal';
+import { useModal } from '@/context/ModalContext';
 
 
 const Weight = () => {
+  const {openModal} = useModal()
     const [readings, setReadings] = useState([
         { date: 'Jun 20', systolic: 82, diastolic: 62 },
         { date: 'Jun 21', systolic: 95, diastolic: 75 },
@@ -151,7 +154,13 @@ const Weight = () => {
         </View>
         </Wrapper>
       </ScreenOverFlowLayout>
-      <Button _fn={handleClick}>
+      <Button _fn={() =>
+         openModal(<WeightModal />, {
+          title: 'Log New Weight',
+          description: '',
+          onClose: () => {},
+          // btnText: 'Save Reading'
+        })}>
         Log New Weight
       </Button>
     </ScreenLayout>

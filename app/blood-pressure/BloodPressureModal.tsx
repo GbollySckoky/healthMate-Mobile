@@ -75,9 +75,9 @@ const BloodPressureModal = () => {
         isOpen={showDatePicker}
         onChangeText={handleDateSelect}
         onClose={handleCloseCalendar}
-        markedDates={{
-          [inputValue.date]: {selected: true, disableTouchEvent: false, selectedColor: '#007AFF'}
-        }}
+        // markedDates={{
+        //   [inputValue.date]: {selected: true, disableTouchEvent: false, selectedColor: '#C11574'}
+        // }}
       />
 
       <SubmitButton _fn={handleClick}>

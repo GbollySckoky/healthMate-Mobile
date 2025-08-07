@@ -35,7 +35,7 @@ const MedicationModal = () => {
         onChangeText={(value) => handleChange('dosage', value)}
       />
       <SubmitButton _fn={handleClick}>
-        Save Log
+        Save Medication Log
       </SubmitButton>
     </View>
   )
