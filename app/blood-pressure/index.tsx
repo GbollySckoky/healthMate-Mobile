@@ -10,8 +10,7 @@ import { recenntReadings } from '../data';
 import { LineChart } from 'react-native-chart-kit';
 import { useState } from 'react';
 import { Button } from '@/constant/button/Button';
-import useDisplayModal from '@/hooks/useDisplay';
-import ModalInput from './ModalInput';
+import BloodPressureModal  from './BloodPressureModal';
 import { useModal } from '@/context/ModalContext';
 
 
@@ -19,58 +18,55 @@ const { width } = Dimensions.get('window');
 
 const BloodPressure = () => {
   const {openModal} = useModal()
-    const [readings, setReadings] = useState([
-        { date: 'Jun 20', systolic: 82, diastolic: 62 },
-        { date: 'Jun 21', systolic: 95, diastolic: 75 },
-        { date: 'Jun 22', systolic: 118, diastolic: 105 },
-        { date: 'Jun 23', systolic: 118, diastolic: 95 },
-        { date: 'Jun 24', systolic: 140, diastolic: 82 },
-        { date: 'Jun 25', systolic: 140, diastolic: 82 },
-        { date: 'Jun 26', systolic: 140, diastolic: 82 },
-        { date: 'Jun 27', systolic: 140, diastolic: 82 },
-      ]);
-    
-      // Prepare chart data
-      const chartData = {
-        labels: readings.map(r => r.date.split(' ')[1]), // Just day numbers
-        datasets: [
-          {
-            data: readings.map(r => r.systolic),
-            color: (opacity = 1) => `rgba(239, 68, 68, ${opacity})`, // Red for systolic
-            strokeWidth: 3,
-          },
-          {
-            data: readings.map(r => r.diastolic),
-            color: (opacity = 1) => `rgba(59, 130, 246, ${opacity})`, // Blue for diastolic
-            strokeWidth: 3,
-          }
-        ],
-      };
-    
-      const chartConfig = {
-        backgroundColor: '#ffffff',
-        backgroundGradientFrom: '#ffffff',
-        backgroundGradientTo: '#ffffff',
-        decimalPlaces: 0,
-        color: (opacity = 1) => `rgba(107, 114, 128, ${opacity})`,
-        labelColor: (opacity = 1) => `rgba(107, 114, 128, ${opacity})`,
-        style: {
-          borderRadius: 16,
+  const [readings, setReadings] = useState([
+      { date: 'Jun 20', systolic: 82, diastolic: 62 },
+      { date: 'Jun 21', systolic: 95, diastolic: 75 },
+      { date: 'Jun 22', systolic: 118, diastolic: 105 },
+      { date: 'Jun 23', systolic: 118, diastolic: 95 },
+      { date: 'Jun 24', systolic: 140, diastolic: 82 },
+      { date: 'Jun 25', systolic: 140, diastolic: 82 },
+      { date: 'Jun 26', systolic: 140, diastolic: 82 },
+      { date: 'Jun 27', systolic: 140, diastolic: 82 },
+    ]);
+  
+    // Prepare chart data
+    const chartData = {
+      labels: readings.map(r => r.date.split(' ')[1]), // Just day numbers
+      datasets: [
+        {
+          data: readings.map(r => r.systolic),
+          color: (opacity = 1) => `rgba(239, 68, 68, ${opacity})`, // Red for systolic
+          strokeWidth: 3,
         },
-        propsForDots: {
-          r: "4",
-          strokeWidth: "0",
-        },
-        propsForBackgroundLines: {
-          strokeDasharray: "5,5",
-          stroke: `rgba(229, 231, 235, 1)`,
-          strokeWidth: 1,
-        },
-      };
+        {
+          data: readings.map(r => r.diastolic),
+          color: (opacity = 1) => `rgba(59, 130, 246, ${opacity})`, // Blue for diastolic
+          strokeWidth: 3,
+        }
+      ],
+    };
+  
+    const chartConfig = {
+      backgroundColor: '#ffffff',
+      backgroundGradientFrom: '#ffffff',
+      backgroundGradientTo: '#ffffff',
+      decimalPlaces: 0,
+      color: (opacity = 1) => `rgba(107, 114, 128, ${opacity})`,
+      labelColor: (opacity = 1) => `rgba(107, 114, 128, ${opacity})`,
+      style: {
+        borderRadius: 16,
+      },
+      propsForDots: {
+        r: "4",
+        strokeWidth: "0",
+      },
+      propsForBackgroundLines: {
+        strokeDasharray: "5,5",
+        stroke: `rgba(229, 231, 235, 1)`,
+        strokeWidth: 1,
+      },
+    };
 
-      const handleClick = () => {
-
-      }
   return (
     <ScreenLayout>
     <NavHeader 
@@ -82,7 +78,7 @@ const BloodPressure = () => {
     <ScreenOverFlowLayout>
       <Wrapper>
         <DetailsContainer>
-          <AntDesign name="hearto" size={24} color="#DF0000" style={styles.icon}/>,
+          <AntDesign name="hearto" size={24} color="#DF0000" style={styles.icon}/>
           <CardText>
             Today’s Readings
           </CardText>
@@ -167,7 +163,7 @@ const BloodPressure = () => {
         </Wrapper>
       </ScreenOverFlowLayout>
       <Button _fn={() =>
-         openModal(<ModalInput />, {
+         openModal(<BloodPressureModal />, {
           title: 'Add Blood Pressure Reading',
           description: '',
           onClose: () => {},

@@ -1,5 +1,5 @@
 import React from "react"
-import { Text, ViewStyle, View, TouchableOpacity, StyleSheet } from "react-native"
+import { Text, ViewStyle, View, TouchableOpacity, StyleSheet, Pressable } from "react-native"
 
 export const Title = ({children}:{children: React.ReactNode}) => {
     return <Text style={style.Title}>{children}</Text>
@@ -109,6 +109,12 @@ export const Status = ({children}: {children: React.ReactNode
     <Text style={style.status}>{children} </Text>
 )
 
+export const SubmitButton = ({children, _fn}: {children: React.ReactNode, _fn: () => void
+}) => (
+    <TouchableOpacity style={style.closeBtn} onPress={_fn}>
+        <Text style={style.closeBtnText}>{children}</Text>
+    </TouchableOpacity>
+)
 
 export const style = StyleSheet.create({
     Title:{
@@ -244,6 +250,22 @@ export const style = StyleSheet.create({
         marginBottom: 20,
         paddingVertical:5,
         flex: 1
-      },
+    },
+    closeBtn: {
+        width: '95%',
+        borderRadius: 10,
+        backgroundColor: '#C11574',
+        padding: 13,
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: 'auto',
+        marginVertical: 15
+    },
+    closeBtnText: {
+    fontSize: 14,
+    color: 'white',
+    fontWeight: '600',
+    fontFamily: 'Inter'
+    },
 })
 

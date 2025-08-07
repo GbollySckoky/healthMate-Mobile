@@ -8,14 +8,15 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { StyleSheet, Text, View } from 'react-native';
 import { medicationDosage } from '../data';
 import { Button } from '@/constant/button/Button';
+import MedicationModal from './MedicationModal';
+import { useModal } from '@/context/ModalContext';
 
 
 
 
 const Medication = () => {
-  const handleClick = () => {
+  const {openModal} = useModal()
 
-  }
   return (
     <ScreenLayout>
     <NavHeader 
@@ -75,9 +76,15 @@ const Medication = () => {
         </View>
         </Wrapper>
       </ScreenOverFlowLayout>
-      <Button _fn={handleClick}>
-        Log New Medication
-      </Button>
+        <Button _fn={() =>
+         openModal(<MedicationModal />, {
+          title: 'Log Medication',
+          description: '',
+          onClose: () => {},
+          // btnText: 'Save Reading'
+        })}>
+          Log New Medication
+        </Button>
     </ScreenLayout>
   )
 }

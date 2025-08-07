@@ -56,13 +56,13 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
 
   const openModal = (
     content: ReactNode,
+
     options: {
       title?: string;
       description?: string;
       buttonName?: string;
       onClose?: () => void;
       animationType?: 'slide' | 'fade' | 'none';
-      // btnText?: string;
     } = {}
   ) => {
     setModalContent(content);
@@ -137,7 +137,6 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
             )} */}
             
           </Pressable>
-          hkele
         </Pressable>
       </Modal>
     </ModalContext.Provider>
@@ -201,22 +200,22 @@ const styles = StyleSheet.create({
     color: '#666666',
     fontWeight: '500',
   },
-  // closeBtn: {
-  //   width: '95%',
-  //   borderRadius: 10,
-  //   backgroundColor: '#C11574',
-  //   padding: 13,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   margin: 'auto'
-  //   // marginHorizontal: 10
-  // },
-  // closeBtnText: {
-  //   fontSize: 14,
-  //   color: 'white',
-  //   fontWeight: '600',
-  //   fontFamily: 'Inter'
-  // },
+  closeBtn: {
+    width: '95%',
+    borderRadius: 10,
+    backgroundColor: '#C11574',
+    padding: 13,
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 'auto'
+    // marginHorizontal: 10
+  },
+  closeBtnText: {
+    fontSize: 14,
+    color: 'white',
+    fontWeight: '600',
+    fontFamily: 'Inter'
+  },
   description: {
     fontSize: 14,
     color: '#666666',

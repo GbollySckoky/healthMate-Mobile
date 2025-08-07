@@ -5,10 +5,11 @@ import NumberInput from '@/constant/Input/NumberInput'
 import { useState } from 'react'
 import DateInput from '@/constant/Input/DateInput'
 import CustomCalendar from '@/constant/calendar/CustomCalendar'
+import { SubmitButton } from '@/constant/typography/Typography'
 
 type BloodPressureInputType = Record<string, string>
 
-const ModalInput = () => {
+const BloodPressureModal = () => {
   const {date, time, topNumber, lastNumber} = bloodPressureData
   const [inputValue, setInputValue] = useState<BloodPressureInputType>({
     date: new Date().toISOString().split('T')[0], // Initialize with today's date in YYYY-MM-DD format
@@ -17,7 +18,9 @@ const ModalInput = () => {
     lastNumber: ''
   })
   const [showDatePicker, setShowDatePicker] = useState(false)
-  
+  const handleClick = () => {
+    
+  }
   console.log('📊 Input Values:', inputValue)
 
   const handleChange = (key: string, value: string) => {
@@ -77,30 +80,11 @@ const ModalInput = () => {
         }}
       />
 
-      <Pressable style={styles.closeBtn} >
-        <Text style={styles.closeBtnText}>Save Reading</Text>
-      </Pressable>
+      <SubmitButton _fn={handleClick}>
+        Save Reading
+      </SubmitButton>
     </View>
   )
 }
 
-export default ModalInput
-
-const styles = StyleSheet.create({
-    closeBtn: {
-    width: '95%',
-    borderRadius: 10,
-    backgroundColor: '#C11574',
-    padding: 13,
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: 'auto',
-    marginVertical: 15
-  },
-  closeBtnText: {
-    fontSize: 14,
-    color: 'white',
-    fontWeight: '600',
-    fontFamily: 'Inter'
-  },
-})
+export default BloodPressureModal
