@@ -40,7 +40,7 @@ const MoodModal = () => {
             ...prev,
             [key]: {
                 selectedMood: value,
-                selectedEmoji: Boolean(emoji)
+                selectedEmoji: Boolean(emoji) //coverts a string to a boolean if the stirng is empty is false 
             }
         }))
     }

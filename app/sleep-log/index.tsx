@@ -10,6 +10,11 @@ import { ScreenOverFlowLayout } from '@/constant/scrollView/ScreenOverFlowLayout
 import { Card, CardAmount, CardText, DetailsContainer, SubTitle, Wrapper } from '@/constant/typography/Typography';
 import { sleepLogHistory } from '../data';
 import { Button } from '@/constant/button/Button';
+import SleepModal from './_components/SleepModal';
+import { useModal } from '@/context/ModalContext';
+
+
+
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -51,6 +56,7 @@ const handleClick = () => {
 }
 
 export default function MyBarChart() {
+  const {openModal} = useModal()
   return (
     <ScreenLayout>
       <NavHeader 
@@ -132,7 +138,13 @@ export default function MyBarChart() {
           </View>
         </Wrapper>
       </ScreenOverFlowLayout>
-      <Button _fn={handleClick}>
+      <Button _fn={() =>
+         openModal(<SleepModal />, {
+          title: 'Log Your Sleep',
+          description: '',
+          onClose: () => {},
+          // btnText: 'Save Reading'
+        })}>
         Log New Sleep
       </Button>
     </ScreenLayout>
