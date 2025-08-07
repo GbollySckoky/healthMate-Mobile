@@ -4,6 +4,7 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useCallback, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ModalProvider } from '@/context/ModalContext';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -32,11 +33,13 @@ export default function RootLayout() {
   return (
     <SafeAreaView style={{ flex: 1 }} onLayout={onLayoutRootView}>
       <StatusBar style="light" />
+      <ModalProvider>
       <Stack
         screenOptions={{
           headerShown: false,
         }}
       />
+      </ModalProvider>
     </SafeAreaView>
   );
 }

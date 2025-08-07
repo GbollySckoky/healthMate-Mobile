@@ -1,15 +1,15 @@
 import React, { useCallback, useState } from 'react'
 
-const useDisplayModal = () => {
+const useDisplay = () => {
     const [openModal, setOpenModal] = useState(false)
 
-    const handleOpenModal = useCallback(() => {
+    const handleDisplay = useCallback(() => {
         setOpenModal((prev) => !prev)
     },[])
   return {
     openModal,
-    handleOpenModal
+    handleDisplay
   }
 }
 
-export default useDisplayModal
+export default useDisplay

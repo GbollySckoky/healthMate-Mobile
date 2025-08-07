@@ -10,12 +10,15 @@ import { recenntReadings } from '../data';
 import { LineChart } from 'react-native-chart-kit';
 import { useState } from 'react';
 import { Button } from '@/constant/button/Button';
+import useDisplayModal from '@/hooks/useDisplay';
+import ModalInput from './ModalInput';
+import { useModal } from '@/context/ModalContext';
 
 
 const { width } = Dimensions.get('window');
 
 const BloodPressure = () => {
-
+  const {openModal} = useModal()
     const [readings, setReadings] = useState([
         { date: 'Jun 20', systolic: 82, diastolic: 62 },
         { date: 'Jun 21', systolic: 95, diastolic: 75 },
@@ -156,12 +159,23 @@ const BloodPressure = () => {
               )
             })}
         </Card>
+        
         </View>
+        {/* Modal */}
+      
+        
         </Wrapper>
       </ScreenOverFlowLayout>
-      <Button _fn={handleClick}>
+      <Button _fn={() =>
+         openModal(<ModalInput />, {
+          title: 'Add Blood Pressure Reading',
+          description: '',
+          onClose: () => {},
+          // btnText: 'Save Reading'
+        })}>
         Add New Reading
       </Button>
+      
     </ScreenLayout>
   )
 }
