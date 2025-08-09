@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { View } from 'react-native'
-import DateInput from '@/constant/Input/DateInput'
+import DateInput from '@/components/Input/DateInput'
 import { weightData } from './data'
-import CustomCalendar from '@/constant/calendar/CustomCalendar'
-import DecimalInput from '@/constant/Input/DecimalInput'
-import { SubmitButton } from '@/constant/typography/Typography'
+import CustomCalendar from '@/components/calendar/CustomCalendar'
+import DecimalInput from '@/components/Input/DecimalInput'
+import { SubmitButton } from '@/components/typography/Typography'
 
 
 

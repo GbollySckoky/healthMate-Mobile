@@ -1,16 +1,40 @@
+import { Texts, Title, Wrapper } from '@/components/typography/Typography'
 import React from 'react'
-import { StyleSheet  } from 'react-native'
-import HomePage from '../home'
+import { View, StyleSheet  } from 'react-native'
+import AppointmentCard from '@/app/home/_components/Appointment'
+import Reminder from '@/app/home/_components/Reminder'
+import Streak from '@/app/home/_components/Streak'
+import Activities from '@/app/home/_components/Activities';
+import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
 
 
-const Home = () => {
+const HomePage = () => {
 
   return (
-    <HomePage />
+    <ScreenOverFlowLayout>
+      <Wrapper>
+        <View style={{borderBottomWidth: 1, borderColor: '#F2F2F2', paddingBottom: 20}}>
+          <Title>
+            Good Evening, Sarah 👋
+          </Title>
+          <Texts>
+            Let's take a step toward a healthier you today.
+          </Texts>
+        </View>
+          {/* Your Activities */}
+            <Activities />
+          {/* Recent Appointments */}
+            <AppointmentCard />
+          {/* Streak */}
+            <Streak />
+          {/* Reminder */}
+          <Reminder />
+      </Wrapper>
+    </ScreenOverFlowLayout>
   )
 }
 
-export default Home
+export default HomePage
 
 export const style = StyleSheet.create({
   Flex: {

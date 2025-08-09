@@ -1,11 +1,11 @@
 import React from 'react'
 import { View  } from 'react-native'
 import { bloodPressureData } from './data'
-import NumberInput from '@/constant/Input/NumberInput'
+import NumberInput from '@/components/Input/NumberInput'
 import { useState } from 'react'
-import DateInput from '@/constant/Input/DateInput'
-import CustomCalendar from '@/constant/calendar/CustomCalendar'
-import { SubmitButton } from '@/constant/typography/Typography'
+import DateInput from '@/components/Input/DateInput'
+import CustomCalendar from '@/components/calendar/CustomCalendar'
+import { SubmitButton } from '@/components/typography/Typography'
 
 type BloodPressureInputType = Record<string, string>
 

@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { MoodData } from './data'
 import { View, StyleSheet, Text, Pressable } from 'react-native'
-import TextAreaInput from '@/constant/Input/TextAreaInput'
-import { SubmitButton } from '@/constant/typography/Typography'
+import TextAreaInput from '@/components/Input/TextAreaInput'
+import { SubmitButton } from '@/components/typography/Typography'
 
 type MoodInputType = {
     description?: string;

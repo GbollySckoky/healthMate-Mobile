@@ -6,7 +6,7 @@ export const ScreenOverFlowLayout = ({children}: {children: React.ReactNode}) =>
         <ScrollView 
        contentContainerStyle={{ flexGrow: 1 }} 
        showsVerticalScrollIndicator={false} 
-    //    style={{backgroundColor: '#ffffff'}}
+       style={{backgroundColor: '#ffffff'}}
        > 
        {children}
        </ScrollView>

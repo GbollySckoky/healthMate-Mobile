@@ -1,9 +1,9 @@
 import React, {useState} from 'react'
-import CustomCalendar from '@/constant/calendar/CustomCalendar'
+import CustomCalendar from '@/components/calendar/CustomCalendar'
 import { Pressable, Text, View, StyleSheet } from 'react-native'
 import { sleepExperienceData, sleepData } from './data'
-import DateInput from '@/constant/Input/DateInput'
-import { SubmitButton } from '@/constant/typography/Typography'
+import DateInput from '@/components/Input/DateInput'
+import { SubmitButton } from '@/components/typography/Typography'
 
 type SleepQuality = {
   selectedMood: string;

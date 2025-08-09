@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { View, Text } from 'react-native'
-import NumberInput from '@/constant/Input/NumberInput'
+import NumberInput from '@/components/Input/NumberInput'
 import {MedicationData} from './data'
-import Input from '@/constant/Input/Input'
-import { SubmitButton } from '@/constant/typography/Typography'
+import Input from '@/components/Input/Input'
+import { SubmitButton } from '@/components/typography/Typography'
 
 
 type MedicationInputType = Record<string, string>

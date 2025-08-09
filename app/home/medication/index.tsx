@@ -1,13 +1,13 @@
-import { NavHeader } from '@/constant/Header/Header';
-import { ScreenLayout } from '@/constant/ScreenLayout/ScreenLayout';
-import { ScreenOverFlowLayout } from '@/constant/scrollView/ScreenOverFlowLayout';
-import { Card, CardAmount, CardText, DetailsContainer, SubTitle, Wrapper } from '@/constant/typography/Typography';
+import { NavHeader } from '@/components/Header/Header';
+import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout';
+import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
+import { Card, CardAmount, CardText, DetailsContainer, SubTitle, Wrapper } from '@/components/typography/Typography';
 import { router } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { StyleSheet, Text, View } from 'react-native';
 import { medicationDosage } from '../../data';
-import { Button } from '@/constant/button/Button';
+import { Button } from '@/components/button/Button';
 import MedicationModal from './MedicationModal';
 import { useModal } from '@/context/ModalContext';
 
