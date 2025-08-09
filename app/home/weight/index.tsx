@@ -1,7 +1,7 @@
-import { NavHeader } from '@/constant/Header/Header';
-import { ScreenLayout } from '@/constant/ScreenLayout/ScreenLayout';
-import { ScreenOverFlowLayout } from '@/constant/scrollView/ScreenOverFlowLayout';
-import { Card, CardAmount, CardText, DetailsContainer, SubTitle, Wrapper } from '@/constant/typography/Typography';
+import { NavHeader } from '@/components/Header/Header';
+import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout';
+import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
+import { Card, CardAmount, CardText, DetailsContainer, SubTitle, Wrapper } from '@/components/typography/Typography';
 import { router } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -11,7 +11,7 @@ import { useState } from 'react';
 const { width } = Dimensions.get('window');
 import { recentWeight } from '../../data';
 import Feather from '@expo/vector-icons/Feather';
-import { Button } from '@/constant/button/Button';
+import { Button } from '@/components/button/Button';
 import WeightModal from './_component/WeightModal';
 import { useModal } from '@/context/ModalContext';
 

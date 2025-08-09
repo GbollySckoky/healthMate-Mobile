@@ -18,6 +18,6 @@ export const style = StyleSheet.create({
       alignContent:'center',
       marginTop: 5,
       marginBottom: 2,
-      gap:5
+      gap:15
     },
 })

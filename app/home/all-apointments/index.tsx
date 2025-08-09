@@ -1,14 +1,14 @@
 import React from 'react'
 import { View, Text,StyleSheet, TouchableOpacity } from 'react-native'
 import { allAppointmentData } from '../../data'
-import { SubTitle, Texts, Wrapper } from '@/constant/typography/Typography'
+import { SubTitle, Texts, Wrapper } from '@/components/typography/Typography'
 import Feather from '@expo/vector-icons/Feather';
 import { Image } from 'expo-image';
-import { NavHeader } from '@/constant/Header/Header';
+import { NavHeader } from '@/components/Header/Header';
 import { router } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
-import { ScreenOverFlowLayout } from '@/constant/scrollView/ScreenOverFlowLayout';
-import { ScreenLayout } from '@/constant/ScreenLayout/ScreenLayout';
+import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
+import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout';
 
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';

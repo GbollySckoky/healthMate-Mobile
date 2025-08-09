@@ -1,13 +1,13 @@
-import { NavHeader } from '@/constant/Header/Header'
+import { NavHeader } from '@/components/Header/Header'
 import { useRouter } from 'expo-router'
 import React from 'react'
 import { Text, View } from 'react-native'
 import Entypo from '@expo/vector-icons/Entypo';
 import { useNavigation } from '@react-navigation/native';
 import { healthOverview } from '../data';
-import { ScreenLayout } from '@/constant/ScreenLayout/ScreenLayout';
-import { ScreenOverFlowLayout } from '@/constant/scrollView/ScreenOverFlowLayout';
-import { Wrapper } from '@/constant/typography/Typography';
+import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout';
+import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
+import { Wrapper } from '@/components/typography/Typography';
 import HealthOverview from './_components/HealthOverview';
 
 const TrackPage = () => {

@@ -1,15 +1,15 @@
 import React from 'react';
 import { BarChart } from 'react-native-chart-kit';
 import { StyleSheet, View, Text, Dimensions  } from 'react-native';
-import { NavHeader } from '@/constant/Header/Header';
+import { NavHeader } from '@/components/Header/Header';
 import { router } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { ScreenLayout } from '@/constant/ScreenLayout/ScreenLayout';
-import { ScreenOverFlowLayout } from '@/constant/scrollView/ScreenOverFlowLayout';
-import { Card, CardAmount, CardText, DetailsContainer, SubTitle, Wrapper } from '@/constant/typography/Typography';
+import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout';
+import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
+import { Card, CardAmount, CardText, DetailsContainer, SubTitle, Wrapper } from '@/components/typography/Typography';
 import { sleepLogHistory } from '../../data';
-import { Button } from '@/constant/button/Button';
+import { Button } from '@/components/button/Button';
 import SleepModal from './_components/SleepModal';
 import { useModal } from '@/context/ModalContext';
 

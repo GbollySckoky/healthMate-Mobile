@@ -1,8 +1,8 @@
 import { Text, View, StyleSheet, Pressable } from 'react-native'
 import { useCallback } from 'react'
 import { healthOverview, trackData } from '../../data'
-import { ScrollViewHorizontal } from '@/constant/scrollView/ScrollViewHorizontal'
-import { Card, CardText, CardTitle, MinCard, Status, SubTitle, Texts, Title, Wrapper } from '@/constant/typography/Typography'
+import { ScrollViewHorizontal } from '@/components/scrollView/ScrollViewHorizontal'
+import { Card, CardText, CardTitle, MinCard, Status, SubTitle, Texts, Title, Wrapper } from '@/components/typography/Typography'
 import { useLinkTo } from '@react-navigation/native'
 
 const HealthOverview = () => {
