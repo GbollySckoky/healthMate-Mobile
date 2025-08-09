@@ -6,7 +6,7 @@ import { router } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
-import { recenntReadings } from '../data';
+import { recenntReadings } from '../../data';
 import { LineChart } from 'react-native-chart-kit';
 import { useState } from 'react';
 import { Button } from '@/constant/button/Button';

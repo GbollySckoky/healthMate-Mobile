@@ -35,15 +35,15 @@ const HomePage = () => {
   }
 
   const handleAppointmentPress = () => {
-    router.push(`/appointment/${appointmentData.id}`)
+    router.push(`/home/appointment/${appointmentData.id}`)
   }
 
   const handleSeeAllAppointments = () => {
-    router.push('/all-apointments')
+    router.push('/home/all-apointments')
   }
   
   const handleViewAllReminders = () => {
-    router.push('/all-reminders')
+    router.push('/home/all-reminders')
   }
   const linkTo = useLinkTo();
   return (
@@ -231,6 +231,7 @@ export const style = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
+    width: '100%'
   },
   SubCard: {
     padding: 15,

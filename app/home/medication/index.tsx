@@ -6,7 +6,7 @@ import { router } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { StyleSheet, Text, View } from 'react-native';
-import { medicationDosage } from '../data';
+import { medicationDosage } from '../../data';
 import { Button } from '@/constant/button/Button';
 import MedicationModal from './MedicationModal';
 import { useModal } from '@/context/ModalContext';

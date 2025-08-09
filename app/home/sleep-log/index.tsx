@@ -8,7 +8,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { ScreenLayout } from '@/constant/ScreenLayout/ScreenLayout';
 import { ScreenOverFlowLayout } from '@/constant/scrollView/ScreenOverFlowLayout';
 import { Card, CardAmount, CardText, DetailsContainer, SubTitle, Wrapper } from '@/constant/typography/Typography';
-import { sleepLogHistory } from '../data';
+import { sleepLogHistory } from '../../data';
 import { Button } from '@/constant/button/Button';
 import SleepModal from './_components/SleepModal';
 import { useModal } from '@/context/ModalContext';

@@ -9,7 +9,7 @@ import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import { useState } from 'react';
 const { width } = Dimensions.get('window');
-import { recentWeight } from '../data';
+import { recentWeight } from '../../data';
 import Feather from '@expo/vector-icons/Feather';
 import { Button } from '@/constant/button/Button';
 import WeightModal from './_component/WeightModal';

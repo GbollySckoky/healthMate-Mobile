@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Pressable, Text, StyleSheet } from 'react-native'
+import { View  } from 'react-native'
 import { bloodPressureData } from './data'
 import NumberInput from '@/constant/Input/NumberInput'
 import { useState } from 'react'

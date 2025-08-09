@@ -1,46 +1,81 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import Feather from '@expo/vector-icons/Feather';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
-
-export default function TabsLayout () {
-    return(
-        <Tabs screenOptions={{headerShown: false}} >  
+export default function TabsLayout() {
+    return (
+        <Tabs 
+            screenOptions={{
+                headerShown: false,
+                tabBarActiveTintColor: '#C11574',
+                tabBarInactiveTintColor: '#6B7280',
+                tabBarStyle: {
+                    backgroundColor: '#FFFFFF',
+                    borderTopColor: '#E5E7EB',
+                    height: 60,
+                    paddingBottom: 8,
+                    paddingTop: 8,
+                },
+                tabBarLabelStyle: {
+                    fontSize: 12,
+                    fontWeight: '500',
+                }
+            }}
+        >  
             <Tabs.Screen
-                name="home" // Corresponds to app/(tabs)/home.tsx
+                name="home"
                 options={{
-                title: "Home",
-                tabBarIcon: ({ color, size }) => (
-                    <Ionicons name="home-outline" color={color} size={size} />
-                ),
+                    title: "Home",
+                    tabBarIcon: ({ color, size, focused }) => (
+                        <Feather 
+                            name={focused ? "home" : "home"} 
+                            size={size} 
+                            color={color} 
+                        />
+                    ),
                 }}
             />
             <Tabs.Screen
-                name="track" // Corresponds to app/(tabs)/home.tsx
+                name="track"
                 options={{
-                title: "Track",
-                tabBarIcon: ({ color, size }) => (
-                    <Ionicons name="home-outline" color={color} size={size} />
-                ),
+                    title: "Track",
+                    tabBarIcon: ({ color, size, focused }) => (
+                        <Ionicons 
+                            name={focused ? "analytics" : "analytics-outline"} 
+                            color={color} 
+                            size={size} 
+                        />
+                    ),
                 }}
             />
             <Tabs.Screen
-                name="consultation" // Corresponds to app/(tabs)/home.tsx
+                name="consultation"
                 options={{
-                title: "Track",
-                tabBarIcon: ({ color, size }) => (
-                    <Ionicons name="home-outline" color={color} size={size} />
-                ),
+                    title: "Consult",
+                    tabBarIcon: ({ color, size, focused }) => (
+                        <FontAwesome6 
+                            name={focused ? "calendar-check" : "calendar"} 
+                            size={size} 
+                            color={color} 
+                        />
+                    ),
                 }}
             />
             <Tabs.Screen
-                name="settings" // Corresponds to app/(tabs)/settings.tsx
+                name="messages"
                 options={{
-                title: "Settings",
-                tabBarIcon: ({ color, size }) => (
-                    <Ionicons name="settings-outline" color={color} size={size} />
-                ),
+                    title: "Messages",
+                    tabBarIcon: ({ color, size, focused }) => (
+                        <MaterialCommunityIcons 
+                            name={focused ? "message-text" : "message-text-outline"} 
+                            size={size} 
+                            color={color} 
+                        />
+                    ),
                 }}
             />
         </Tabs>
-    )
-} 
+    );
+}

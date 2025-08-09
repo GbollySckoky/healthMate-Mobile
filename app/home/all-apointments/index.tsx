@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text,StyleSheet, TouchableOpacity } from 'react-native'
-import { allAppointmentData } from '../data'
+import { allAppointmentData } from '../../data'
 import { SubTitle, Texts, Wrapper } from '@/constant/typography/Typography'
 import Feather from '@expo/vector-icons/Feather';
 import { Image } from 'expo-image';

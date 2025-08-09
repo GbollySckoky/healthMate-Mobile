@@ -6,7 +6,7 @@ import {router} from 'expo-router'
 import { ScreenOverFlowLayout } from '@/constant/scrollView/ScreenOverFlowLayout';
 import { Wrapper } from '@/constant/typography/Typography';
 import RadioInput from '@/constant/Input/RadioInput'
-import { trackData } from '../data';
+import { trackData } from '../../data';
 import { ScreenLayout } from '@/constant/ScreenLayout/ScreenLayout';
 
 

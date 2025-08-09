@@ -8,7 +8,7 @@ import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import { useState } from 'react';
 const { width } = Dimensions.get('window');
-import { recentMood } from '../data';
+import { recentMood } from '../../data';
 import { Button } from '@/constant/button/Button';
 import MoodModal from './_components/MoodModal';
 import { useModal } from '@/context/ModalContext';

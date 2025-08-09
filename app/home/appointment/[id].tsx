@@ -10,7 +10,7 @@ import {NavHeader}  from '@/constant/Header/Header';
 
 const AppointmentDetails = () => {
     const {id} = useLocalSearchParams()
-    const profile = require(('../../assets/images/Mobile.png'))
+    const profile = require(('../../../assets/images/Mobile.png'))
     const data = [
       {
         text: 'I am a General Practitioner with over 8years experience. I help patients manage chronic migraines and sleep issues with comprehensive care approaches.',
