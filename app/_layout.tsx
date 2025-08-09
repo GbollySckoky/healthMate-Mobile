@@ -2,19 +2,16 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import { useCallback } from 'react';
-import { View } from 'react-native';
+import { useCallback, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import '../my-expo-app/global.css'
-
-
+import { ModalProvider } from '@/context/ModalContext';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     'Libre-Franklin': require('../assets/fonts/LibreFranklin-Regular.ttf'),
-    'Inter': require('../assets/fonts/Inter_28pt-Regular.ttf')
+    'Inter': require('../assets/fonts/Inter_28pt-Regular.ttf'),
   });
 
   const onLayoutRootView = useCallback(async () => {
@@ -23,19 +20,26 @@ export default function RootLayout() {
     }
   }, [fontsLoaded]);
 
-  if (!fontsLoaded) return null;
+  useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null; // Show nothing while fonts load
+  }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 1 }} 
-      onLayout={onLayoutRootView}
-      >
-        <StatusBar style="light" />
-          <Stack>
-            <Stack.Screen name="index" options={{ headerShown: false }} />
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          </Stack>
-      </View>
+    <SafeAreaView style={{ flex: 1 }} onLayout={onLayoutRootView}>
+      <StatusBar style="light" />
+      <ModalProvider>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+        }}
+      />
+      </ModalProvider>
     </SafeAreaView>
   );
 }
