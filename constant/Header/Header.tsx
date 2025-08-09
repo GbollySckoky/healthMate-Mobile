@@ -1,7 +1,6 @@
 import { ReactElement } from "react"
-import { View, Text, Pressable, StyleSheet} from "react-native"
-
-
+import { View, Text, Pressable, StyleSheet} from "react-native" 
+import { Title } from "../typography/Typography"
 
 export const NavHeader = (
     {title, _goBack, text,
@@ -9,14 +8,16 @@ export const NavHeader = (
     {title: string, text?:string, _goBack: () => void,
     _optionFn?: () => void,
     backIcon: ReactElement, 
-    optionIcon?: ReactElement}) => (
+    optionIcon?: ReactElement}) => {
+    
+    return(
     <View style={styles.container}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Pressable onPress={_goBack}>
                 <Text>{backIcon}</Text>
             </Pressable>
             <View style={{paddingLeft: 10}}>
-                <Text>{title}</Text>
+                <Title>{title}</Title>
                 {text && <Text style={{paddingVertical: 2}}>{text}</Text> }
             </View>
         </View>
@@ -25,6 +26,7 @@ export const NavHeader = (
         </Pressable>
     </View>
 )
+}
 
 export const styles = StyleSheet.create({
     container:{
@@ -33,9 +35,9 @@ export const styles = StyleSheet.create({
         justifyContent: 'space-between', 
         borderBottomWidth: 1, 
         borderColor: '#f2f2f2', 
-        paddingVertical: 16, 
+        paddingVertical: 20, 
         paddingHorizontal: 8, 
         backgroundColor: 'white',
-        // flex: 1
+        // paddingVertical: 10
     }
 })

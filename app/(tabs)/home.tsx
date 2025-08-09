@@ -1,16 +1,12 @@
 import { Card, CardText, CardTitle, MinCard, Status, SubTitle, Texts, Title, Wrapper } from '@/constant/typography/Typography'
 import React from 'react'
-import { Text, View, ScrollView, TouchableOpacity, Pressable  } from 'react-native'
+import { Text, View, ScrollView, TouchableOpacity, Pressable, StyleSheet  } from 'react-native'
 import { healthOverview,trackData } from '../data'
-import { StyleSheet } from 'react-native'
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Image } from 'expo-image'
-import Entypo from '@expo/vector-icons/Entypo';
 import Feather from '@expo/vector-icons/Feather';
 import RadioInput from '@/constant/Input/RadioInput'
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { router } from 'expo-router'
-import { Link } from '@react-navigation/native'
 import { useLinkTo } from '@react-navigation/native';
 import { ScrollViewHorizontal } from '@/constant/scrollView/ScrollViewHorizontal'
 
@@ -68,22 +64,22 @@ const HomePage = () => {
                 const {title, id,text, value, icon, url} = health;
                 return(
                   <Pressable onPress={() => linkTo(url)} key={id} >
-                  <MinCard  style={style.MinCard} >
-                    <Text style={{paddingBottom: 15}}>
-                      {icon}
-                    </Text>
-                    <CardTitle>
-                      {title}
-                    </CardTitle>
-                    <View style={{paddingTop: 4}}>
-                      <Title>
-                        {value}
-                      </Title>
-                      <CardText>
-                        {text}
-                      </CardText>
-                    </View>
-                  </MinCard>
+                    <MinCard  style={style.MinCard} >
+                      <Text style={{paddingBottom: 15}}>
+                        {icon}
+                      </Text>
+                      <CardTitle>
+                        {title}
+                      </CardTitle>
+                      <View style={{paddingTop: 4}}>
+                        <Title>
+                          {value}
+                        </Title>
+                        <CardText>
+                          {text}
+                        </CardText>
+                      </View>
+                    </MinCard>
                   </Pressable>
                 )
               })}
@@ -231,7 +227,7 @@ export const style = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
-    width: '100%'
+    width: '100%',
   },
   SubCard: {
     padding: 15,

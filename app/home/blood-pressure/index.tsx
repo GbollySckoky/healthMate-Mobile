@@ -12,12 +12,13 @@ import { useState } from 'react';
 import { Button } from '@/constant/button/Button';
 import BloodPressureModal  from './BloodPressureModal';
 import { useModal } from '@/context/ModalContext';
-
+import { useNavigation } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 
 const BloodPressure = () => {
   const {openModal} = useModal()
+  const navigate = useNavigation()
   const [readings, setReadings] = useState([
       { date: 'Jun 20', systolic: 82, diastolic: 62 },
       { date: 'Jun 21', systolic: 95, diastolic: 75 },
@@ -71,7 +72,7 @@ const BloodPressure = () => {
     <ScreenLayout>
     <NavHeader 
       title='Blood Pressure Tracker'
-      _goBack={() => router.push('/(tabs)/home')}
+      _goBack={() => router.replace('/(tabs)/home')}
       backIcon={<Entypo name="chevron-small-left" size={24} color="black"   />}
       text="Track your readings to monitor your heart health"
     />
@@ -161,7 +162,7 @@ const BloodPressure = () => {
       
         
         </Wrapper>
-      </ScreenOverFlowLayout>
+    </ScreenOverFlowLayout>
       <Button _fn={() =>
          openModal(<BloodPressureModal />, {
           title: 'Add Blood Pressure Reading',

@@ -73,7 +73,7 @@ const Mood = () => {
   return (
     <ScreenLayout>
     <NavHeader 
-      title='Track Your Weight'
+      title='How Are You Feeling Today?'
       _goBack={() => router.push('/(tabs)/home')}
       backIcon={<Entypo name="chevron-small-left" size={24} color="black"   />}
       text="Tracking your mood helps you understand your...."
