@@ -12,13 +12,11 @@ import { useState } from 'react';
 import { Button } from '@/components/button/Button';
 import BloodPressureModal  from './BloodPressureModal';
 import { useModal } from '@/context/ModalContext';
-import { useNavigation } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 
 const BloodPressure = () => {
   const {openModal} = useModal()
-  const navigate = useNavigation()
   const [readings, setReadings] = useState([
       { date: 'Jun 20', systolic: 82, diastolic: 62 },
       { date: 'Jun 21', systolic: 95, diastolic: 75 },
@@ -95,7 +93,7 @@ const BloodPressure = () => {
         </DetailsContainer>
         {/* Line Chart */}
         <View style={styles.chartContainer}>
-            <Text style={styles.title}>BP Trends</Text>
+            <SubTitle>BP Trends</SubTitle>
             <LineChart
                 data={chartData}
                 width={width - 48} // Adjust for card padding
@@ -142,25 +140,21 @@ const BloodPressure = () => {
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <Text style={{borderColor: '#f2f2f2', borderWidth: 1, padding: 6, borderRadius: 5}}> {icon} </Text>
                       <View style={{paddingLeft: 16}}>
-                        <Text style={{fontWeight: '500', fontSize: 14, color: '#414651', paddingTop: 2}}>{bloodRate}</Text>
-                        <Text style={{fontWeight: '400', fontSize: 12, color: '#717680', paddingTop: 2}}>{date} at {time}</Text>
+                        <Text style={{fontWeight: '500', fontSize: 14, color: '#414651', paddingTop: 2,fontFamily: 'Lato_400Regular',}}>{bloodRate}</Text>
+                        <Text style={{fontWeight: '400', fontSize: 12, color: '#717680', paddingTop: 2, fontFamily: 'Lato_400Regular'}}>{date} at {time}</Text>
                       </View>
                     </View>
                     <Text 
                       style={{backgroundColor: `${status === 'Normal' &&  '#ECFDF3' || status === 'High' && '#FEF3F2'}`,
                       color: `${status === 'Normal' && '#027A48' ||  status === 'High' && '#B42318'}`,
-                      paddingHorizontal: 15, paddingVertical: 7, borderRadius: 30, fontFamily: 'Inter'   }}>
+                      paddingHorizontal: 15, paddingVertical: 7, borderRadius: 30, fontFamily: 'Inter_500Medium'   }}>
                         {status}</Text>
                   </View>
                 </View>
               )
             })}
         </Card>
-        
         </View>
-        {/* Modal */}
-      
-        
         </Wrapper>
     </ScreenOverFlowLayout>
       <Button _fn={() =>
@@ -193,7 +187,7 @@ const styles = StyleSheet.create({
         borderRadius: 50, 
         paddingHorizontal: 10, 
         paddingVertical: 5, 
-        fontFamily: 'Inter', 
+        fontFamily: 'Inter_500Medium', 
         marginTop: 7
     },
     lastItem: {
@@ -230,15 +224,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#f2f2f2'
     },
-    title: {
-        fontSize: 14,
-        fontWeight: '600',
-        color: '#333',
-        marginBottom: 20,
-        textAlign: 'left',
-        paddingTop: 10,
-        fontFamily: 'Libre-Franklin'
-    },
+
     chart: {
         marginVertical: 8,
         borderRadius: 8,

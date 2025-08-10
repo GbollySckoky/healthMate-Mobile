@@ -7,7 +7,7 @@ export default function HomeScreen() {
   return (
       <View>
   
-          <View>
+          <View className='bg-red-900'>
         <Link href='/(tabs)/home'>
         Homes
         </Link>

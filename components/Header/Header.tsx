@@ -18,7 +18,10 @@ export const NavHeader = (
             </Pressable>
             <View style={{paddingLeft: 10}}>
                 <Title>{title}</Title>
-                {text && <Text style={{paddingVertical: 2}}>{text}</Text> }
+                {text && <Text 
+                    style={{paddingVertical: 2, fontFamily: 'LibreFranklin_400Regular', fontSize: 12, fontWeight: '400'}}>
+                    {text}
+                </Text> }
             </View>
         </View>
         <Pressable onPress={_optionFn}>

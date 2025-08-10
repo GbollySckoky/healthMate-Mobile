@@ -1,0 +1,133 @@
+import { Card, LatoText, SubTitle, Texts } from '@/components/typography/Typography'
+import { colors } from '@/lib/colors'
+import { Image } from 'expo-image'
+import React from 'react'
+import { View, Text, StyleSheet } from 'react-native'
+import EvilIcons from '@expo/vector-icons/EvilIcons';
+import Fontisto from '@expo/vector-icons/Fontisto';
+import Feather from '@expo/vector-icons/Feather';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import Entypo from '@expo/vector-icons/Entypo';
+import { Link } from 'expo-router'
+
+
+
+const Profile = () => {
+    const profileImage = require('../../../assets/images/Ellipse 165.png')
+    const profileData = [
+        {
+            title: 'Name',
+            value:'Sarah Daniels',
+            id: 1,
+            icon: <EvilIcons name="user" size={24} color={colors.lightRed} />,
+            next: <Entypo name="chevron-small-right" size={24} color={colors.lightBlack} />
+        },
+        {
+            title: 'Email',
+            value:'gbolly@gmail.com',
+            id: 2,
+            icon: <Fontisto name="email" size={20} color={colors.lightRed} />
+        },
+        {
+            title: 'Phone Number',
+            value:'+2349076536764',
+            id: 3,
+            icon: <Feather name="phone" size={20} color={colors.lightRed} />
+        },
+        {
+            title: 'Date Of Birth',
+            value:'Jan 20, 1996',
+            id: 4,
+            icon: <Feather name="calendar" size={20} color={colors.lightRed} />
+        },
+        {
+            title: 'My Health Info',
+            id: 5,
+            icon: <MaterialIcons name="medical-services" size={20} color={colors.lightRed} />
+        },
+        {
+            title: 'My Reminders',
+            id: 6,
+            icon: <Ionicons name="notifications-outline" size={20} color={colors.lightRed} />
+        },
+    ]
+
+
+
+  return (
+    <View>
+        <View>
+            <Image 
+                source={profileImage}
+                alt='profileimage'
+            />
+            <SubTitle>Dr James Uche</SubTitle>
+            <Text style={{color: colors.purple,fontWeight: '400', fontSize: 12, marginTop: 5}}>38 years</Text>
+        </View>
+        {/* Account Info */}
+        <View>
+            <LatoText>Account Information</LatoText>
+            <Card>
+                {profileData.slice(0,4).map((profile) => {
+                    const {title, value, id, icon, next } = profile;
+                    const isLastItem = id  === profileData.length - 1;
+                    return(
+                        <View 
+                            key={id} 
+                            style={[isLastItem && styles.lastItem, styles.container]}>
+                            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                                <View style={{flexDirection: 'row'}}>
+                                    <Text>{icon}</Text>
+                                    <View style={{marginLeft: 10}}>
+                                        <Text style={{fontFamily: 'Lato_700Bold', fontWeight: '600', color: colors.lightBlack}}>{title}</Text>
+                                        <Text style={{fontFamily: 'Lato_400Regular', fontWeight: '400', color: colors.gray, paddingTop:3}}>{value}</Text>
+                                    </View>
+                                </View>
+                                <Link href={'/(profile)/edit-name'}>{next ? next : null} </Link>
+                            </View>
+                        </View>
+                    )
+                })}
+            </Card>
+        </View>
+        {/* Other */}
+        <View>
+            <LatoText>Other</LatoText>
+            <Card>
+                {profileData.slice(4,6).map((profile) => {
+                    const {title, id, icon } = profile;
+                    const isLastItem = id  === profileData.length - 1;
+                    return(
+                        <View 
+                            key={id} 
+                            style={[isLastItem && styles.lastItem, styles.container]}>
+                            <View style={{flexDirection: 'row'}}>
+                                <Text>{icon}</Text>
+                                <View style={{marginLeft: 10}}>
+                                    <Text style={{fontFamily: 'Lato_700Bold', fontWeight: '600', color: colors.lightBlack}}>{title}</Text>
+                                    {/* <Text style={{fontFamily: 'Lato_400Regular', fontWeight: '400', color: colors.gray, paddingTop:3}}>{value}</Text> */}
+                                </View>
+                            </View>
+                        </View>
+                    )
+                })}
+            </Card>
+        </View>
+    </View>
+  )
+}
+
+export default Profile
+
+const styles = StyleSheet.create({
+    lastItem: {
+        borderBottomWidth: 0, // Remove border from last item
+    },
+    container:{
+        marginBottom: 15, 
+        borderBottomWidth: 1, 
+        borderBottomColor: colors.lightGray,
+        paddingBottom: 20,
+    },
+})

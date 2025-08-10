@@ -107,7 +107,7 @@ const Weight = () => {
         </Card>
         {/* Chart */}
         <View style={styles.chartContainer}>
-            <Text style={styles.title}>Weight Trends</Text>
+            <SubTitle>Weight Trends</SubTitle>
             <LineChart
                 data={chartData}
                 width={width - 48} // Adjust for card padding
@@ -142,8 +142,8 @@ const Weight = () => {
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <Text style={{borderColor: '#f2f2f2', borderWidth: 1, padding: 6, borderRadius: 5}}> {icon} </Text>
                       <View style={{paddingLeft: 16}}>
-                      <Text style={{fontWeight: 500, fontSize: 14, fontFamily: 'Libre-Franklin'}}>{weight}</Text>
-                        <Text style={{fontWeight: '400', fontSize: 12, color: '#717680', paddingTop: 2, }}>{date} at {time}</Text>
+                      <Text style={{fontWeight: 500, fontSize: 14, fontFamily: 'Lato_400Regular'}}>{weight}</Text>
+                        <Text style={{fontWeight: '400', fontSize: 12, color: '#717680', paddingTop: 2, fontFamily: 'Lato_400Regular' }}>{date} at {time}</Text>
                       </View>
                     </View>
                   </View>
@@ -232,6 +232,7 @@ const styles = StyleSheet.create({
     text:{
         fontWeight: 400,
         fontSize: 12,
-        marginBottom: 4
+        marginBottom: 4,
+        fontFamily: 'Lato_400Regular'
     }
 })

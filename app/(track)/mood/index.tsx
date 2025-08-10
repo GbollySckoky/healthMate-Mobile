@@ -94,7 +94,7 @@ const Mood = () => {
         </DetailsContainer>
         {/* Chart */}
         <View style={styles.chartContainer}>
-          <Text style={styles.title}>Mood Trends</Text>
+          <SubTitle>Mood Trends</SubTitle>
           <LineChart
             data={chartData}
             width={width - 48} // Adjust for card padding
@@ -113,7 +113,7 @@ const Mood = () => {
         </View>
         <View style={{marginBottom: 40}}>
         <Card>
-            <SubTitle>Weight History</SubTitle>
+            <SubTitle>Recent Moods</SubTitle>
             {recentMood.map((recent, index) => {
               const {icon, date, time,mood, status} = recent;
               const isLastItem = index === recentMood.length - 1;
@@ -128,15 +128,15 @@ const Mood = () => {
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <Text style={{borderColor: '#f2f2f2', borderWidth: 1, padding: 6, borderRadius: 5}}> {icon} </Text>
                       <View style={{paddingLeft: 16}}>
-                        <Text style={{fontWeight: 500, fontSize: 14, fontFamily: 'Libre-Franklin'}}>{mood}</Text>
-                        <Text style={{fontWeight: '400', fontSize: 12, color: '#717680', paddingTop: 2, }}>{date} at {time}</Text>
+                        <Text style={{fontWeight: 500, fontSize: 14, fontFamily: 'Lato_400Regular'}}>{mood}</Text>
+                        <Text style={{fontWeight: '400', fontSize: 12, color: '#717680', paddingTop: 2,fontFamily: 'Lato_400Regular' }}>{date} at {time}</Text>
                       </View>
                     </View>
                     <Text 
                       style={{backgroundColor: `${status === 'Normal' &&  '#ECFDF3' || status === 'Low' && '#FEF3F2'
                         || status === 'Balanced' && '#FFFAEB' }`,
                       color: `${status === 'Normal' && '#027A48' ||  status === 'Low' && '#B42318' || status === 'Balanced' && '#B54708'}`,
-                      paddingHorizontal: 15, paddingVertical: 7, borderRadius: 30, fontFamily: 'Inter'}}>
+                      paddingHorizontal: 15, paddingVertical: 7, borderRadius: 30, fontFamily: 'Inter_500Medium' }}>
                         {status}</Text>
                   </View>
                 </View>
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
         borderRadius: 50, 
         paddingHorizontal: 10, 
         paddingVertical: 5, 
-        fontFamily: 'Inter', 
+        fontFamily: 'Inter_500Medium', 
         marginTop: 7
     },
     chartContainer: {
@@ -193,15 +193,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#f2f2f2',
         marginTop: 25
-    },
-    title: {
-        fontSize: 14,
-        fontWeight: '600',
-        color: '#333',
-        marginBottom: 20,
-        textAlign: 'left',
-        paddingTop: 10,
-        fontFamily: 'Libre-Franklin'
     },
     chart: {
         marginVertical: 8,

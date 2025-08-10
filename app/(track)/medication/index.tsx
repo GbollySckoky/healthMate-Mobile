@@ -44,10 +44,10 @@ const Medication = () => {
         </DetailsContainer>
         <View style={{marginBottom: 40}}>
           <Card>
-              <SubTitle>Recent Readings</SubTitle>
+              <SubTitle>Medication History</SubTitle>
               {medicationDosage.map((recent, index) => {
                 const {icon, bloodRate, date, status, time} = recent;
-                const isLastItem = index ===medicationDosage.length - 1;
+                const isLastItem = index === medicationDosage.length - 1;
                 return(
                   <View 
                     key={index}
@@ -59,14 +59,14 @@ const Medication = () => {
                       <View style={{flexDirection: 'row', alignItems: 'center'}}>
                         <Text style={{borderColor: '#f2f2f2', borderWidth: 1, padding: 6, borderRadius: 5}}> {icon} </Text>
                         <View style={{paddingLeft: 16}}>
-                          <Text style={{fontWeight: '500', fontSize: 14, color: '#414651', paddingTop: 2}}>{bloodRate}</Text>
-                          <Text style={{fontWeight: '400', fontSize: 12, color: '#717680', paddingTop: 2}}>{date} at {time}</Text>
+                          <Text style={{fontWeight: '500', fontSize: 14, color: '#414651', paddingTop: 2, fontFamily: 'Lato_400Regular'}}>{bloodRate}</Text>
+                          <Text style={{fontWeight: '400', fontSize: 12, color: '#717680', paddingTop: 2, fontFamily: 'Lato_400Regular'}}>{date} at {time}</Text>
                         </View>
                       </View>
                       <Text 
                         style={{backgroundColor: `${status === 'Taken' &&  '#ECFDF3' || status === 'Missed' && '#FEF3F2'}`,
                         color: `${status === 'Taken' && '#027A48' ||  status === 'Missed' && '#B42318'}`,
-                        paddingHorizontal: 15, paddingVertical: 7, borderRadius: 30, fontFamily: 'Inter'   }}>
+                        paddingHorizontal: 15, paddingVertical: 7, borderRadius: 30, fontFamily: 'Inter_500Medium'   }}>
                           {status}</Text>
                     </View>
                   </View>
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
         borderRadius: 50, 
         paddingHorizontal: 10, 
         paddingVertical: 5, 
-        fontFamily: 'Inter', 
+        fontFamily: 'Inter_500Medium', 
         marginTop: 7
     },
     lastItem: {
