@@ -5,6 +5,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useCallback, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ModalProvider } from '@/context/ModalContext';
+import '../global.css'
 
 SplashScreen.preventAutoHideAsync();
 

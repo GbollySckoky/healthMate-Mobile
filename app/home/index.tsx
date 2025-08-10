@@ -1,11 +1,13 @@
-import { Texts, Title, Wrapper } from '@/components/typography/Typography'
+import { Title, Wrapper } from '@/components/typography/Typography'
 import React from 'react'
-import { View, StyleSheet  } from 'react-native'
+import { View, StyleSheet, Text  } from 'react-native'
 import AppointmentCard from '@/app/home/_components/Appointment'
 import Reminder from '@/app/home/_components/Reminder'
 import Streak from '@/app/home/_components/Streak'
 import Activities from '@/app/home/_components/Activities';
 import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { Link } from 'expo-router'
 
 
 const HomePage = () => {
@@ -13,13 +15,23 @@ const HomePage = () => {
   return (
     <ScreenOverFlowLayout>
       <Wrapper>
-        <View style={{borderBottomWidth: 1, borderColor: '#F2F2F2', paddingBottom: 20}}>
-          <Title>
-            Good Evening, Sarah 👋
-          </Title>
-          <Texts>
-            Let's take a step toward a healthier you today.
-          </Texts>
+        <View style={{borderBottomWidth: 1, borderColor: '#F2F2F2', paddingBottom: 20, flexDirection: 'row', justifyContent: 'space-between'}}>
+            <View >
+                <Title>
+                    Good Evening, Sarah 👋
+                </Title>
+                <Text>
+                    Let's take a step toward a healthier you today.
+                </Text>
+            </View>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <MaterialIcons name="notifications-none" size={22} color="#717680" />
+                <Link href={"/(profile)"}
+                style={{backgroundColor: '#F45A42', borderRadius: 40, paddingHorizontal: 10, 
+                paddingVertical: 7, color:'white',fontSize: 14, fontFamily: '600', marginLeft: 5}}>G
+                S
+                </Link>
+            </View>
         </View>
           {/* Your Activities */}
             <Activities />
@@ -29,6 +41,9 @@ const HomePage = () => {
             <Streak />
           {/* Reminder */}
           <Reminder />
+          <Link href={"/(profile)"} >
+            
+          </Link>
       </Wrapper>
     </ScreenOverFlowLayout>
   )

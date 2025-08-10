@@ -12,7 +12,7 @@ export const healthOverview = [
         text: 'Blood Pressure',
         id: 1,
         icon:  <AntDesign name="hearto" size={24} color="#DF0000" />,
-        url: '/home/blood-pressure'
+        url: '/track/blood-pressure'
     },
     {
         title: 'Mood',
@@ -20,7 +20,7 @@ export const healthOverview = [
         text: 'Feeling Great',
         id: 2,
         icon: <Feather name="smile" size={24} color="#FFC847" />,
-        url: "/home//mood"
+        url: "/track/mood"
     },
     {
         title: 'Sleep',
@@ -28,7 +28,7 @@ export const healthOverview = [
         text: 'Quality: Good',
         id: 3,
         icon: <FontAwesome name="moon-o" size={24} color="black" />,
-        url: '/home//sleep-log'
+        url: '/track/sleep-log'
     },
     {
         title: 'Weight',
@@ -36,7 +36,7 @@ export const healthOverview = [
         text: 'Healthy range',
         id: 4,
         icon: <FontAwesome name="balance-scale" size={24} color="blue" />,
-        url: "/home//weight"
+        url: "/track/weight"
     },
     {
         title: 'Medications',
@@ -44,7 +44,7 @@ export const healthOverview = [
         text: 'Taken today',
         id: 5,
         icon: <MaterialCommunityIcons name="pill" size={24} color="#C11574" />,
-        url: "/medication"
+        url: "/track/medication"
     },
 ]
 
