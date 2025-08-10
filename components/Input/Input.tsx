@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { TextInput, View, StyleSheet, Text } from 'react-native';
 
 interface NumberInputType{
@@ -26,7 +26,7 @@ export default Input
 
 const styles = StyleSheet.create({
     text:{
-        fontFamily: 'Inter',
+        fontFamily: 'Inter_500Medium',
         fontSize: 14,
         fontWeight: 500,
         paddingBottom: 6,
@@ -37,6 +37,9 @@ const styles = StyleSheet.create({
         padding: 10,
         borderColor: '#D6D7DA',
         borderWidth: 1,
-        borderRadius: 5
+        borderRadius: 5,
+        fontFamily: 'Inter_400Regular',
+        fontWeight: '400',
+        fontSize: 16
     }
 })

@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text,StyleSheet, TouchableOpacity } from 'react-native'
 import { allAppointmentData } from '../../data'
-import { SubTitle, Texts, Wrapper } from '@/components/typography/Typography'
+import { SmallText, SubTitle, Texts, Wrapper } from '@/components/typography/Typography'
 import Feather from '@expo/vector-icons/Feather';
 import { Image } from 'expo-image';
 import { NavHeader } from '@/components/Header/Header';
@@ -46,20 +46,20 @@ const AllApointments = () => {
                       {doctorName}
                     </SubTitle>
                     <View style={[style.flex,{marginTop: 5}]}>
-                      <View style={{marginRight: 6}}>
-                        <Feather name="clock" size={16} color="#717680" />
+                      <View style={{marginRight: 3}}>
+                        <Feather name="clock" size={13} color="#717680" />
                       </View>
-                      <Texts> {time} | {date} </Texts>
+                      <SmallText> {time} | {date} </SmallText>
                     </View>
                     <View style={[style.flex,{marginTop: 5}]}>
-                      <View style={{marginRight: 6}}>
-                        <Feather name="video" size={16} color="#717680" />
+                      <View style={{marginRight: 3}}>
+                        <Feather name="video" size={13} color="#717680" />
                       </View>
-                      <Texts> {type}</Texts>
+                      <SmallText> {type}</SmallText>
                     </View>
                   </View>
                   <Text 
-                    style={{color:'#5924DC', backgroundColor: '#F4F3FF', borderRadius: 10, padding: 10, fontWeight: 500, fontSize: 12, height: 30}}>
+                    style={{color:'#5924DC', backgroundColor: '#F4F3FF', borderRadius: 10, padding: 10, fontWeight: 500, fontSize: 12, height: 30,fontFamily: 'Inter_500Medium'}}>
                     {status}
                   </Text>
                 </View>

@@ -1,4 +1,4 @@
-import { Card, Status, SubTitle, Texts } from '@/components/typography/Typography'
+import { Card, SmallText, Status, SubTitle, Texts } from '@/components/typography/Typography'
 import { useRouter } from 'expo-router'
 import React from 'react'
 import { Text, View, TouchableOpacity, StyleSheet  } from 'react-native'
@@ -55,19 +55,19 @@ const AppointmentCard = () => {
                 </SubTitle>
                 <View style={[style.flex,{marginTop: 5}]}>
                   <View style={{marginRight: 6}}>
-                    <Feather name="clock" size={16} color="#717680" />
+                    <Feather name="clock" size={13} color="#717680" />
                   </View>
-                  <Texts>
+                  <SmallText>
                     {appointmentData.time} | {appointmentData.date}
-                  </Texts>
+                  </SmallText>
                 </View>
                 <View style={[style.flex,{marginTop: 5}]}>
                   <View style={{marginRight: 6}}>
-                    <Feather name="video" size={16} color="#717680" />
+                    <Feather name="video" size={13} color="#717680" />
                   </View>
-                  <Texts>
+                  <SmallText>
                     {appointmentData.type}
-                  </Texts>
+                  </SmallText>
                 </View>
               </View>
               <Status>
@@ -134,6 +134,7 @@ export const style = StyleSheet.create({
     buttonText: {
         fontSize: 14,
         fontWeight: '600',
+        fontFamily: 'Inter_600SemiBold'
     },
     ButtonRow: {
         flexDirection: 'row',
@@ -152,7 +153,10 @@ export const style = StyleSheet.create({
     },
     linkFlex:{
       flexDirection: 'row',
-      alignItems: 'center'
+      alignItems: 'center',
+      fontFamily: 'LibreFranklin_400Regular',
+      fontSize: 12,
+      fontWeight: '400'
     },
     linkText: {
       color: '#DD2590', 
