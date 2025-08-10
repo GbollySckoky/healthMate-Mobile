@@ -39,8 +39,8 @@ const Reminder = () => {
                   {icon}
                 </Text>
                 <View style={{paddingLeft: 15}}>
-                  <Text style={{fontWeight: 500, fontSize: 14}}>{med}</Text>
-                  <Text style={{color: '#717680', fontWeight: 400, fontSize: 12, paddingTop: 3}}>{time}</Text>
+                  <Text style={{fontWeight: '500', fontSize: 14,fontFamily: 'Lato_400Regular'}}>{med}</Text>
+                  <Text style={{color: '#717680', fontWeight: 400, fontSize: 12, paddingTop: 3,fontFamily: 'Lato_400Regular'}}>{time}</Text>
                 </View>
               </View>
               <RadioInput 

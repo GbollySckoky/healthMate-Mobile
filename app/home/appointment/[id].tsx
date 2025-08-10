@@ -137,6 +137,7 @@ const styles =  StyleSheet.create({
     fontWeight: '400',
     color: '#C11574',
     marginVertical: 5,
+    fontFamily: 'Inter_400Regular'
   },
   locationContainer: {
     flexDirection: 'row',
@@ -147,6 +148,7 @@ const styles =  StyleSheet.create({
     color: '#666',
     marginLeft: 4,
     fontWeight: '400',
+    fontFamily: 'LibreFranklin_400Regular'
   },
   lastItem: {
     borderBottomWidth: 0, // Remove border from last item
@@ -177,7 +179,7 @@ const styles =  StyleSheet.create({
     // marginHorizontal: -4, // Slight inset for visual appeal
   },
   CardText: {
-    fontFamily: 'Inter',
+    fontFamily: 'Lato_400Regular',
     fontSize: 12,
     color: '#414651',
     fontStyle: 'normal',
@@ -185,11 +187,10 @@ const styles =  StyleSheet.create({
     // backgroundColor: 'red'
 },
 CardTitle: {
-  // fontFamily: 'Libre-Franklin',
+  fontFamily: 'Lato_400Regular',
   fontSize: 14,
   color: '#414651',
-  fontStyle: 'normal',
-  fontWeight: 500,
+  fontWeight: '500',
   marginBottom: 5,
   // marginTop: 10
 },

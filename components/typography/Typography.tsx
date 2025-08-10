@@ -1,3 +1,4 @@
+import { colors } from "@/lib/colors"
 import React from "react"
 import { Text, ViewStyle, View, TouchableOpacity, StyleSheet, Pressable } from "react-native"
 
@@ -10,7 +11,13 @@ export const MinTitle = ({children}:{children: React.ReactNode}) => {
 }
 
 export const Texts = ({children}:{children: React.ReactNode}) => (
-    <Text  style={style.Text} className="bg-red-900">
+    <Text  style={style.Text}>
+        {children}
+    </Text>
+)
+
+export const SmallText = ({children}:{children: React.ReactNode}) => (
+    <Text  style={style.smallText}>
         {children}
     </Text>
 )
@@ -116,20 +123,26 @@ export const SubmitButton = ({children, _fn}: {children: React.ReactNode, _fn: (
     </TouchableOpacity>
 )
 
+export const LatoText = ({children}: {children: React.ReactNode
+}) => (
+    <Text style={style.latoText}>{children} </Text>
+)
+
 export const style = StyleSheet.create({
     Title:{
         fontSize: 18,
         fontWeight: '600',
         marginBottom: 3,
+        color: colors.black,
         // backgroundColor: 'red',
-        fontFamily: 'Libre-Franklin',
+        fontFamily: 'LibreFranklin_600SemiBold',
         // fontStyle: 'italic'
     },
     MinTitle:{
         fontSize: 18,
         fontWeight: '600',
         // marginBottom: 5,
-        fontFamily: 'Libre-Franklin'
+        fontFamily: 'LibreFranklin_600SemiBold'
     },
     Wrapper:{
         width: '95%',
@@ -147,6 +160,13 @@ export const style = StyleSheet.create({
         fontStyle: 'normal',
         fontWeight: 400
     },
+    smallText: {
+        fontFamily: 'Libre-Franklin',
+        fontSize: 12,
+        color: '#717680',
+        fontStyle: 'normal',
+        fontWeight: 400
+    },
     SubTitles: {
         fontFamily: 'Libre-Franklin',
         fontSize: 14,
@@ -157,13 +177,13 @@ export const style = StyleSheet.create({
         marginTop: 10
     },
     SubTitle: {
-        fontFamily: 'Libre-Franklin',
+        fontFamily: 'LibreFranklin_600SemiBold',
         fontSize: 14,
         color: '#414651',
         fontWeight: 600
     },
     CardTitle: {
-        fontFamily: 'Inter',
+        fontFamily: 'Inter_400Regular',
         fontSize: 12,
         color: '#414651',
         fontStyle: 'normal',
@@ -171,7 +191,7 @@ export const style = StyleSheet.create({
         // backgroundColor: 'red'
     },
     CardText: {
-        fontFamily: 'Inter',
+        fontFamily: 'Inter_400Regular',
         fontSize: 10,
         color: '#717680',
         fontWeight: 400
@@ -226,6 +246,7 @@ export const style = StyleSheet.create({
       buttonText: {
         fontSize: 14,
         fontWeight: '600',
+        fontFamily: 'Inter_600SemiBold'
       },
     status:{
         color:'#5924DC', 
@@ -235,12 +256,13 @@ export const style = StyleSheet.create({
         fontWeight: 500, 
         fontSize: 12,
         textAlign: 'center',
-        height: 30
+        height: 30,
+        fontFamily: 'Inter_500Medium'
     },
     cardAmount: {
         fontSize: 20,
         fontWeight: 600,
-        fontFamily: 'Libre-Franklin',
+        fontFamily: 'LibreFranklin_600SemiBold',
         paddingVertical: 4,
     },
     container:{
@@ -254,7 +276,7 @@ export const style = StyleSheet.create({
     closeBtn: {
         width: '100%',
         borderRadius: 10,
-        backgroundColor: '#C11574',
+        backgroundColor: '#DD2590',
         padding: 13,
         justifyContent: 'center',
         alignItems: 'center',
@@ -268,5 +290,12 @@ export const style = StyleSheet.create({
     fontWeight: '600',
     fontFamily: 'Inter'
     },
+    latoText:{
+        fontFamily: 'Lato_400Regular', 
+        fontWeight: '400', 
+        color: colors.lightBlack,
+        marginBottom: 10,
+        marginTop: 20
+    }
 })
 

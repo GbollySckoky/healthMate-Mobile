@@ -85,7 +85,7 @@ export default function MyBarChart() {
           </DetailsContainer>
           <View style={styles.container}>
             <View style={styles.chartContainer}>
-              <Text style={styles.title}>Sleep Trends</Text>
+              <SubTitle>Sleep Trends</SubTitle>
               <BarChart
                 style={styles.chart}
                 data={data}
@@ -121,14 +121,14 @@ export default function MyBarChart() {
                       <View style={{flexDirection: 'row', alignItems: 'center'}}>
                         <Text style={{borderColor: '#f2f2f2', borderWidth: 1, padding: 6, borderRadius: 5}}> {icon} </Text>
                         <View style={{paddingLeft: 16}}>
-                          <Text style={{fontWeight: '500', fontSize: 14, color: '#414651', paddingTop: 2}}>{hour}</Text>
-                          <Text style={{fontWeight: '400', fontSize: 12, color: '#717680', paddingTop: 2}}>{date} . {time}</Text>
+                          <Text style={{fontWeight: '500', fontSize: 14, color: '#414651', paddingTop: 2, fontFamily: 'Lato_400Regular'}}>{hour}</Text>
+                          <Text style={{fontWeight: '400', fontSize: 12, color: '#717680', paddingTop: 2,  fontFamily: 'Lato_400Regular'}}>{date} . {time}</Text>
                         </View>
                       </View>
                       <Text 
                         style={{backgroundColor: `${status === 'Excellent' &&  '#ECFDF3' || status === 'Average' && '#FFFAEB' || status === 'Low' && '#FEF3F2'}`,
                         color: `${status === 'Excellent' && '#027A48' || status === 'Average' && '#B54708' || status === 'Low' && '#B42318'}`,
-                        paddingHorizontal: 15, paddingVertical: 7, borderRadius: 30, fontFamily: 'Inter'   }}>
+                        paddingHorizontal: 15, paddingVertical: 7, borderRadius: 30, fontFamily: 'Inter_500Medium'   }}>
                           {status}</Text>
                     </View>
                   </View>
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
     borderRadius: 50, 
     paddingHorizontal: 10, 
     paddingVertical: 5, 
-    fontFamily: 'Inter', 
+    fontFamily: 'Inter_500Medium',
     marginTop: 7
   },
   // container: {

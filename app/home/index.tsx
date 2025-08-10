@@ -20,7 +20,7 @@ const HomePage = () => {
                 <Title>
                     Good Evening, Sarah 👋
                 </Title>
-                <Text>
+                <Text style={{fontFamily: 'LibreFranklin_400Regular', fontWeight: '400', fontSize: 12}}>
                     Let's take a step toward a healthier you today.
                 </Text>
             </View>
@@ -28,8 +28,9 @@ const HomePage = () => {
                 <MaterialIcons name="notifications-none" size={22} color="#717680" />
                 <Link href={"/(profile)"}
                 style={{backgroundColor: '#F45A42', borderRadius: 40, paddingHorizontal: 10, 
-                paddingVertical: 7, color:'white',fontSize: 14, fontFamily: '600', marginLeft: 5}}>G
-                S
+                paddingVertical: 7, color:'white',fontSize: 14, fontFamily: 'LibreFranklin_600SemiBold', 
+                marginLeft: 5, fontWeight: '600'}}>
+                G
                 </Link>
             </View>
         </View>
@@ -41,9 +42,6 @@ const HomePage = () => {
             <Streak />
           {/* Reminder */}
           <Reminder />
-          <Link href={"/(profile)"} >
-            
-          </Link>
       </Wrapper>
     </ScreenOverFlowLayout>
   )
