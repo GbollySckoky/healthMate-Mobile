@@ -4,6 +4,7 @@ import { colors } from '@/lib/colors';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
+
 export const settingsData = [
   {
     icon: <Entypo name="lock-open" size={17} color={colors.lightRed} />,
@@ -49,7 +50,7 @@ export const settingsData = [
     rightIcon: (
       <Entypo name="chevron-small-right" size={24} color={colors.gray} />
     ),
-    url: '#',
+    url: '/profile/',
   },
   {
     title: 'Contact Support',
@@ -57,7 +58,7 @@ export const settingsData = [
     rightIcon: (
       <Entypo name="chevron-small-right" size={24} color={colors.gray} />
     ),
-    url: '#',
+    url: '/profile/',
   },
 ];
 
@@ -84,3 +85,4 @@ export const passwordData = {
     id: '3',
   },
 };
+
