@@ -1,87 +1,85 @@
 import React from 'react';
 import { BarChart } from 'react-native-chart-kit';
-import { StyleSheet, View, Text, Dimensions  } from 'react-native';
+import { StyleSheet, View, Text, Dimensions } from 'react-native';
 import { NavHeader } from '@/components/Header/Header';
 import { router } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout';
 import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
-import { Card, CardAmount, CardText, DetailsContainer, SubTitle, Wrapper } from '@/components/typography/Typography';
+import {
+  Card,
+  CardAmount,
+  CardText,
+  DetailsContainer,
+  SubTitle,
+  Wrapper,
+} from '@/components/typography/Typography';
 import { sleepLogHistory } from '../../data';
 import { Button } from '@/components/button/Button';
 import SleepModal from './_components/SleepModal';
 import { useModal } from '@/context/ModalContext';
 
-
-
-
-const screenWidth = Dimensions.get("window").width;
+const screenWidth = Dimensions.get('window').width;
 
 const data = {
-  labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
   datasets: [
     {
-      data: [20, 45, 28, 80, 99, 43]
-    }
-  ]
+      data: [20, 45, 28, 80, 99, 43],
+    },
+  ],
 };
 
 const chartConfig = {
-  backgroundColor: "#CC400C",
-  backgroundGradientFrom: "#ffffff",
-  backgroundGradientTo: "#ffffff",
+  backgroundColor: '#CC400C',
+  backgroundGradientFrom: '#ffffff',
+  backgroundGradientTo: '#ffffff',
   decimalPlaces: 0,
   color: (opacity = 1) => `rgba(185, 85, 45, ${opacity})`, // Orange-red color
   labelColor: (opacity = 1) => `rgba(128, 128, 128, ${opacity})`, // Gray labels
   style: {
-    borderRadius: 8
+    borderRadius: 8,
   },
   barPercentage: 0.7,
   fillShadowGradient: '#B9552D', // Orange-red fill
   fillShadowGradientOpacity: 1,
   propsForBackgroundLines: {
-    strokeDasharray: "5,5", // Dashed grid lines
-    stroke: "#e0e0e0",
-    strokeWidth: 1
+    strokeDasharray: '5,5', // Dashed grid lines
+    stroke: '#e0e0e0',
+    strokeWidth: 1,
   },
   propsForLabels: {
     fontSize: 12,
-    fontFamily: "System"
-  }
+    fontFamily: 'System',
+  },
 };
 
-const handleClick = () => {
-
-}
+const handleClick = () => {};
 
 export default function MyBarChart() {
-  const {openModal} = useModal()
+  const { openModal } = useModal();
   return (
     <ScreenLayout>
-      <NavHeader 
-        title='Blood Pressure Tracker'
+      <NavHeader
+        title="Blood Pressure Tracker"
         _goBack={() => router.push('/(tabs)/home')}
-        backIcon={<Entypo name="chevron-small-left" size={24} color="black"  />}
+        backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
         text="Track your readings to monitor your heart health"
       />
       <ScreenOverFlowLayout>
         <Wrapper>
           <DetailsContainer>
-            <FontAwesome name="moon-o" size={24} color="#C11574" style={styles.icon} />
-            <CardText>
-              Today’s sleep
-            </CardText>
-            <CardAmount>
-              8h 30mins
-            </CardAmount>
-            <CardText>
-              Recorded on: Jun 22, 09:45
-            </CardText>
-            <Text 
-              style={styles.colorText}>
-              Excellent
-            </Text>
+            <FontAwesome
+              name="moon-o"
+              size={24}
+              color="#C11574"
+              style={styles.icon}
+            />
+            <CardText>Today’s sleep</CardText>
+            <CardAmount>8h 30mins</CardAmount>
+            <CardText>Recorded on: Jun 22, 09:45</CardText>
+            <Text style={styles.colorText}>Excellent</Text>
           </DetailsContainer>
           <View style={styles.container}>
             <View style={styles.chartContainer}>
@@ -104,47 +102,90 @@ export default function MyBarChart() {
             </View>
           </View>
           {/* sleep log */}
-          <View style={{marginBottom: 40}}>
+          <View style={{ marginBottom: 40 }}>
             <Card>
               <SubTitle>Sleep Log History</SubTitle>
               {sleepLogHistory.map((sleep, index) => {
-                const {icon, hour, date, status, time} = sleep;
+                const { icon, hour, date, status, time } = sleep;
                 const isLastItem = index === sleepLogHistory.length - 1;
-                return(
-                  <View 
+                return (
+                  <View
                     key={index}
                     style={[
                       styles.enhancedItemContainer,
-                      isLastItem && styles.lastItem
-                    ]}>
+                      isLastItem && styles.lastItem,
+                    ]}
+                  >
                     <View style={styles.flex}>
-                      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <Text style={{borderColor: '#f2f2f2', borderWidth: 1, padding: 6, borderRadius: 5}}> {icon} </Text>
-                        <View style={{paddingLeft: 16}}>
-                          <Text style={{fontWeight: '500', fontSize: 14, color: '#414651', paddingTop: 2, fontFamily: 'Lato_400Regular'}}>{hour}</Text>
-                          <Text style={{fontWeight: '400', fontSize: 12, color: '#717680', paddingTop: 2,  fontFamily: 'Lato_400Regular'}}>{date} . {time}</Text>
+                      <View
+                        style={{ flexDirection: 'row', alignItems: 'center' }}
+                      >
+                        <Text
+                          style={{
+                            borderColor: '#f2f2f2',
+                            borderWidth: 1,
+                            padding: 6,
+                            borderRadius: 5,
+                          }}
+                        >
+                          {' '}
+                          {icon}{' '}
+                        </Text>
+                        <View style={{ paddingLeft: 16 }}>
+                          <Text
+                            style={{
+                              fontWeight: '500',
+                              fontSize: 14,
+                              color: '#414651',
+                              paddingTop: 2,
+                              fontFamily: 'Lato_400Regular',
+                            }}
+                          >
+                            {hour}
+                          </Text>
+                          <Text
+                            style={{
+                              fontWeight: '400',
+                              fontSize: 12,
+                              color: '#717680',
+                              paddingTop: 2,
+                              fontFamily: 'Lato_400Regular',
+                            }}
+                          >
+                            {date} . {time}
+                          </Text>
                         </View>
                       </View>
-                      <Text 
-                        style={{backgroundColor: `${status === 'Excellent' &&  '#ECFDF3' || status === 'Average' && '#FFFAEB' || status === 'Low' && '#FEF3F2'}`,
-                        color: `${status === 'Excellent' && '#027A48' || status === 'Average' && '#B54708' || status === 'Low' && '#B42318'}`,
-                        paddingHorizontal: 15, paddingVertical: 7, borderRadius: 30, fontFamily: 'Inter_500Medium'   }}>
-                          {status}</Text>
+                      <Text
+                        style={{
+                          backgroundColor: `${(status === 'Excellent' && '#ECFDF3') || (status === 'Average' && '#FFFAEB') || (status === 'Low' && '#FEF3F2')}`,
+                          color: `${(status === 'Excellent' && '#027A48') || (status === 'Average' && '#B54708') || (status === 'Low' && '#B42318')}`,
+                          paddingHorizontal: 15,
+                          paddingVertical: 7,
+                          borderRadius: 30,
+                          fontFamily: 'Inter_500Medium',
+                        }}
+                      >
+                        {status}
+                      </Text>
                     </View>
                   </View>
-                )
+                );
               })}
             </Card>
           </View>
         </Wrapper>
       </ScreenOverFlowLayout>
-      <Button _fn={() =>
-         openModal(<SleepModal />, {
-          title: 'Log Your Sleep',
-          description: '',
-          onClose: () => {},
-          // btnText: 'Save Reading'
-        })}>
+      <Button
+        _fn={() =>
+          openModal(<SleepModal />, {
+            title: 'Log Your Sleep',
+            description: '',
+            onClose: () => {},
+            // btnText: 'Save Reading'
+          })
+        }
+      >
         Log New Sleep
       </Button>
     </ScreenLayout>
@@ -152,29 +193,29 @@ export default function MyBarChart() {
 }
 
 const styles = StyleSheet.create({
-  container:{
+  container: {
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
-    paddingVertical:5,
-    flex: 1
+    paddingVertical: 5,
+    flex: 1,
   },
-  icon:{
+  icon: {
     backgroundColor: '#FDF2FA',
-    paddingHorizontal:15, 
-    paddingVertical: 13, 
-    borderRadius:100, 
-    marginBottom: 10
+    paddingHorizontal: 15,
+    paddingVertical: 13,
+    borderRadius: 100,
+    marginBottom: 10,
   },
-  colorText:{
-    color: '#027A48', 
-    backgroundColor: "#ECFDF3", 
-    borderRadius: 50, 
-    paddingHorizontal: 10, 
-    paddingVertical: 5, 
+  colorText: {
+    color: '#027A48',
+    backgroundColor: '#ECFDF3',
+    borderRadius: 50,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
     fontFamily: 'Inter_500Medium',
-    marginTop: 7
+    marginTop: 7,
   },
   // container: {
   //   flex: 1,
@@ -202,11 +243,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'left',
     paddingTop: 10,
-    fontFamily: 'Libre-Franklin'
+    fontFamily: 'Libre-Franklin',
   },
   chart: {
     marginVertical: 8,
-    borderRadius: 8
+    borderRadius: 8,
   },
   lastItem: {
     borderBottomWidth: 0, // Remove border from last item
@@ -214,7 +255,7 @@ const styles = StyleSheet.create({
   enhancedItemContainer: {
     paddingTop: 5,
     borderColor: '#F2F2F2',
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
   },
   flex: {
     flexDirection: 'row',
@@ -222,5 +263,5 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 18,
     // backgroundColor: 'red'
-  }
-})
+  },
+});
