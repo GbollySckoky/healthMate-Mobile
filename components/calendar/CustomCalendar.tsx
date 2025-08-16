@@ -1,18 +1,22 @@
 import useDisplay from '@/hooks/useDisplay';
-import React, {useState} from 'react';
-import { Modal, StyleSheet, View, TouchableOpacity, Text  } from 'react-native';
-import {Calendar, LocaleConfig} from 'react-native-calendars';
+import React, { useState } from 'react';
+import { Modal, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import { Calendar, LocaleConfig } from 'react-native-calendars';
 
-interface CalendarType{
+interface CalendarType {
   isOpen: boolean;
   onChangeText: (day: any) => void;
   onClose: () => void;
   // markedDates: any;
 }
 
-export default function CustomCalendar ({isOpen, onChangeText, onClose}: CalendarType)  {
+export default function CustomCalendar({
+  isOpen,
+  onChangeText,
+  onClose,
+}: CalendarType) {
   const [selected, setSelected] = useState('');
-  
+
   LocaleConfig.locales['en'] = {
     monthNames: [
       'January',
@@ -26,29 +30,50 @@ export default function CustomCalendar ({isOpen, onChangeText, onClose}: Calenda
       'September',
       'October',
       'November',
-      'December'
+      'December',
     ],
-    monthNamesShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-    dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+    monthNamesShort: [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ],
+    dayNames: [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ],
     dayNamesShort: ['Sun.', 'Mon.', 'Tue.', 'Wed.', 'Thu.', 'Fri.', 'Sat.'],
-    today: "Today" // Changed from French to English
-  }
+    today: 'Today', // Changed from French to English
+  };
   LocaleConfig.defaultLocale = 'en';
 
   const handleDayPress = (day: any) => {
     setSelected(day.dateString);
     onChangeText(day); // Pass the entire day object to parent
-  }
+  };
 
-  console.log("Selected:", selected)
-  console.log('IS_OPEN:', isOpen)
-  
-  return(
+  console.log('Selected:', selected);
+  console.log('IS_OPEN:', isOpen);
+
+  return (
     <Modal
       visible={isOpen}
       transparent={true}
       animationType={'fade'}
-      onRequestClose={onClose} 
+      onRequestClose={onClose}
       statusBarTranslucent={true}
     >
       <View style={styles.backdrop}>
@@ -59,7 +84,7 @@ export default function CustomCalendar ({isOpen, onChangeText, onClose}: Calenda
               <Text style={styles.closeButtonText}>✕</Text>
             </TouchableOpacity>
           </View>
-          
+
           <Calendar
             onDayPress={handleDayPress}
             markedDates={{
@@ -67,8 +92,8 @@ export default function CustomCalendar ({isOpen, onChangeText, onClose}: Calenda
               [selected]: {
                 selected: true,
                 disableTouchEvent: false,
-                selectedColor: '#C11574'
-              }
+                selectedColor: '#C11574',
+              },
             }}
             style={styles.calendar}
             theme={{
@@ -98,7 +123,7 @@ export default function CustomCalendar ({isOpen, onChangeText, onClose}: Calenda
         </View>
       </View>
     </Modal>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -131,4 +156,4 @@ const styles = StyleSheet.create({
   calendar: {
     paddingBottom: 15,
   },
-})
+});

@@ -1,62 +1,59 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { NavHeader } from '@/components/Header/Header';
 import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout';
 import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
 import Entypo from '@expo/vector-icons/Entypo';
-import {  SubmitButton, Wrapper } from '@/components/typography/Typography';
+import { SubmitButton, Wrapper } from '@/components/typography/Typography';
 import { useRouter } from 'expo-router';
 import Input from '@/components/Input/Input';
 
-
-type EditInputType = Record<string, string>
+type EditInputType = Record<string, string>;
 const EditName = () => {
-    const router = useRouter()
-    const data = {
-      firstName:{
-        label: 'First Name',
-        placeholder: 'Sarah',
-      },
-      lastName:{
-        label: 'Surname',
-        placeholder: 'Daniels',
-      }
-    }
-    const [inputValue, setInputValue] = useState<EditInputType>({})
+  const router = useRouter();
+  const data = {
+    firstName: {
+      label: 'First Name',
+      placeholder: 'Sarah',
+    },
+    lastName: {
+      label: 'Surname',
+      placeholder: 'Daniels',
+    },
+  };
+  const [inputValue, setInputValue] = useState<EditInputType>({});
 
-    const handleInput = (key: string, value: string) => {
-      setInputValue((prev) => ({
-        ...prev,
-        [key]: value
-      }))
-    }
-    const handleClick = () => {
-
-    }
-    console.log(inputValue)
+  const handleInput = (key: string, value: string) => {
+    setInputValue((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
+  const handleClick = () => {};
+  console.log(inputValue);
   return (
     <ScreenLayout>
-    <NavHeader 
-      title='Edit Name'
-      _goBack={() => router.replace('/(profile)')}
-      backIcon={<Entypo name="chevron-small-left" size={24} color="black"  />}
-    />
+      <NavHeader
+        title="Edit Name"
+        _goBack={() => router.replace('/(profile)')}
+        backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+      />
       <ScreenOverFlowLayout>
         <Wrapper>
-          <Input 
-          {...data.firstName}
-          value={inputValue.firstName}
-          onChangeText={(value) => handleInput('firstName', value)}/>
-          <Input 
-          {...data.lastName}
-          value={inputValue.lastName}
-          onChangeText={(value) => handleInput('lastName', value)}/>
-          <SubmitButton _fn={handleClick}>
-            Save Changes
-          </SubmitButton>
+          <Input
+            {...data.firstName}
+            value={inputValue.firstName}
+            onChangeText={(value) => handleInput('firstName', value)}
+          />
+          <Input
+            {...data.lastName}
+            value={inputValue.lastName}
+            onChangeText={(value) => handleInput('lastName', value)}
+          />
+          <SubmitButton _fn={handleClick}>Save Changes</SubmitButton>
         </Wrapper>
-        </ScreenOverFlowLayout>
+      </ScreenOverFlowLayout>
     </ScreenLayout>
-  )
-}
+  );
+};
 
-export default EditName
+export default EditName;
