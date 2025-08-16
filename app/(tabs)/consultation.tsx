@@ -1,14 +1,12 @@
-import React from 'react'
-import { Text, View } from 'react-native'
+import React from 'react';
+import { Text, View } from 'react-native';
 
 const Consultation = () => {
   return (
     <View>
-        <Text>
-            Consultation
-        </Text>
+      <Text>Consultation</Text>
     </View>
-  )
-}
+  );
+};
 
-export default Consultation
+export default Consultation;

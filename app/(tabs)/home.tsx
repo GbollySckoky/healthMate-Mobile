@@ -1,28 +1,24 @@
-import React from 'react'
-import { StyleSheet  } from 'react-native'
-import HomePage from '../home'
-
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import HomePage from '../home';
 
 const Home = () => {
+  return <HomePage />;
+};
 
-  return (
-    <HomePage />
-  )
-}
-
-export default Home
+export default Home;
 
 export const style = StyleSheet.create({
   Flex: {
     flexDirection: 'row',
-    alignContent:'center',
+    alignContent: 'center',
     marginTop: 5,
-    marginBottom: 2
+    marginBottom: 2,
   },
   flex: {
     flexDirection: 'row',
     alignContent: 'center',
-    marginTop: 3
+    marginTop: 3,
   },
   MinCard: {
     padding: 15,
@@ -45,16 +41,16 @@ export const style = StyleSheet.create({
     backgroundColor: '#0553',
     borderRadius: 100,
   },
-  Flexs:{
+  Flexs: {
     flexDirection: 'row',
     flex: 1,
     justifyContent: 'space-between',
-    alignContent: 'center'
+    alignContent: 'center',
   },
   Text: {
     fontFamily: 'Libre-Franklin',
     fontWeight: 500,
-    fontSize: 12
+    fontSize: 12,
   },
   ButtonRow: {
     flexDirection: 'row',
@@ -62,14 +58,14 @@ export const style = StyleSheet.create({
     gap: 10,
     borderTopColor: '#F8F8F8',
     borderTopWidth: 2,
-    marginTop: 15
+    marginTop: 15,
   },
   rescheduleBtn: {
     paddingVertical: 8,
     paddingHorizontal: 16,
     backgroundColor: '#FAFAFA',
     borderRadius: 8,
-    borderColor:  '#D6D7DA',
+    borderColor: '#D6D7DA',
     borderWidth: 1,
     marginTop: 14,
   },
@@ -84,5 +80,4 @@ export const style = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
   },
- 
 });
