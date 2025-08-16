@@ -86,7 +86,7 @@ const ChangePassword = () => {
             }
             title="Password Updated"
             text="Your password has been updated successfully. You can change at any time."
-            _fn={handleDisplay}
+            closeModal={handleDisplay}
             isOpen={openModal}
           />
         </Wrapper>

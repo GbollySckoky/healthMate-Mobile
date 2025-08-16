@@ -65,22 +65,22 @@ export const passwordData = {
   oldPassword: {
     label: 'Old Password',
     placeholder: '*******',
-    closeIcon: <Feather name="eye-off" size={24} color="black" />,
-    openIcon: <FontAwesome5 name="eye" size={24} color="black" />,
+    closeIcon: <Feather name="eye-off" size={20} color="black" />,
+    openIcon: <FontAwesome5 name="eye" size={20} color="black" />,
     id: '1',
   },
   newPassword: {
     label: 'New Password',
     placeholder: '*******',
-    closeIcon: <Feather name="eye-off" size={24} color="black" />,
-    openIcon: <FontAwesome5 name="eye" size={24} color="black" />,
+    closeIcon: <Feather name="eye-off" size={20} color="black" />,
+    openIcon: <FontAwesome5 name="eye" size={20} color="black" />,
     id: '2',
   },
   confirmPassword: {
     label: 'Confirm Password',
     placeholder: '*******',
-    closeIcon: <Feather name="eye-off" size={24} color="black" />,
-    openIcon: <FontAwesome5 name="eye" size={24} color="black" />,
+    closeIcon: <Feather name="eye-off" size={20} color="black" />,
+    openIcon: <FontAwesome5 name="eye" size={20} color="black" />,
     id: '3',
   },
 };
