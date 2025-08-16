@@ -1,71 +1,104 @@
-import { NavHeader } from '@/components/Header/Header'
-import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { NavHeader } from '@/components/Header/Header';
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import Entypo from '@expo/vector-icons/Entypo';
-import {router} from 'expo-router'
+import { router } from 'expo-router';
 import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
 import { Wrapper } from '@/components/typography/Typography';
-import RadioInput from '@/components/Input/RadioInput'
+import RadioInput from '@/components/Input/RadioInput';
 import { trackData } from '../../data';
 import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout';
 
-
-
 const index = () => {
-    const handleInput = () => {
-
-    }
+  const handleInput = () => {};
   return (
     <ScreenLayout>
-        <NavHeader 
-            title="All Reminders"
-            _goBack={() => router.push('/(tabs)/home')}
-            _optionFn={() => router.push('/(tabs)/home')}
-            backIcon={<Entypo name="chevron-small-left" size={24} color="black" style={{paddingRight: 90}} />}
-        />
-        <ScreenOverFlowLayout>
-            <Wrapper>
-            {trackData.map((data, index) => {
-              const {id, med, time, icon} = data;
-              const isLastItem = index === trackData.length - 1
-              return(
-                <View 
-                    key={id} 
-                    style={[ style.container, isLastItem && style.lastItem]}>
-                  <View style={{flexDirection: 'row', alignContent: 'center',justifyContent: 'space-between'}}>
-                    <View style={{flexDirection: 'row', alignContent:'center'}}>
-                      <Text style={{backgroundColor: '#FDF2FA', padding:5, borderRadius: 4}}>
-                        {icon}
+      <NavHeader
+        title="All Reminders"
+        _goBack={() => router.push('/(tabs)/home')}
+        _optionFn={() => router.push('/(tabs)/home')}
+        backIcon={
+          <Entypo
+            name="chevron-small-left"
+            size={24}
+            color="black"
+            style={{ paddingRight: 90 }}
+          />
+        }
+      />
+      <ScreenOverFlowLayout>
+        <Wrapper>
+          {trackData.map((data, index) => {
+            const { id, med, time, icon } = data;
+            const isLastItem = index === trackData.length - 1;
+            return (
+              <View
+                key={id}
+                style={[style.container, isLastItem && style.lastItem]}
+              >
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignContent: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <View
+                    style={{ flexDirection: 'row', alignContent: 'center' }}
+                  >
+                    <Text
+                      style={{
+                        backgroundColor: '#FDF2FA',
+                        padding: 5,
+                        borderRadius: 4,
+                      }}
+                    >
+                      {icon}
+                    </Text>
+                    <View style={{ paddingLeft: 15 }}>
+                      <Text
+                        style={{
+                          fontWeight: 500,
+                          fontSize: 14,
+                          fontFamily: 'Lato_400Regular',
+                        }}
+                      >
+                        {med}
                       </Text>
-                      <View style={{paddingLeft: 15}}>
-                        <Text style={{fontWeight: 500, fontSize: 14,fontFamily: 'Lato_400Regular'}}>{med}</Text>
-                        <Text style={{color: '#717680', fontWeight: 400, fontSize: 12, paddingTop: 3, fontFamily:'Lato_400Regular'}}>{time}</Text>
-                      </View>
+                      <Text
+                        style={{
+                          color: '#717680',
+                          fontWeight: 400,
+                          fontSize: 12,
+                          paddingTop: 3,
+                          fontFamily: 'Lato_400Regular',
+                        }}
+                      >
+                        {time}
+                      </Text>
                     </View>
-                    <RadioInput 
-                    selected={true}
-                    onPress={handleInput}
-                    />
                   </View>
+                  <RadioInput selected={true} onPress={handleInput} />
                 </View>
-              )
-            })}
-            </Wrapper>
-        </ScreenOverFlowLayout>
+              </View>
+            );
+          })}
+        </Wrapper>
+      </ScreenOverFlowLayout>
     </ScreenLayout>
-  )
-}
+  );
+};
 
-export default index
+export default index;
 
 const style = StyleSheet.create({
-    container:{
-        paddingTop: 15, 
-        paddingBottom: 15 ,
-        borderBottomWidth: 1, 
-        borderBottomColor:'#F2F2F2',
-    },
-    lastItem: {
-        borderBottomWidth: 0, // Remove border from last item
-      },
-})
+  container: {
+    paddingTop: 15,
+    paddingBottom: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F2F2F2',
+  },
+  lastItem: {
+    borderBottomWidth: 0, // Remove border from last item
+  },
+});

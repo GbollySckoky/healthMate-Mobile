@@ -1,13 +1,13 @@
-import React from 'react'
-import { Text, View } from 'react-native'
-import TrackPage from '../(track)'
+import React from 'react';
+import { Text, View } from 'react-native';
+import TrackPage from '../(track)';
 
 const Track = () => {
   return (
     <View>
-        <TrackPage />
+      <TrackPage />
     </View>
-  )
-}
+  );
+};
 
-export default Track
+export default Track;

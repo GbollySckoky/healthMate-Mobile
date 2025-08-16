@@ -1,13 +1,13 @@
 import React, { ReactNode, createContext, useState, useContext } from 'react';
-import { 
-  Modal, 
-  Pressable, 
-  Text, 
-  View, 
-  StyleSheet, 
-  Dimensions, 
+import {
+  Modal,
+  Pressable,
+  Text,
+  View,
+  StyleSheet,
+  Dimensions,
   ScrollView,
-  StatusBar 
+  StatusBar,
 } from 'react-native';
 
 const { height } = Dimensions.get('window');
@@ -80,7 +80,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
   return (
     <ModalContext.Provider value={{ openModal, closeModal }}>
       {children}
-      
+
       <Modal
         visible={isOpen}
         transparent={true}
@@ -90,8 +90,11 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
       >
         {/* Backdrop */}
         <Pressable style={styles.backdrop} onPress={closeModal}>
-          <StatusBar backgroundColor="rgba(0,0,0,0.5)" barStyle="light-content" />
-          
+          <StatusBar
+            backgroundColor="rgba(0,0,0,0.5)"
+            barStyle="light-content"
+          />
+
           {/* Modal Container */}
           <Pressable
             style={styles.modalContainer}
@@ -104,12 +107,12 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
                   {modalConfig.title && (
                     <Text style={styles.title}>{modalConfig.title}</Text>
                   )}
-                  
+
                   <Pressable style={styles.closeButton} onPress={closeModal}>
                     <Text style={styles.closeButtonText}>✕</Text>
                   </Pressable>
                 </View>
-                
+
                 {modalConfig.description && (
                   <Text style={styles.description}>
                     {modalConfig.description}
@@ -120,7 +123,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
 
             {/* Content */}
             {modalContent && (
-              <ScrollView 
+              <ScrollView
                 style={styles.content}
                 showsVerticalScrollIndicator={false}
                 bounces={false}
@@ -135,7 +138,6 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
                 <Text style={styles.closeBtnText}>{modalConfig.btnText}</Text>
               </Pressable>
             )} */}
-            
           </Pressable>
         </Pressable>
       </Modal>
@@ -193,7 +195,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 3
+    padding: 3,
   },
   closeButtonText: {
     fontSize: 16,
@@ -207,14 +209,14 @@ const styles = StyleSheet.create({
     padding: 13,
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 'auto'
+    margin: 'auto',
     // marginHorizontal: 10
   },
   closeBtnText: {
     fontSize: 14,
     color: 'white',
     fontWeight: '600',
-    fontFamily: 'Inter'
+    fontFamily: 'Inter',
   },
   description: {
     fontSize: 14,
