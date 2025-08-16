@@ -14,19 +14,24 @@ interface ModalType {
   title: string;
   text: string;
   isOpen: boolean;
-  _fn: () => void;
+  closeModal: () => void;
 }
 
-const Modals = ({ icon, title, text, isOpen, _fn }: ModalType) => {
+const Modals = ({ icon, title, text, isOpen, closeModal }: ModalType) => {
   if (!isOpen) return null;
   return (
-    <Modal>
+    <Modal
+    // visible={isOpen}
+    transparent={true}
+    // animationType={modalConfig.animationType || 'fade'}
+    onRequestClose={closeModal}
+    statusBarTranslucent={true}>
       <View style={styles.overlay}>
         <View style={styles.container}>
           <Text style={styles.iconWrapper}>{icon}</Text>
-          <CardAmount>{title}</CardAmount>
+          <Text style={styles.title}>{title}</Text>
           <Text style={styles.description}>{text}</Text>
-          <SubmitButton _fn={_fn}>Back to home</SubmitButton>
+          <SubmitButton _fn={closeModal}>Done</SubmitButton>
         </View>
       </View>
     </Modal>
@@ -35,11 +40,7 @@ const Modals = ({ icon, title, text, isOpen, _fn }: ModalType) => {
 
 const styles = StyleSheet.create({
   overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
@@ -59,19 +60,31 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    padding:20,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   iconWrapper: {
     paddingBottom: 8,
     backgroundColor: colors.lightPurple,
     borderRadius: 40,
     padding: 10,
+    marginTop: 10,
+    marginBottom: 10
+  },
+  title:{
+    fontWeight: '500',
+    fontSize: 20,
+    fontFamily: 'Lato_400Regular',
+    color: colors.black,
   },
   description: {
-    fontWeight: '400',
-    fontSize: 16,
-    fontFamily: 'LibreFranklin_400Regular',
+    fontWeight: '500',
+    fontSize: 14,
+    fontFamily: 'Lato_400Regular',
     color: colors.gray,
     paddingTop: 8,
+    textAlign: 'center'
   },
 });
 
