@@ -85,7 +85,7 @@ const Profile = () => {
   };
 
   const navigateToSettings = () => {
-    router.push('/(profile)/settings');
+    router.push('/settings');
   };
 
   const handleMenuNavigation = (route: string) => {

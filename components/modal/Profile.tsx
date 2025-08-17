@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     },
     optionText: {
       fontSize: 12,
-      paddingVertical: 4,
+      paddingVertical: 6,
     },
 });
 
