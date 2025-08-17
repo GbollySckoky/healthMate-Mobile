@@ -5,7 +5,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Card } from '@/components/typography/Typography';
 import { colors } from '@/lib/colors';
 
-const AllChats = () => {
+const ClosedChats = () => {
   
   return (
     <View style={styles.container}>
@@ -127,4 +127,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AllChats;
+export default ClosedChats;

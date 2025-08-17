@@ -2,55 +2,81 @@ import * as React from 'react';
 import { View, Text, StyleSheet, useWindowDimensions, Dimensions } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import AllChats from './_components/AllChats';
+import OpenChats from './_components/OpenChats';
+import ClosedChats from './_components/ClosedChats';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
-const FirstRoute = () => (
-  <View style={styles.scene}>
-    <AllChats />
-  </View>
-);
+// const FirstRoute = () => (
+//   <View style={styles.scene}>
+//     <AllChats />
+//   </View>
+// );
 
-const SecondRoute = () => (
-  <View style={styles.scene}>
-    <Text style={styles.debugText}>SECOND ROUTE CONTENT</Text>
-    <Text style={styles.text}>Open Chats</Text>
-  </View>
-);
+// const SecondRoute = () => (
+//   <View style={styles.scene}>
+//     <OpenChats />
+//   </View>
+// );
 
-const ThirdRoute = () => (
-  <View style={styles.scene}>
-    <Text style={styles.debugText}>THIRD ROUTE CONTENT</Text>
-    <Text style={styles.text}>Closed Chats</Text>
-  </View>
-);
+// const ThirdRoute = () => (
+//   <View style={styles.scene}>
+//     <ClosedChats />
+//   </View>
+// );
 
-const renderScene = SceneMap({
-  first: FirstRoute,
-  second: SecondRoute,
-  third: ThirdRoute
-});
+// const renderScene = SceneMap({
+//   first: FirstRoute,
+//   second: SecondRoute,
+//   third: ThirdRoute
+// });
 
 const renderTabBar = (props: any) => (
-  <TabBar
-    {...props}
-    indicatorStyle={styles.indicator}
-    style={styles.tabBar}
-    labelStyle={styles.label}
-    activeColor="#007AFF"
-    inactiveColor="#8E8E93"
-  />
-);
-
-const routes = [
-  { key: 'first', title: 'All Chats' },
-  { key: 'second', title: 'Open Chats' },
-  { key: 'third', title: 'Closed Chats' },
-];
+    <TabBar
+      {...props}
+      indicatorStyle={styles.indicator}
+      style={styles.tabBar}
+      labelStyle={styles.label}
+      activeColor="#007AFF"
+      inactiveColor="#8E8E93"
+    />
+  );
+  
+  const routes = [
+    { key: 'first', title: 'All Chats' },
+    { key: 'second', title: 'Open Chats' },
+    { key: 'third', title: 'Closed Chats' },
+  ];
+  
 
 export default function TabViews() {
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
+
+  const renderScene = ({ route }: any) => {
+    switch (route.key) {
+      case 'first':
+        return (
+          <View style={styles.scene}>
+            <AllChats />
+          </View>
+        );
+      case 'second':
+        return (
+          <View style={styles.scene}>
+            <OpenChats />
+          </View>
+        );
+      case 'third':
+        return (
+          <View style={styles.scene}>
+            <ClosedChats />
+          </View>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -60,7 +86,6 @@ export default function TabViews() {
         renderTabBar={renderTabBar}
         onIndexChange={setIndex}
         initialLayout={{ width: layout.width }}
-        style={styles.tabView}
       />
     </View>
   );
@@ -69,8 +94,8 @@ export default function TabViews() {
 const styles = StyleSheet.create({
   container: {
     height: screenHeight - 100, // Force specific height
-    width: screenWidth,
-    backgroundColor: '#fff',
+    // width: screenWidth,
+    // backgroundColor: '#fff',
   },
   tabView: {
     flex: 1,
@@ -78,8 +103,9 @@ const styles = StyleSheet.create({
   },
   scene: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
-    padding: 20,
+    // backgroundColor: '#f0f0f0',
+    // padding: 20,
+    marginTop: 30,
     minHeight: 500, // Force minimum height for scenes
   },
   debugText: {

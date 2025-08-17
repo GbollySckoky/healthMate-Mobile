@@ -6,8 +6,8 @@ import { Wrapper } from '@/components/typography/Typography';
 import { View, Text } from 'react-native';
 import SearchInput from '@/components/Input/SearchInput';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import TabViewExample from './Tab';
 import { colors } from '@/lib/colors';
+import TabViews from './Tab';
 
 
 const MessagePage = () => {
@@ -31,7 +31,7 @@ const MessagePage = () => {
                 </Text>
                 
             </View>
-            <TabViewExample />
+            <TabViews />
         </Wrapper>
       </ScreenOverFlowLayout>
     </ScreenLayout>

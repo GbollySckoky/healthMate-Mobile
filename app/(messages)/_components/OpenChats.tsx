@@ -2,10 +2,9 @@ import React from 'react';
 import { Text, View, StyleSheet, Image } from 'react-native';
 import { messageData } from './data';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Card } from '@/components/typography/Typography';
 import { colors } from '@/lib/colors';
 
-const AllChats = () => {
+const OpenChats = () => {
   
   return (
     <View style={styles.container}>
@@ -127,4 +126,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AllChats;
+export default OpenChats;

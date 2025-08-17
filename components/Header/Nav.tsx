@@ -13,9 +13,10 @@ const Nav = ({title, text}: navType) => {
           style={{
             borderBottomWidth: 1,
             borderColor: '#F2F2F2',
-            paddingBottom: 20,
+            paddingTop: 20,
             flexDirection: 'row',
             justifyContent: 'space-between',
+            paddingLeft: 10
           }}
         >
           <View>
@@ -25,6 +26,7 @@ const Nav = ({title, text}: navType) => {
                 fontFamily: 'LibreFranklin_400Regular',
                 fontWeight: '400',
                 fontSize: 12,
+                
               }}
             >
              {text}
