@@ -15,6 +15,7 @@ const Inputs = ({ value, onChangeText }: NumberInputType) => {
       onChangeText={onChangeText}
       value={value}
       // placeholder={placeholder}
+      // placeholderTextColor={colors.black}
     />
   );
 };

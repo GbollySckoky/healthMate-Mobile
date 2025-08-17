@@ -1,24 +1,12 @@
-import { Image } from 'expo-image';
-import Feather from '@expo/vector-icons/Feather';
 import RadioInput from '@/components/Input/RadioInput';
 import {
-  Card,
-  CardText,
-  CardTitle,
-  MinCard,
-  Status,
   SubTitle,
-  Texts,
-  Title,
-  Wrapper,
 } from '@/components/typography/Typography';
 import React from 'react';
 import {
   Text,
   View,
-  ScrollView,
   TouchableOpacity,
-  Pressable,
   StyleSheet,
 } from 'react-native';
 import { trackData } from '../../data';

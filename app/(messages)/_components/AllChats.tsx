@@ -1,18 +1,22 @@
 import React from 'react';
-import { Text, View, StyleSheet, Image } from 'react-native';
+import { Text, View, StyleSheet, Image, Pressable } from 'react-native';
 import { messageData } from './data';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Card } from '@/components/typography/Typography';
 import { colors } from '@/lib/colors';
+import { useRouter } from 'expo-router';
 
 const AllChats = () => {
-  
+    const router = useRouter()
+    const handleRoute = (index: number) => {
+        router.push(`/(messages)/details/${index}`)
+    }
   return (
     <View style={styles.container}>
         {messageData?.map((message, index) => {
           const { name, profession, msg, time, count, img } = message;
           return (
-            <View style={styles.Card} key={index}>
+            <Pressable style={styles.Card} key={index} onPress={() => handleRoute(index)}>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <View style={{flexDirection: 'row', flex: 1}}>
                     <Image source={img} alt='Profile Image' style={{width: 60, height: 60, borderRadius: 30}}/>
@@ -34,7 +38,7 @@ const AllChats = () => {
                     <Text style={styles.time}>{time || 'No Time'}</Text>
                 </View>
                 </View>
-            </View>
+            </Pressable>
           );
         }) || <Text style={styles.debugText}>No messages to display</Text>}
       

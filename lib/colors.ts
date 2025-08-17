@@ -6,5 +6,7 @@ export const colors = {
   lightGray: '#F1F1F1F1',
   black: '#414651',
   lightPurple: '#FDF2FA',
-  broderColor: '#D6D7DA'
+  broderColor: '#D6D7DA',
+  green: '#027A48',
+  lightGreen: '#EBFEF3'
 };

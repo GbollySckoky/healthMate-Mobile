@@ -23,8 +23,11 @@ const SearchInput = ({
         onChangeText={onChangeText}
         value={value}
         placeholder={placeholder}
+        placeholderTextColor={colors.black}
       />
-      <Text style={{position: 'absolute',top: 18, left: 3 }}> <EvilIcons name="search" size={25} color={colors.black} /> </Text>
+      <Text style={{position: 'absolute',top: 18, left: 3 }}> 
+        <EvilIcons name="search" size={25} color={colors.black} /> 
+      </Text>
     </View>
   );
 };
