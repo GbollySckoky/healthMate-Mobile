@@ -1,25 +1,25 @@
-import Nav from '@/components/Header/Nav'
-import React, { useState } from 'react'
 import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout';
 import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
 import { Wrapper } from '@/components/typography/Typography';
-import { View, Text } from 'react-native';
+import Nav from '@/components/Header/Nav';
 import SearchInput from '@/components/Input/SearchInput';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { View, Text } from 'react-native';
+import { useState } from 'react';
 import { colors } from '@/lib/colors';
-import TabViews from './Tab';
+import Consultation from './components/Consultation';
+import TopRated from './components/TopRated';
 
 
-const MessagePage = () => {
+const ConsultationPage = () => {
     const [searchInput, setSearchInput] = useState("")
-    console.log(searchInput)
   return (
     <ScreenLayout>
-      <Nav
-        title="Your Conversations"
-      />
-      <ScreenOverFlowLayout>
-        <Wrapper>
+    <Nav
+      title="Book a Consultation"
+    />
+    <ScreenOverFlowLayout>
+      <Wrapper>
             <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10}}>
                 <SearchInput 
                     placeholder='Search for a doctor, specialty, or ho...'
@@ -30,11 +30,12 @@ const MessagePage = () => {
                     <Ionicons name="filter-outline" size={20} color="black" />
                 </Text>
             </View>
-            <TabViews />
-        </Wrapper>
+            <Consultation />
+            <TopRated />
+      </Wrapper>
       </ScreenOverFlowLayout>
     </ScreenLayout>
   )
 }
 
-export default MessagePage
+export default ConsultationPage

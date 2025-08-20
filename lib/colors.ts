@@ -8,5 +8,6 @@ export const colors = {
   lightPurple: '#FDF2FA',
   broderColor: '#D6D7DA',
   green: '#027A48',
-  lightGreen: '#EBFEF3'
+  lightGreen: '#EBFEF3',
+  white: '#FAFAFA'
 };

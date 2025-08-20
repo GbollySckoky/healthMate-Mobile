@@ -1,4 +1,3 @@
-import { useRouter } from 'expo-router';
 import React from 'react';
 import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout';
 import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
@@ -7,7 +6,7 @@ import HealthOverview from './_components/HealthOverview';
 import Nav from '@/components/Header/Nav';
 
 const TrackPage = () => {
-  const router = useRouter();
+
   return (
     <ScreenLayout>
       <Nav
