@@ -1,20 +1,9 @@
 import {
-  Card,
-  CardText,
   CardTitle,
-  MinCard,
-  Status,
   SubTitle,
-  Texts,
-  Title,
-  Wrapper,
 } from '@/components/typography/Typography';
 import {
-  Text,
   View,
-  ScrollView,
-  TouchableOpacity,
-  Pressable,
   StyleSheet,
 } from 'react-native';
 

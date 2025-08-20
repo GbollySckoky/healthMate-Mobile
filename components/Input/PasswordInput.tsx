@@ -1,5 +1,7 @@
 import React, { ReactElement } from 'react';
 import { TextInput, View, StyleSheet, Text, Pressable } from 'react-native';
+import { colors } from '@/lib/colors';
+
 
 interface PasswordInputProps {
   label: string;
@@ -34,6 +36,7 @@ const PasswordInput = ({
           value={value}
           placeholder={placeholder}
           secureTextEntry={secureTextEntry}
+          placeholderTextColor={colors.black}
         />
         <Pressable style={styles.eyeButton} onPress={onToggleVisibility}>
           {isPasswordVisible ? openIcon : closeIcon}

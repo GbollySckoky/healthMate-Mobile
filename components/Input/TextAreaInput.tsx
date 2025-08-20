@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { TextInput, View, StyleSheet, Text } from 'react-native';
+import { colors } from '@/lib/colors';
+
 
 interface NumberInputType {
   label: string;
@@ -24,7 +26,8 @@ const TextAreaInput = ({
         placeholder={placeholder}
         multiline={true}
         numberOfLines={6}
-        textAlignVertical="top" // for andriod it takes the text to the top
+        textAlignVertical="top" 
+        placeholderTextColor={colors.black}
       />
     </View>
   );

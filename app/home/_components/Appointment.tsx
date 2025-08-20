@@ -3,7 +3,6 @@ import {
   SmallText,
   Status,
   SubTitle,
-  Texts,
 } from '@/components/typography/Typography';
 import { useRouter } from 'expo-router';
 import React from 'react';

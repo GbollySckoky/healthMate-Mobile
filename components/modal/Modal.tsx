@@ -1,10 +1,6 @@
 import React, { ReactElement } from 'react';
 import { View, Text, StyleSheet, Dimensions, Modal } from 'react-native';
-import {
-  CardAmount,
-  SubmitButton,
-  Wrapper,
-} from '@/components/typography/Typography';
+import { SubmitButton } from '@/components/typography/Typography';
 import { colors } from '@/lib/colors';
 
 const { height } = Dimensions.get('window');
