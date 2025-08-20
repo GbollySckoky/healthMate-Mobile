@@ -50,7 +50,10 @@ const Profile = () => {
       value: 'Jan 20, 1996',
       id: 4,
       icon: <Feather name="calendar" size={20} color={colors.lightRed} />,
-    },
+    }
+  ];
+
+  const otherMenuItems = [
     {
       title: 'My Health Info',
       id: 5,
@@ -61,6 +64,7 @@ const Profile = () => {
           color={colors.lightRed}
         />
       ),
+      route: '/(profile)/health-info' as const
     },
     {
       title: 'My Reminders',
@@ -72,6 +76,7 @@ const Profile = () => {
           color={colors.lightRed}
         />
       ),
+      route: '/(profile)/reminders' as const // Changed to a more appropriate route
     },
   ];
 
@@ -80,8 +85,13 @@ const Profile = () => {
   };
 
   const navigateToSettings = () => {
-    router.push('/(profile)/settings');
+    router.push('/settings');
   };
+
+  const handleMenuNavigation = (route: string) => {
+    router.push(route as any); // Type assertion for dynamic navigation
+  };
+
   return (
     <View>
       <View
@@ -129,13 +139,14 @@ const Profile = () => {
           38 years
         </Text>
       </View>
+
       {/* Account Info */}
       <View>
         <LatoText>Account Information</LatoText>
         <Card>
-          {profileData.slice(0, 4).map((profile) => {
+          {profileData.map((profile, index) => {
             const { title, value, id, icon, next } = profile;
-            const isLastItem = id === profileData.length - 1;
+            const isLastItem = index === profileData.length - 1;
             return (
               <View
                 key={id}
@@ -180,42 +191,45 @@ const Profile = () => {
           })}
         </Card>
       </View>
+
       {/* Other */}
       <View>
         <LatoText>Other</LatoText>
         <Card>
-          {profileData.slice(4, 6).map((profile) => {
-            const { title, id, icon } = profile;
-            const isLastItem = id === profileData.length - 1;
+          {otherMenuItems.map((item, index) => {
+            const { title, id, icon, route } = item;
+            const isLastItem = index === otherMenuItems.length - 1;
             return (
               <View
                 key={id}
                 style={[isLastItem && styles.lastItem, styles.container]}
               >
-                <View style={{ flexDirection: 'row' }}>
-                  <Text>{icon}</Text>
-                  <View style={{ marginLeft: 10 }}>
-                    <Text
-                      style={{
-                        fontFamily: 'Lato_700Bold',
-                        fontWeight: '600',
-                        color: colors.lightBlack,
-                      }}
-                    >
-                      {title}
-                    </Text>
-                    {/* <Text style={{fontFamily: 'Lato_400Regular', fontWeight: '400', color: colors.gray, paddingTop:3}}>{value}</Text> */}
+                <Pressable onPress={() => handleMenuNavigation(route)}>
+                  <View style={{ flexDirection: 'row' }}>
+                    <Text>{icon}</Text>
+                    <View style={{ marginLeft: 10 }}>
+                      <Text
+                        style={{
+                          fontFamily: 'Lato_700Bold',
+                          fontWeight: '600',
+                          color: colors.lightBlack,
+                        }}
+                      >
+                        {title}
+                      </Text>
+                    </View>
                   </View>
-                </View>
+                </Pressable>
               </View>
             );
           })}
         </Card>
       </View>
+
       {/* Settings */}
-      <Pressable onPress={navigateToSettings}>
+      <Pressable onPress={navigateToSettings} style={styles.settingsContainer}>
         <AntDesign name="setting" size={24} color="black" />
-        <Text>Settings</Text>
+        <Text style={styles.settingsText}>Settings</Text>
       </Pressable>
     </View>
   );
@@ -232,5 +246,16 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.lightGray,
     paddingBottom: 20,
+  },
+  settingsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 15,
+  },
+  settingsText: {
+    marginLeft: 10,
+    fontFamily: 'Lato_700Bold',
+    fontWeight: '600',
+    color: colors.lightBlack,
   },
 });

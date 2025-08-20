@@ -1,15 +1,31 @@
 import { Title, Wrapper } from '@/components/typography/Typography';
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, Pressable } from 'react-native';
 import AppointmentCard from '@/app/home/_components/Appointment';
 import Reminder from '@/app/home/_components/Reminder';
 import Streak from '@/app/home/_components/Streak';
 import Activities from '@/app/home/_components/Activities';
 import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { Link } from 'expo-router';
+import useDisplay from '@/hooks/useDisplay';
+import ProfileModal from '@/components/modal/Profile';
+
+
 
 const HomePage = () => {
+  const {openModal, handleDisplay} = useDisplay() 
+  const options = [
+   {name:"View my Profile",
+    url: '/(profile)',
+    },
+    {name: "Settings",
+      url: '/settings'
+    },
+    {
+      name: "Logout",
+      url: ''
+    }
+  ] 
   return (
     <ScreenOverFlowLayout>
       <Wrapper>
@@ -40,22 +56,18 @@ const HomePage = () => {
               size={22}
               color="#717680"
             />
-            <Link
-              href={'/(profile)'}
+            <Pressable
+              onPress={handleDisplay}
               style={{
                 backgroundColor: '#F45A42',
                 borderRadius: 40,
                 paddingHorizontal: 10,
                 paddingVertical: 7,
-                color: 'white',
-                fontSize: 14,
-                fontFamily: 'LibreFranklin_600SemiBold',
                 marginLeft: 5,
-                fontWeight: '600',
               }}
             >
-              G
-            </Link>
+             <Text style={style.text}>G</Text> 
+            </Pressable>
           </View>
         </View>
         {/* Your Activities */}
@@ -66,6 +78,12 @@ const HomePage = () => {
         <Streak />
         {/* Reminder */}
         <Reminder />
+        <ProfileModal 
+          isOpen={openModal}
+          closeModal={handleDisplay}
+          options={options}
+          icon={<MaterialIcons name="logout" size={17}  />}
+        />
       </Wrapper>
     </ScreenOverFlowLayout>
   );
@@ -145,4 +163,10 @@ export const style = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
   },
+  text:{
+    color: 'white',
+    fontSize: 14,
+    fontFamily: 'LibreFranklin_600SemiBold', 
+    fontWeight: '600'
+  }
 });

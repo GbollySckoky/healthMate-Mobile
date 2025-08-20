@@ -1,5 +1,7 @@
 import React from 'react';
 import { TextInput, View, StyleSheet, Text } from 'react-native';
+import { colors } from '@/lib/colors';
+
 
 interface DateInputType {
   label: string;
@@ -20,6 +22,7 @@ const DateInput = ({ label, value, _fn, placeholder }: DateInputType) => {
         placeholder={placeholder}
         editable={false}
         showSoftInputOnFocus={false}
+        placeholderTextColor={colors.black}
       />
     </View>
   );

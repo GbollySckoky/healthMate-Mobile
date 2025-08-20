@@ -211,6 +211,7 @@ export const style = StyleSheet.create({
     shadowRadius: 2,
     elevation: 3,
     overflow: 'hidden',
+
   },
   ButtonRow: {
     flexDirection: 'row',
