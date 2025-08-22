@@ -9,8 +9,14 @@ import { useState } from 'react';
 import { colors } from '@/lib/colors';
 import Consultation from './components/Consultation';
 import TopRated from './components/TopRated';
+import { ScrollViewHorizontal } from '@/components/scrollView/ScrollViewHorizontal';
 
-
+const filtersData = [
+  "General",
+  "Cardiology",
+  "Dermatology",
+  'Pediatrics'
+]
 const ConsultationPage = () => {
     const [searchInput, setSearchInput] = useState("")
   return (
@@ -30,6 +36,15 @@ const ConsultationPage = () => {
                     <Ionicons name="filter-outline" size={20} color="black" />
                 </Text>
             </View>
+            <ScrollViewHorizontal>
+              {filtersData.map((filter, index) => (
+                <Text 
+                  key={index} 
+                  style={{flexDirection: 'row', alignItems: 'center', rowGap: 5, backgroundColor: colors.white, borderRadius: 5,
+                  paddingVertical: 4, paddingHorizontal: 10, marginBottom: 10, color: colors.black}}>
+                  {filter}</Text>
+              ))}
+            </ScrollViewHorizontal>
             <Consultation />
             <TopRated />
       </Wrapper>

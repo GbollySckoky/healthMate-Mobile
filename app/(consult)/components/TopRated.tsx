@@ -50,7 +50,7 @@ const TopRated = () => {
                         </View>
                     </View>
                     <View style={style.ButtonRow}>
-                        <Text style={[style.buttonText, { color: '#252B37' }]}>
+                        <Text style={[style.buttonText, { color: '₦10,000' }]}>
                         ₦10,000
                         </Text>
                     <TouchableOpacity style={style.joinBtn}>
@@ -127,7 +127,7 @@ export const style = StyleSheet.create({
       marginTop: 14,
     },
     buttonText: {
-      fontSize: 14,
+      fontSize: 15,
       fontWeight: '600',
       fontFamily: 'Inter_600SemiBold',
     },
@@ -135,7 +135,7 @@ export const style = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      gap: 10,
+    //   gap: 10,
       borderTopColor: '#F8F8F8',
       borderTopWidth: 2,
       marginTop: 15,
