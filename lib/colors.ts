@@ -9,5 +9,6 @@ export const colors = {
   broderColor: '#D6D7DA',
   green: '#027A48',
   lightGreen: '#EBFEF3',
-  white: '#FAFAFA'
+  white: '#FAFAFA',
+  red: '#FF6757'
 };

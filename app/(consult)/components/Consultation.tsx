@@ -12,7 +12,7 @@ const Consultation = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <SubTitle>Featured Hospitals</SubTitle>
-        <Link href="/" >
+        <Link href="/(consult)/all-hospitals" >
           <Text style={styles.viewAllText}>
             View All
             <AntDesign name="arrowright" size={15} />
@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 16,
+    marginTop: 10
   },
   header: {
     flexDirection: 'row',
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
   },
   card: {
     width: 300,
-    backgroundColor: colors.white,
+    backgroundColor: '#FAFAFA',
     borderRadius: 12,
     shadowColor: '#000',
     shadowOffset: {
@@ -90,7 +91,9 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     overflow: 'hidden',
-    padding: 10
+    padding: 10,
+    borderColor: '#D6D7D8',
+    borderWidth: 1,
   },
   imageContainer: {
     width: '100%',
