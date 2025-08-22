@@ -27,7 +27,6 @@ const TopRated = () => {
       </View>
       
       <ScrollViewHorizontal>
-
         {topRatedData.map((rated) => {
             const {id, doctorName, type,address} = rated;
             return(

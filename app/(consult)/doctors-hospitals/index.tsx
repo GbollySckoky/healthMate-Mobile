@@ -1,31 +1,42 @@
 "use client"
 import { NavHeader } from '@/components/Header/Header'
-import React from 'react'
+import React, {useState} from 'react'
 import Entypo from '@expo/vector-icons/Entypo';
 import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout';
 import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
 import { Wrapper, SubTitle } from '@/components/typography/Typography';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
+import SearchInput from '@/components/Input/SearchInput';
 import { colors } from '@/lib/colors';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { Image } from 'react-native';
 import { topRatedData } from '@/app/data'
 
 
-
-const TopRatedDoctorsPage = () => {
+const index = () => {
     const router = useRouter()
+    const [searchInput, setSearchInput] = useState("")
     const profile = require('../../../assets/images/Ellipse 165.png')
   return (
     <ScreenLayout>
-        <NavHeader
-            title="Top Rated Doctors"
-            _goBack={() => router.back()}
-            backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
-        />
-        <ScreenOverFlowLayout>
-            <Wrapper>
-            {/* Rated Doctors */}
+    <NavHeader
+       title="Lagos General Hospital"
+       _goBack={() => router.back()}
+       backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+    />
+    <ScreenOverFlowLayout>
+      <Wrapper>
+            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20}}>
+                <SearchInput 
+                    placeholder='Search for a doctor, specialty, or ho...'
+                    value={searchInput}
+                    onChangeText={(value) => setSearchInput(value)}
+                />
+                <Text style={{borderWidth: 1, borderColor: colors.broderColor, padding: 9, borderRadius: 5, marginLeft: 10}}>
+                    <Ionicons name="filter-outline" size={20} color="black" />
+                </Text>
+            </View>
             <View>  
                 {topRatedData.map((rated) => {
                     const {id, doctorName, type,address} = rated;
@@ -62,12 +73,12 @@ const TopRatedDoctorsPage = () => {
                 })}
             </View>
         </Wrapper>
-        </ScreenOverFlowLayout>
+      </ScreenOverFlowLayout>
     </ScreenLayout>
   )
 }
 
-export default TopRatedDoctorsPage
+export default index
 
 const style = StyleSheet.create({
     Card: {

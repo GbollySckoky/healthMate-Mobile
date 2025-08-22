@@ -45,7 +45,7 @@ const Consultation = () => {
                 </View>
                 <View style={styles.footer}>
                  
-                  <Link href={'/(consult)'} style={styles.linkButton}>
+                  <Link href={'/(consult)/doctors-hospitals'} style={styles.linkButton}>
                     <Text style={styles.linkText}>{linkText}</Text>
                   </Link>
                 </View>
