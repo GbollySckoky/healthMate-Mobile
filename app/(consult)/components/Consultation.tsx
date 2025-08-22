@@ -144,10 +144,10 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   linkButton: {
-    borderColor: colors.gray,
+    borderColor: colors.broderColor,
     borderWidth: 1,
     paddingVertical: 12,
-    borderRadius: 6,
+    borderRadius: 10,
     width: '100%',
     textAlign: 'center'
   },
