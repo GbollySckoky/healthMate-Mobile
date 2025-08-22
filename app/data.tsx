@@ -240,7 +240,7 @@ const image4 = require('../assets/images/stephen-andrews-GwgFPDXiSIs-unsplash.we
 export const consultationData = [
   {
     image: image1,
-    id: 1,
+    id: '1',
     hospital: 'Lagos General Hospital',
     address: '2 Olayinka Atiku St, Ajah, Lagos',
     text: 'Over 50 experienced Doctors',
@@ -249,7 +249,7 @@ export const consultationData = [
   },
   {
     image: image2,
-    id: 2,
+    id: '2',
     hospital: 'Braithway Memorial Hospital',
     address: '2 Olayinka Atiku St, Ajah, Lagos',
     text: 'Over 50 experienced Doctors',
@@ -258,7 +258,7 @@ export const consultationData = [
   },
     {
     image: image3,
-    id: 3,
+    id: '3',
     hospital: 'Lagos General Hospital',
     address: '2 Olayinka Atiku St, Ajah, Lagos',
     text: 'Over 50 experienced Doctors',
@@ -267,7 +267,7 @@ export const consultationData = [
   },
    {
     image: image4,
-    id: 4,
+    id: '4',
     hospital: 'Lagos General Hospital',
     address: '2 Olayinka Atiku St, Ajah, Lagos',
     text: 'Over 50 experienced Doctors',
