@@ -6,18 +6,19 @@ import { colors } from '@/lib/colors'
 import AntDesign from '@expo/vector-icons/AntDesign';
 import {
     Card,
-    SmallText,
-    Status,
     SubTitle,
   } from '@/components/typography/Typography';
 import { topRatedData } from '@/app/data'
+
+
+
 const TopRated = () => {
     const profile = require('../../../assets/images/Ellipse 165.png')
   return (
     <View style={style.container}>
       <View style={style.header}>
         <SubTitle>Top Rated Doctors</SubTitle>
-        <Link href="/" >
+        <Link href="/(consult)/top-rated-doctors" >
           <Text style={style.viewAllText}>
             See All
             <AntDesign name="arrowright" size={15} />
@@ -36,8 +37,6 @@ const TopRated = () => {
                             <Image
                             style={style.image}
                             source={profile}
-                            // contentFit="cover"
-                            // transition={1000}
                             />
                         </View>
                         <View style={style.Flexs}>
@@ -50,7 +49,7 @@ const TopRated = () => {
                         </View>
                     </View>
                     <View style={style.ButtonRow}>
-                        <Text style={[style.buttonText, { color: '₦10,000' }]}>
+                        <Text style={[style.buttonTexts, { color: colors.green }]}>
                         ₦10,000
                         </Text>
                     <TouchableOpacity style={style.joinBtn}>
@@ -78,7 +77,8 @@ export const style = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginVertical: 6,
+        marginTop: 16,
+        marginBottom: 6
     },
     viewAllText: {
         color: colors.lightRed,
@@ -110,27 +110,22 @@ export const style = StyleSheet.create({
       alignContent: 'center',
       marginTop: 3,
     },
-    rescheduleBtn: {
-      paddingVertical: 8,
-      paddingHorizontal: 16,
-      backgroundColor: '#FAFAFA',
-      borderRadius: 8,
-      borderColor: '#D6D7DA',
-      borderWidth: 1,
-      marginTop: 14,
-    },
     joinBtn: {
-      paddingVertical: 8,
-      paddingHorizontal: 16,
-      backgroundColor: '#DD2591',
-      borderRadius: 8,
-      marginTop: 14,
-    },
-    buttonText: {
-      fontSize: 15,
-      fontWeight: '600',
-      fontFamily: 'Inter_600SemiBold',
-    },
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        backgroundColor: colors.lightRed,
+        borderRadius: 8,
+      },
+      buttonText: {
+        fontSize: 14,
+        fontWeight: '600',
+        fontFamily: 'Inter_600SemiBold',
+      },
+      buttonTexts: {
+        fontSize: 16,
+        fontWeight: '600',
+        fontFamily: 'LibreFranklin_600SemiBold',
+      },
     ButtonRow: {
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -139,6 +134,7 @@ export const style = StyleSheet.create({
       borderTopColor: '#F8F8F8',
       borderTopWidth: 2,
       marginTop: 15,
+      paddingTop: 10
     },
     flexs: {
       flexDirection: 'row',

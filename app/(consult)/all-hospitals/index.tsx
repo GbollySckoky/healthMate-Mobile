@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
         fontWeight: '400',
       },
       linkButton: {
-        borderColor: '#D6D7D8',
+        borderColor: colors.broderColor,
         borderWidth: 1,
         paddingVertical: 12,
         borderRadius: 10,
