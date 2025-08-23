@@ -33,7 +33,6 @@ const Consultation = () => {
                   resizeMode="cover"
                 />
               </View>
-              
               <View style={styles.content}>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                   <View style={styles.hospitalInfo}>
@@ -61,7 +60,6 @@ const Consultation = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 16,
     marginTop: 10
   },
   header: {

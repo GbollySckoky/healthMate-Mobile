@@ -3,14 +3,14 @@ import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayo
 import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout';
 import { MessageHeader } from '@/components/Header/MessageHeader';
 import Entypo from '@expo/vector-icons/Entypo';
-
-
-
 import {
     Wrapper,
   } from '@/components/typography/Typography';
 import { useRouter } from 'expo-router';
 import MessageInput from './MessageInput';
+
+
+
 const MessageDetails = () => {
     const image = require('../../../assets/images/Mobile.png')
     const router = useRouter()

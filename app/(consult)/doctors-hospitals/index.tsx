@@ -12,6 +12,7 @@ import { colors } from '@/lib/colors';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Image } from 'react-native';
 import { topRatedData } from '@/app/data'
+import EvilIcons from '@expo/vector-icons/EvilIcons';
 
 
 const index = () => {
@@ -53,7 +54,10 @@ const index = () => {
                                     <View style={{ marginLeft: 5 }}>
                                         <SubTitle>{doctorName}</SubTitle>
                                         <Text style={style.Text}>{type}</Text>                      
-                                        <Text style={style.smallText}>{address}</Text>
+                                        <Text style={style.smallText}>
+                                          <EvilIcons name="location" size={13} style={{paddingRight:10}} />
+                                          {address}
+                                        </Text>
                                     </View>
                                     <Text style={style.rating}>⭐ 4.2(38)</Text>
                                 </View>

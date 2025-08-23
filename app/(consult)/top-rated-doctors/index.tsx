@@ -10,7 +10,7 @@ import { useRouter } from 'expo-router';
 import { colors } from '@/lib/colors';
 import { Image } from 'react-native';
 import { topRatedData } from '@/app/data'
-
+import EvilIcons from '@expo/vector-icons/EvilIcons';
 
 
 const TopRatedDoctorsPage = () => {
@@ -42,7 +42,10 @@ const TopRatedDoctorsPage = () => {
                                     <View style={{ marginLeft: 5 }}>
                                         <SubTitle>{doctorName}</SubTitle>
                                         <Text style={style.Text}>{type}</Text>                      
-                                        <Text style={style.smallText}>{address}</Text>
+                                        <Text style={style.smallText}>
+                                          <EvilIcons name="location" size={13} style={{paddingRight:10}} />
+                                          {address}
+                                        </Text>
                                     </View>
                                     <Text style={style.rating}>⭐ 4.2(38)</Text>
                                 </View>
@@ -51,7 +54,7 @@ const TopRatedDoctorsPage = () => {
                                 <Text style={[style.buttonTexts, { color: colors.green }]}>
                                 ₦10,000
                                 </Text>
-                            <TouchableOpacity style={style.joinBtn}>
+                            <TouchableOpacity style={style.joinBtn} onPress={() => router.push(`/(consult)/consultation-deatils/${id}`)}>
                                 <Text style={[style.buttonText, { color: '#F2F2F2' }]}>
                                 View Profile
                                 </Text>

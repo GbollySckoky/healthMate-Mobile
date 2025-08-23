@@ -120,12 +120,12 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 180,
         position: 'relative'
-      },
-      image: {
+    },
+    image: {
         width: '100%',
         height: '100%',
         borderRadius: 10
-      },
+    },
     content: {
         padding: 6,
         marginTop: 10

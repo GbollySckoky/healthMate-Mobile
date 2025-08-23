@@ -9,164 +9,200 @@ import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayo
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import useDisplay from '@/hooks/useDisplay';
 import ProfileModal from '@/components/modal/Profile';
-
-
+import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout';
 
 const HomePage = () => {
-  const {openModal, handleDisplay} = useDisplay() 
+  const { openModal, handleDisplay } = useDisplay();
+  
   const options = [
-   {name:"View my Profile",
-    url: '/(profile)',
+    {
+      name: "View my Profile",
+      url: '/(profile)',
     },
-    {name: "Settings",
+    {
+      name: "Settings",
       url: '/settings'
     },
     {
       name: "Logout",
       url: ''
     }
-  ] 
+  ];
+
+  // Dynamic greeting based on time of day
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good Morning";
+    if (hour < 17) return "Good Afternoon";
+    return "Good Evening";
+  };
+
   return (
-    <ScreenOverFlowLayout>
-      <Wrapper>
-        <View
-          style={{
-            borderBottomWidth: 1,
-            borderColor: '#F2F2F2',
-            paddingBottom: 20,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
-        >
-          <View>
-            <Title>Good Evening, Sarah 👋</Title>
-            <Text
-              style={{
-                fontFamily: 'LibreFranklin_400Regular',
-                fontWeight: '400',
-                fontSize: 12,
-              }}
-            >
-              Let's take a step toward a healthier you today.
-            </Text>
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+    <ScreenLayout>
+      {/* Header Section */}
+      <View style={styles.headerContainer}>
+        <View style={styles.greetingSection}>
+          <Title>{getGreeting()}, Sarah 👋</Title>
+          <Text style={styles.subGreeting}>
+            Let's take a step toward a healthier you today.
+          </Text>
+        </View>
+        
+        <View style={styles.headerIcons}>
+          <Pressable 
+            style={styles.notificationButton}
+            accessibilityLabel="View notifications"
+            accessibilityRole="button"
+          >
             <MaterialIcons
               name="notifications-none"
               size={22}
               color="#717680"
             />
-            <Pressable
-              onPress={handleDisplay}
-              style={{
-                backgroundColor: '#F45A42',
-                borderRadius: 40,
-                paddingHorizontal: 10,
-                paddingVertical: 7,
-                marginLeft: 5,
-              }}
-            >
-             <Text style={style.text}>G</Text> 
-            </Pressable>
-          </View>
+          </Pressable>
+          
+          <Pressable
+            onPress={handleDisplay}
+            style={styles.profileButton}
+            accessibilityLabel="Open profile menu"
+            accessibilityRole="button"
+          >
+            <Text style={styles.profileInitial}>S</Text> 
+          </Pressable>
         </View>
-        {/* Your Activities */}
-        <Activities />
-        {/* Recent Appointments */}
-        <AppointmentCard />
-        {/* Streak */}
-        <Streak />
-        {/* Reminder */}
-        <Reminder />
-        <ProfileModal 
-          isOpen={openModal}
-          closeModal={handleDisplay}
-          options={options}
-          icon={<MaterialIcons name="logout" size={17}  />}
-        />
-      </Wrapper>
-    </ScreenOverFlowLayout>
+      </View>
+
+      {/* Main Content */}
+      <ScreenOverFlowLayout>
+        <Wrapper>
+          <Activities />
+          <AppointmentCard />
+          <Streak />
+          <Reminder />
+          
+          <ProfileModal 
+            isOpen={openModal}
+            closeModal={handleDisplay}
+            options={options}
+            icon={<MaterialIcons name="logout" size={17} />}
+          />
+        </Wrapper>
+      </ScreenOverFlowLayout>
+    </ScreenLayout>
   );
 };
 
 export default HomePage;
 
-export const style = StyleSheet.create({
-  Flex: {
+const styles = StyleSheet.create({
+  // Header Styles
+  headerContainer: {
+    borderBottomWidth: 1,
+    borderColor: '#F2F2F2',
+    paddingBottom: 20,
+    paddingHorizontal: 16,
     flexDirection: 'row',
-    alignContent: 'center',
-    marginTop: 5,
-    marginBottom: 2,
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
   },
-  flex: {
+  greetingSection: {
+    flex: 1,
+    paddingRight: 16,
+  },
+  subGreeting: {
+    fontFamily: 'LibreFranklin_400Regular',
+    fontWeight: '400',
+    fontSize: 12,
+    color: '#717680',
+    marginTop: 4,
+  },
+  headerIcons: {
     flexDirection: 'row',
-    alignContent: 'center',
-    marginTop: 3,
+    alignItems: 'center',
+    gap: 12,
   },
-  MinCard: {
-    padding: 15,
+  notificationButton: {
+    padding: 8,
+    borderRadius: 8,
+  },
+  profileButton: {
+    backgroundColor: '#F45A42',
+    borderRadius: 20,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  profileInitial: {
+    color: 'white',
+    fontSize: 16,
+    fontFamily: 'LibreFranklin_600SemiBold', 
+    fontWeight: '600',
+  },
+
+  // Card Styles (keeping your existing styles but organized better)
+  cardContainer: {
+    padding: 16,
     borderColor: '#F1F1F1',
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: 12,
     backgroundColor: '#fff',
-    marginRight: 10,
-    marginBottom: 10,
-    elevation: 3,
+    marginBottom: 16,
+    elevation: 2,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
-    shadowRadius: 3,
-    width: '100%',
+    shadowRadius: 2,
   },
-  image: {
-    width: 50,
-    height: 50,
-    backgroundColor: '#0553',
-    borderRadius: 100,
-  },
-  Flexs: {
+  
+  // Flex Utilities
+  rowCenter: {
     flexDirection: 'row',
-    flex: 1,
-    justifyContent: 'space-between',
-    alignContent: 'center',
+    alignItems: 'center',
   },
-  Text: {
-    fontFamily: 'Libre-Franklin',
-    fontWeight: 500,
-    fontSize: 12,
-  },
-  ButtonRow: {
+  rowBetween: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    gap: 10,
+    alignItems: 'center',
+  },
+  
+  // Button Styles
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 12,
     borderTopColor: '#F8F8F8',
-    borderTopWidth: 2,
-    marginTop: 15,
+    borderTopWidth: 1,
+    paddingTop: 16,
+    marginTop: 16,
   },
-  rescheduleBtn: {
-    paddingVertical: 8,
+  secondaryButton: {
+    flex: 1,
+    paddingVertical: 12,
     paddingHorizontal: 16,
     backgroundColor: '#FAFAFA',
     borderRadius: 8,
     borderColor: '#D6D7DA',
     borderWidth: 1,
-    marginTop: 14,
+    alignItems: 'center',
   },
-  joinBtn: {
-    paddingVertical: 8,
+  primaryButton: {
+    flex: 1,
+    paddingVertical: 12,
     paddingHorizontal: 16,
     backgroundColor: '#DD2591',
     borderRadius: 8,
-    marginTop: 14,
+    alignItems: 'center',
   },
   buttonText: {
     fontSize: 14,
     fontWeight: '600',
+    textAlign: 'center',
   },
-  text:{
+  primaryButtonText: {
     color: 'white',
-    fontSize: 14,
-    fontFamily: 'LibreFranklin_600SemiBold', 
-    fontWeight: '600'
-  }
+  },
+  secondaryButtonText: {
+    color: '#333',
+  },
 });
