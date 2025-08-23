@@ -108,11 +108,7 @@ const style = StyleSheet.create({
         justifyContent: 'space-between',
       //   alignContent: 'center',
       },
-      flex: {
-        flexDirection: 'row',
-        alignContent: 'center',
-        marginTop: 3,
-      },
+    
       joinBtn: {
         paddingVertical: 8,
         paddingHorizontal: 16,

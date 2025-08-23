@@ -111,7 +111,6 @@ const style = StyleSheet.create({
       image: {
         width: 50,
         height: 50,
-        backgroundColor: '#0553',
         borderRadius: 100,
       },
       Flexs: {

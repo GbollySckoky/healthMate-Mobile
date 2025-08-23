@@ -41,7 +41,7 @@ const HomePage = () => {
     <ScreenLayout>
       {/* Header Section */}
       <View style={styles.headerContainer}>
-        <View style={styles.greetingSection}>
+        <View>
           <Title>{getGreeting()}, Sarah 👋</Title>
           <Text style={styles.subGreeting}>
             Let's take a step toward a healthier you today.
@@ -100,26 +100,22 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#F2F2F2',
     paddingBottom: 20,
-    paddingHorizontal: 16,
+    padding: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-  },
-  greetingSection: {
-    flex: 1,
-    paddingRight: 16,
   },
   subGreeting: {
     fontFamily: 'LibreFranklin_400Regular',
     fontWeight: '400',
     fontSize: 12,
     color: '#717680',
-    marginTop: 4,
+    marginTop: 2,
   },
   headerIcons: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 2,
   },
   notificationButton: {
     padding: 8,
@@ -128,14 +124,14 @@ const styles = StyleSheet.create({
   profileButton: {
     backgroundColor: '#F45A42',
     borderRadius: 20,
-    width: 40,
-    height: 40,
+    width: 30,
+    height: 30,
     justifyContent: 'center',
     alignItems: 'center',
   },
   profileInitial: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: 'LibreFranklin_600SemiBold', 
     fontWeight: '600',
   },

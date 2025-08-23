@@ -1,11 +1,12 @@
 import { SubTitle } from '@/components/typography/Typography'
 import { colors } from '@/lib/colors'
-import React, { ReactNode } from 'react'
+import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import Feather from '@expo/vector-icons/Feather';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { ScrollViewHorizontal } from '@/components/scrollView/ScrollViewHorizontal';
+import { router } from 'expo-router';
 
 const About = () => {
     const data = {
@@ -31,7 +32,7 @@ const About = () => {
             },
         ]
     }
-
+    const id = '1'
     return (
         <View style={{ marginTop: 30, borderTopWidth: 1, borderTopColor: '#F2F2F2' }}>
             <MinCard
@@ -69,7 +70,7 @@ const About = () => {
                                 {consult.icon}
                                 <Text style={{
                                     fontSize: 14,
-                                    fontFamily: 'LibreFranklin_600SemiBold',
+                                    fontFamily: 'LibreFranklin_400Regular',
                                     color: colors.black
                                 }}>
                                     {consult.type}
@@ -98,6 +99,7 @@ const About = () => {
                     marginTop: 25
                 }}
                 activeOpacity={0.8}
+                onPress={() => router.push(`/(consult)/consultation-deatils/book-doctor`)}
             >
                 <Text style={{
                     color: 'white',
