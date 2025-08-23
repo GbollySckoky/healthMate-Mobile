@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { TextInput, View, StyleSheet, Text } from 'react-native';
 import { colors } from '@/lib/colors';
 
-
 interface NumberInputType {
   label: string;
   value: string;
   onChangeText: (value: string) => void;
   placeholder: string;
 }
+
 const TextAreaInput = ({
   label,
   value,
@@ -49,5 +49,6 @@ const styles = StyleSheet.create({
     borderColor: '#D6D7DA',
     borderWidth: 1,
     borderRadius: 5,
+    minHeight: 120, // Add this line - roughly 6 lines of text
   },
 });

@@ -1,4 +1,4 @@
-import { Link } from 'expo-router'
+import { Link, router } from 'expo-router'
 import React from 'react'
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import { ScrollViewHorizontal } from '@/components/scrollView/ScrollViewHorizontal'
@@ -27,7 +27,6 @@ const TopRated = () => {
       </View>
       
       <ScrollViewHorizontal>
-
         {topRatedData.map((rated) => {
             const {id, doctorName, type,address} = rated;
             return(
@@ -52,7 +51,7 @@ const TopRated = () => {
                         <Text style={[style.buttonTexts, { color: colors.green }]}>
                         ₦10,000
                         </Text>
-                    <TouchableOpacity style={style.joinBtn}>
+                    <TouchableOpacity style={style.joinBtn} onPress={() => router.push(`/(consult)/consultation-deatils/${id}`)}>
                         <Text style={[style.buttonText, { color: '#F2F2F2' }]}>
                         View Profile
                         </Text>
@@ -71,7 +70,6 @@ const TopRated = () => {
 export const style = StyleSheet.create({
     container: {
         flex: 1,
-        paddingHorizontal: 16,
     },
     header: {
         flexDirection: 'row',

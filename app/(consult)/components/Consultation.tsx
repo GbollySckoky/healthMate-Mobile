@@ -33,7 +33,6 @@ const Consultation = () => {
                   resizeMode="cover"
                 />
               </View>
-              
               <View style={styles.content}>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                   <View style={styles.hospitalInfo}>
@@ -45,7 +44,7 @@ const Consultation = () => {
                 </View>
                 <View style={styles.footer}>
                  
-                  <Link href={'/(consult)'} style={styles.linkButton}>
+                  <Link href={'/(consult)/doctors-hospitals'} style={styles.linkButton}>
                     <Text style={styles.linkText}>{linkText}</Text>
                   </Link>
                 </View>
@@ -61,7 +60,6 @@ const Consultation = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 16,
     marginTop: 10
   },
   header: {
