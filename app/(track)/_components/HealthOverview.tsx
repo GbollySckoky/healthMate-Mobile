@@ -75,13 +75,8 @@ export const style = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: '#fff',
     marginBottom: 15,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    width: '48%', // Better spacing than 41%
-    minHeight: 120, // Ensures consistent card heights
+    width: '48%',
+    minHeight: 120, 
   },
   pressedCard: {
     opacity: 0.7,
@@ -90,11 +85,11 @@ export const style = StyleSheet.create({
   },
   iconContainer: {
     paddingBottom: 15,
-    fontSize: 24, // Ensure consistent icon sizing
+    fontSize: 24,
   },
   valueContainer: {
     paddingTop: 4,
-    flex: 1, // Takes remaining space
+    flex: 1, 
     justifyContent: 'flex-end', // Pushes content to bottom
   },
   emptyContainer: {
@@ -108,17 +103,5 @@ export const style = StyleSheet.create({
     color: '#666',
     textAlign: 'center',
   },
-  // Alternative grid layout (uncomment if needed)
-  // gridItem: {
-  //     width: '48%',
-  //     minHeight: 120,
-  //     marginBottom: 15,
-  //     justifyContent: 'space-between',
-  //     alignItems: 'flex-start',
-  //     borderRadius: 10,
-  //     borderColor: '#F1F1F1',
-  //     borderWidth: 1,
-  //     padding: 15,
-  //     backgroundColor: '#fff',
-  // },
+
 });

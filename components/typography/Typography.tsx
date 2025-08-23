@@ -145,7 +145,7 @@ export const style = StyleSheet.create({
     fontFamily: 'LibreFranklin_600SemiBold',
   },
   Wrapper: {
-    width: '95%',
+    width: '92%',
     marginLeft: 'auto',
     marginRight: 'auto',
     marginTop: 15,
@@ -179,7 +179,7 @@ export const style = StyleSheet.create({
   SubTitle: {
     fontFamily: 'LibreFranklin_600SemiBold',
     fontSize: 14,
-    color: '#414651',
+    color: colors.black,
     fontWeight: 600,
   },
   CardTitle: {
@@ -188,7 +188,6 @@ export const style = StyleSheet.create({
     color: '#414651',
     fontStyle: 'normal',
     fontWeight: 400,
-    // backgroundColor: 'red'
   },
   CardText: {
     fontFamily: 'Inter_400Regular',

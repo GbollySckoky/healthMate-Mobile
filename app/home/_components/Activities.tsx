@@ -22,7 +22,7 @@ const Activities = () => {
     [linkTo]
   );
   return (
-    <View style={{ marginTop: 20 }}>
+    <View>
       <SubTitle>Your Health Overview</SubTitle>
       <ScrollViewHorizontal>
         {healthOverview.map((health) => {
@@ -54,13 +54,7 @@ export const style = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     backgroundColor: '#fff',
-    marginRight: 10,
     marginBottom: 10,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
     width: 200,
   },
 });
