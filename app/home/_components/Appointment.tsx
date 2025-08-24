@@ -80,7 +80,7 @@ const AppointmentCard = () => {
                 Reschedule
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={style.joinBtn}>
+            <TouchableOpacity style={style.joinBtn} onPress={( ) => router.push('/')}>
               <Text style={[style.buttonText, { color: '#F2F2F2' }]}>
                 Join Call
               </Text>

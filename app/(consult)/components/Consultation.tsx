@@ -1,13 +1,17 @@
 import { Link } from 'expo-router'
 import React from 'react'
-import { View, Text, Image, StyleSheet } from 'react-native'
+import { View, Text, Image, StyleSheet, Pressable } from 'react-native'
 import { consultationData } from '@/app/data'
 import { ScrollViewHorizontal } from '@/components/scrollView/ScrollViewHorizontal'
 import { SubTitle } from '@/components/typography/Typography'
 import { colors } from '@/lib/colors'
 import AntDesign from '@expo/vector-icons/AntDesign';
+import useToggle from '@/hooks/useToggle';
+import Feather from '@expo/vector-icons/Feather';
+
 
 const Consultation = () => {
+  const {isToggle, handleToggle} = useToggle()
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -32,6 +36,11 @@ const Consultation = () => {
                   style={styles.image}
                   resizeMode="cover"
                 />
+                <Pressable style={styles.love} onPress={() => handleToggle(id)}>
+                  {isToggle === id ? <AntDesign name="heart" size={24} color={colors.red} />  :
+                    <Feather name="heart" size={24} color="black" /> 
+                    }
+                </Pressable>
               </View>
               <View style={styles.content}>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -155,6 +164,14 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontFamily: 'Inter_600SemiBold'
   },
+  love:{
+    position: "absolute",
+    right: 10,
+    top: 10,
+    backgroundColor: '#E5EBED',
+    padding: 5,
+    borderRadius: 40
+},
 })
 
 export default Consultation

@@ -4,18 +4,23 @@ import { Wrapper, SubTitle } from '@/components/typography/Typography';
 import { NavHeader } from '@/components/Header/Header'
 import { useRouter } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
-import { Image, View, Text, StyleSheet } from 'react-native';
+import { Image, View, Text, StyleSheet, Pressable } from 'react-native';
 import { colors } from '@/lib/colors';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
 import About from './About';
-
+import useToggle from '@/hooks/useToggle';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import Feather from '@expo/vector-icons/Feather';
+import useToggles from '@/hooks/useToggles';
 
 
 const ConsultationDetails = () => {
   const router = useRouter()
   const image1 = require('../../../assets/images/adhy-savala-zbpgmGe27p8-unsplash (1).jpg')
   const profile = require('../../../assets/images/Ellipse 165.png')
-  
+  const {toggle, handleToggle} = useToggles()
+
+
   return (
     <ScreenLayout>
       <NavHeader
@@ -37,6 +42,11 @@ const ConsultationDetails = () => {
                 style={styles.profileImage}
                 accessibilityLabel="Dr James Uche profile picture" 
               />
+              <Pressable style={styles.love} onPress={() => handleToggle()}>
+                  {toggle ? <AntDesign name="heart" size={24} color={colors.red} />  :
+                    <Feather name="heart" size={24} color="black" /> 
+                    }
+                </Pressable>
             </View>
             <View>
               <View style={styles.flexContainer}>
@@ -106,5 +116,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: -30,
     left: 25, 
-  }
+  },
+  love:{
+    position: "absolute",
+    right: 10,
+    top: 10,
+    backgroundColor: '#E5EBED',
+    padding: 5,
+    borderRadius: 40
+},
 })

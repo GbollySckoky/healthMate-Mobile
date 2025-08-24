@@ -16,7 +16,7 @@ const Nav = ({title, text}: navType) => {
             paddingTop: 20,
             flexDirection: 'row',
             justifyContent: 'space-between',
-            paddingLeft: 10
+            paddingHorizontal: 18
           }}
         >
           <View>
