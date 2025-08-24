@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import MessagePage from '../(messages)';
+
+
+
 const Settings = () => {
   return (
-    <View>
-      <Text>settingd</Text>
-    </View>
+    <MessagePage />
   );
 };
 

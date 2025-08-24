@@ -4,7 +4,6 @@ import { allAppointmentData } from '../../data';
 import {
   SmallText,
   SubTitle,
-  Texts,
   Wrapper,
 } from '@/components/typography/Typography';
 import Feather from '@expo/vector-icons/Feather';

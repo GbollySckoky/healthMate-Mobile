@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { TextInput, View, StyleSheet, Text } from 'react-native';
+import { colors } from '@/lib/colors';
+
 
 interface NumberInputType {
   label: string;
@@ -22,6 +24,7 @@ const NumberInput = ({
         onChangeText={onChangeText}
         value={value}
         placeholder={placeholder}
+        placeholderTextColor={colors.black}
       />
     </View>
   );
