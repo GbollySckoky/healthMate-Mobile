@@ -142,7 +142,7 @@ const Booking = () => {
                     marginTop: 25
                 }}
                 activeOpacity={0.8}
-                onPress={() => router.push(`/(consult)/consultation-deatils/book-doctor`)}
+                onPress={() => router.push(`/(consult)/consultation-deatils/payment`)}
             >
                 <Text style={{
                     color: 'white',
@@ -150,7 +150,7 @@ const Booking = () => {
                     fontWeight: '600',
                     fontSize: 16
                 }}>
-                    Book Consultation
+                    Proceed to payment
                 </Text>
             </TouchableOpacity>
         </View>
