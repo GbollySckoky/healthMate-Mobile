@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TextInput, View, StyleSheet, Text } from 'react-native';
 import { colors } from '@/lib/colors';
-
 
 interface NumberInputType {
   label: string;
@@ -9,31 +8,33 @@ interface NumberInputType {
   onChangeText: (value: string) => void;
   placeholder: string;
 }
-const Input = ({
+
+const EmailInput = ({
   label,
   value,
   onChangeText,
   placeholder,
 }: NumberInputType) => {
   return (
-    <View style={{ paddingVertical: 7 }}>
+    <View >
       <Text style={styles.text}>{label}</Text>
       <TextInput
         style={styles.input}
-        keyboardType="default"
+        keyboardType="email-address"
         onChangeText={onChangeText}
         value={value}
         placeholder={placeholder}
+        placeholderTextColor={colors.black}
       />
     </View>
   );
 };
 
-export default Input;
+export default EmailInput;
 
 const styles = StyleSheet.create({
   text: {
-    fontFamily: 'Inter_500Medium',
+    fontFamily: 'Inter',
     fontSize: 14,
     fontWeight: 500,
     paddingBottom: 6,
@@ -45,8 +46,6 @@ const styles = StyleSheet.create({
     borderColor: '#D6D7DA',
     borderWidth: 1,
     borderRadius: 5,
-    fontFamily: 'Inter_400Regular',
-    fontWeight: '400',
-    fontSize: 16,
+    // minHeight: 120, // Add this line - roughly 6 lines of text
   },
 });

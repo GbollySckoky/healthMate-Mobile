@@ -226,10 +226,10 @@ const Profile = () => {
         </Card>
       </View>
 
-      {/* Settings */}
+      {/*Log out */}
       <Pressable onPress={navigateToSettings} style={styles.settingsContainer}>
-        <AntDesign name="setting" size={24} color="black" />
-        <Text style={styles.settingsText}>Settings</Text>
+        <MaterialIcons name="logout" size={17} color={colors.lightRed} />
+        <Text style={styles.settingsText}>Log out</Text>
       </Pressable>
     </View>
   );
@@ -251,11 +251,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 15,
+    borderWidth: 1,
+    borderColor: colors.lightGray,
+    borderRadius: 10,
+    marginTop: 20
   },
   settingsText: {
     marginLeft: 10,
     fontFamily: 'Lato_700Bold',
     fontWeight: '600',
-    color: colors.lightBlack,
+    color: colors.lightRed
   },
 });

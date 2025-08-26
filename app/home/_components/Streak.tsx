@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 
 const Streak = () => {
+  
   const profile = require('../../../assets/images/Group 19153.png')
   return (
     <View style={style.SubCard}>

@@ -53,7 +53,7 @@ const index = () => {
     <ScreenLayout>
       <NavHeader
         title="Edit Phone Number"
-        _goBack={() => router.replace('/(profile)/settings')}
+        _goBack={() => router.back()}
         backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
       />
       <ScreenOverFlowLayout>

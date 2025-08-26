@@ -1,9 +1,9 @@
+import { colors } from '@/lib/colors';
 import { router } from 'expo-router';
 import React, {ReactElement} from 'react'
 import { View, Text, StyleSheet, Dimensions, Modal, Pressable } from 'react-native';
 
 
-const { width, height } = Dimensions.get('window');
 
 interface optionsType {
     name: string;
@@ -13,10 +13,11 @@ interface ModalType {
     icon: ReactElement;
     isOpen: boolean;
     closeModal: () => void;
-    options: optionsType[]
+    options: optionsType[],
+    values: string
 }
 
-const ProfileModal = ({ icon, isOpen, closeModal, options }: ModalType) => {
+const ProfileModal = ({ icon, isOpen, closeModal, options, values }: ModalType) => {
     if (!isOpen) return null;
 
     const handleRoute = (route: string) => {
@@ -34,11 +35,11 @@ const ProfileModal = ({ icon, isOpen, closeModal, options }: ModalType) => {
           <View style={styles.container}>
             {options.map((option, index) => (
                 <View style={styles.optionRow} key={index}> 
-                    {option.name === 'Logout' && <Text style={styles.logoutIcon}>{icon}</Text>}  
+                    {option.name === `${values}` && <Text style={styles.logoutIcon}>{icon}</Text>}  
                     <Pressable onPress={() => handleRoute(option.url)}>
                         <Text style={[
                         styles.optionText,
-                        { color: option.name === 'Logout' ? '#FD6868' : '#414651' }
+                        { color: option.name === `${values}`  ? '#FD6868' : '#414651' }
                         ]}>
                         {option.name}
                         </Text>
@@ -79,6 +80,8 @@ const styles = StyleSheet.create({
       flexDirection: 'row', 
       alignItems: 'center',
       paddingVertical: 4,
+      // borderBottomWidth: 1,
+      // borderBottomColor: colors.broderColor
     },
     logoutIcon: {
       color: '#FD6868',
