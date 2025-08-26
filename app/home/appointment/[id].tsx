@@ -14,10 +14,16 @@ import EvilIcons from '@expo/vector-icons/EvilIcons';
 import { Image } from 'expo-image';
 import Feather from '@expo/vector-icons/Feather';
 import { NavHeader } from '@/components/Header/Header';
+import useDisplay from '@/hooks/useDisplay';
+import ProfileModal from '@/components/modal/Profile';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { colors } from '@/lib/colors';
+
 
 const AppointmentDetails = () => {
   const { id } = useLocalSearchParams();
   const profile = require('../../../assets/images/Mobile.png');
+  const { openModal, handleDisplay } = useDisplay();
   const data = [
     {
       text: 'I am a General Practitioner with over 8years experience. I help patients manage chronic migraines and sleep issues with comprehensive care approaches.',
@@ -48,13 +54,32 @@ const AppointmentDetails = () => {
       title: 'Health Concern',
     },
   ];
+
+  const options = [
+    {
+      name: "View Profile",
+      url: '/(profile)',
+    },
+    {
+      name: "Cancel Booking",
+      url: '/settings'
+    },
+    {
+      name: "Chat Doctor",
+      url: ''
+    },
+    {
+      name: "Report Issue",
+      url: ''
+    }
+  ];
   console.log(id);
   return (
     <View style={{ backgroundColor: 'white' }}>
       <NavHeader
         title="Appointment Details"
         _goBack={() => router.push('/(tabs)/home')}
-        _optionFn={() => router.push('/(tabs)/home')}
+        _optionFn={() => handleDisplay()}
         backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
         optionIcon={
           <Entypo name="dots-three-vertical" size={15} color="black" />
@@ -100,12 +125,18 @@ const AppointmentDetails = () => {
         </Card>
         <BtnFlex>
           <RescheduleBtn _fn={() => router.push('/')}>
-            {' '}
             Reschedule
           </RescheduleBtn>
           <JoinBtn _fn={() => router.push('/')}>Join Call</JoinBtn>
         </BtnFlex>
       </Wrapper>
+      <ProfileModal 
+        isOpen={openModal}
+        closeModal={handleDisplay}
+        options={options}
+        icon={<MaterialIcons name="report-gmailerrorred" size={15} color='#FD6868' />}
+        values='Report Issue'
+      />
     </View>
   );
 };
