@@ -25,7 +25,7 @@ const HomePage = () => {
     },
     {
       name: "Logout",
-      url: ''
+      url: '/auth/login'
     }
   ];
 
@@ -85,6 +85,7 @@ const HomePage = () => {
             closeModal={handleDisplay}
             options={options}
             icon={<MaterialIcons name="logout" size={17} />}
+            values='Logout'
           />
         </Wrapper>
       </ScreenOverFlowLayout>

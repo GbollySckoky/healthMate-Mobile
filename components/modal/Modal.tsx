@@ -11,10 +11,17 @@ interface ModalType {
   text: string;
   isOpen: boolean;
   closeModal: () => void;
+  route: () => void;
+  submitText: string
 }
 
-const Modals = ({ icon, title, text, isOpen, closeModal }: ModalType) => {
+const Modals = ({ icon, title, text, isOpen, closeModal, route, submitText }: ModalType) => {
   if (!isOpen) return null;
+  const handleRoute = () => {
+    closeModal()
+    route()
+
+  }
   return (
     <Modal
     // visible={isOpen}
@@ -27,7 +34,7 @@ const Modals = ({ icon, title, text, isOpen, closeModal }: ModalType) => {
           <Text style={styles.iconWrapper}>{icon}</Text>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.description}>{text}</Text>
-          <SubmitButton _fn={closeModal}>Done</SubmitButton>
+          <SubmitButton _fn={handleRoute}>{submitText}</SubmitButton>
         </View>
       </View>
     </Modal>
