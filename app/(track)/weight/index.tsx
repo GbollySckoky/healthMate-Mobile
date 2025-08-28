@@ -77,7 +77,7 @@ const Weight = () => {
     <ScreenLayout>
       <NavHeader
         title="Track Your Weight"
-        _goBack={() => router.push('/(tabs)/home')}
+        _goBack={() => router.back()}
         backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
         text="Tracking your mood helps you understand your...."
       />

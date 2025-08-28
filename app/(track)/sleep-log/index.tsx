@@ -63,7 +63,7 @@ export default function MyBarChart() {
     <ScreenLayout>
       <NavHeader
         title="Blood Pressure Tracker"
-        _goBack={() => router.push('/(tabs)/home')}
+        _goBack={() => router.back()}
         backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
         text="Track your readings to monitor your heart health"
       />
