@@ -22,8 +22,8 @@ const AllApointments = () => {
     <ScreenLayout>
       <NavHeader
         title="All Appointments"
-        _goBack={() => router.push('/(tabs)/home')}
-        _optionFn={() => router.push('/(tabs)/home')}
+        _goBack={() => router.back()}
+        _optionFn={() => router.back()}
         backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
       />
       <ScreenOverFlowLayout>

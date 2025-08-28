@@ -22,7 +22,7 @@ const inputData = {
     placeholder: 'Enter email',
   },
   phone: {
-    label: 'Phone number', 
+    label: '*********', 
     placeholder: 'Enter phone number',
   },
   password: {
@@ -143,8 +143,8 @@ const LoginPage = () => {
 
           {/* Sign Up Link */}
           <View style={styles.signUpContainer}>
-            <Text style={styles.signUpText}>Dont have an account? </Text>
-            <TouchableOpacity>
+            <Text style={styles.signUpText}>Don't have an account? </Text>
+            <TouchableOpacity onPress={() => router.push(ROUTES.signup)}> 
               <Text style={styles.signUpLink}>Sign Up</Text>
             </TouchableOpacity>
           </View>

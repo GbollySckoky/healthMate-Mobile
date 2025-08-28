@@ -1,0 +1,1 @@
+// We’ve sent a 6-digit verification code to your phone/email.

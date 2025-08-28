@@ -15,8 +15,8 @@ const index = () => {
     <ScreenLayout>
       <NavHeader
         title="All Reminders"
-        _goBack={() => router.push('/(tabs)/home')}
-        _optionFn={() => router.push('/(tabs)/home')}
+        _goBack={() => router.back()}
+        _optionFn={() => router.back()}
         backIcon={
           <Entypo
             name="chevron-small-left"

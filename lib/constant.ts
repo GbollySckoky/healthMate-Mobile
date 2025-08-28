@@ -5,3 +5,12 @@ export enum FormStep {
     THREE = '3',
     FOUR = '4'
 }
+
+export enum CountStep {
+    ZERO,
+    ONE,
+    TWO,
+    THREE,
+    FOUR,
+    FIVE
+}

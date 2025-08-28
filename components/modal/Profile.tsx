@@ -1,4 +1,3 @@
-import { colors } from '@/lib/colors';
 import { router } from 'expo-router';
 import React, {ReactElement} from 'react'
 import { View, Text, StyleSheet, Dimensions, Modal, Pressable } from 'react-native';
@@ -24,6 +23,7 @@ const ProfileModal = ({ icon, isOpen, closeModal, options, values }: ModalType) 
         router.push(route as any)
         closeModal()
     }
+    console.log(options)
     return (
       <Modal
         visible={isOpen}

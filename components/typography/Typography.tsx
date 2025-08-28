@@ -115,11 +115,13 @@ export const Status = ({ children }: { children: React.ReactNode }) => (
 export const SubmitButton = ({
   children,
   _fn,
+  disabled
 }: {
   children: React.ReactNode;
   _fn: () => void;
+  disabled?: boolean
 }) => (
-  <TouchableOpacity style={style.closeBtn} onPress={_fn}>
+  <TouchableOpacity style={style.closeBtn} onPress={_fn} disabled={disabled}>
     <Text style={style.closeBtnText}>{children}</Text>
   </TouchableOpacity>
 );
@@ -289,7 +291,7 @@ export const style = StyleSheet.create({
     fontSize: 14,
     color: 'white',
     fontWeight: '600',
-    fontFamily: 'Inter',
+    fontFamily: 'Inter_600SemiBold',
   },
   latoText: {
     fontFamily: 'Lato_400Regular',

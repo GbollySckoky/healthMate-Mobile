@@ -3,7 +3,7 @@ import { TextInput, View, StyleSheet, Text } from 'react-native';
 import { colors } from '@/lib/colors';
 
 interface NumberInputType {
-  label: string;
+  label?: string;
   value: string;
   onChangeText: (value: string) => void;
   placeholder: string;
@@ -16,7 +16,7 @@ const TextAreaInput = ({
   placeholder,
 }: NumberInputType) => {
   return (
-    <View style={{ paddingVertical: 7 }}>
+    <View>
       <Text style={styles.text}>{label}</Text>
       <TextInput
         style={styles.input}
