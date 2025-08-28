@@ -4,6 +4,7 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useCallback, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 import { ModalProvider } from '@/context/ModalContext';
 import '../global.css';
 import { Inter_600SemiBold } from '@expo-google-fonts/inter/600SemiBold';
@@ -14,6 +15,7 @@ import { Lato_400Regular } from '@expo-google-fonts/lato/400Regular';
 import { LibreFranklin_600SemiBold } from '@expo-google-fonts/libre-franklin/600SemiBold';
 import { LibreFranklin_400Regular } from '@expo-google-fonts/libre-franklin/400Regular';
 
+// Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -35,6 +37,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (fontsLoaded) {
+      // Hide splash screen after app is ready
       SplashScreen.hideAsync();
     }
   }, [fontsLoaded]);
@@ -44,15 +47,27 @@ export default function RootLayout() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      <StatusBar style="light" />
-      <ModalProvider>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-          }}
-        />
-      </ModalProvider>
-    </SafeAreaView>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 180 : 0}
+    >
+      <SafeAreaView style={styles.container} onLayout={onLayoutRootView}>
+        <StatusBar style= {Platform.OS === 'ios' ? 'light' : "dark" }/>
+        <ModalProvider>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+            }}
+          />
+        </ModalProvider>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

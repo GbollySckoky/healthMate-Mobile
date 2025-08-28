@@ -4,7 +4,7 @@ import { Title} from '@/components/typography/Typography';
 
 
 interface navType{
-    title: string;
+    title?: string;
     text?: string;
 }
 const Nav = ({title, text}: navType) => {

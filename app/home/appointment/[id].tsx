@@ -17,7 +17,7 @@ import { NavHeader } from '@/components/Header/Header';
 import useDisplay from '@/hooks/useDisplay';
 import ProfileModal from '@/components/modal/Profile';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { colors } from '@/lib/colors';
+import { ROUTES } from '@/lib/routes';
 
 
 const AppointmentDetails = () => {
@@ -66,11 +66,11 @@ const AppointmentDetails = () => {
     },
     {
       name: "Chat Doctor",
-      url: ''
+      url: '/'
     },
     {
       name: "Report Issue",
-      url: ''
+      url: ROUTES.reportIssue 
     }
   ];
   console.log(id);
@@ -78,7 +78,7 @@ const AppointmentDetails = () => {
     <View style={{ backgroundColor: 'white' }}>
       <NavHeader
         title="Appointment Details"
-        _goBack={() => router.push('/(tabs)/home')}
+        _goBack={() => router.back()}
         _optionFn={() => handleDisplay()}
         backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
         optionIcon={

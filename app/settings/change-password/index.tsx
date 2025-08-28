@@ -84,12 +84,12 @@ const ChangePassword = () => {
             icon={
               <Ionicons name="checkmark" size={24} color={colors.lightRed} />
             }
-            title="Successful!"
-            text="Password reset successful. You can now log in"
+            title="Password Updated"
+            text="Your password has been updated successfully. You can change at any time."
             closeModal={handleDisplay}
             isOpen={openModal}
             route={() => router.push('/(consult)')}
-            submitText="Go to Login"
+            submitText='Done'
           />
         </Wrapper>
       </ScreenOverFlowLayout>

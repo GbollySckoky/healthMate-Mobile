@@ -23,7 +23,7 @@ export const NavHeader = ({
         <Pressable onPress={_goBack}>
           <Text>{backIcon}</Text>
         </Pressable>
-        <View style={{ paddingLeft: 15 }}>
+        <View style={{ paddingLeft: 10 }}>
           <Title>{title}</Title>
           {text && (
             <Text

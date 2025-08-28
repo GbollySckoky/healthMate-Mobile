@@ -12,7 +12,7 @@ const ProfilePage = () => {
     <ScreenLayout>
       <NavHeader
         title="My Profile"
-        _goBack={() => router.replace('/(tabs)/home')}
+        _goBack={() => router.back()}
         backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
       />
       <ScreenOverFlowLayout>

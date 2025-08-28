@@ -310,3 +310,11 @@ export const topRatedData = [
     address: 'Lagos Health Hospital',
   },
 ]
+
+export const reportAnIssue = [
+  'Appointment / Booking Problem',
+  'Payment / Refund Issue',
+  'Video Call Issue',
+  'Prescription / Medical Record',
+  'Others'
+]
