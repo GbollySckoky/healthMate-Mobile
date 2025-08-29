@@ -1,7 +1,5 @@
-import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout'
 import React, { useState } from 'react'
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native'
-import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
 import { Wrapper } from '@/components/typography/Typography';
 import { colors } from '@/lib/colors';
 import EmailInput from '@/components/Input/EmailInput';
@@ -11,7 +9,7 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { Image } from 'react-native';
 import { router } from 'expo-router';
 import { ROUTES } from '@/lib/routes';
-
+import SafeArea from '@/components/safeAreaView/SafeAreaView';
 
 type LoginType = Record<string, string>
 type TabType = 'email' | 'phone'
@@ -55,115 +53,113 @@ const LoginPage = () => {
   const inputConfig = activeTab === 'email' ? inputData.email : inputData.phone
 
   return (
-    <ScreenLayout>
-      <ScreenOverFlowLayout>
-        <Wrapper>
-          <View style={styles.headerContainer}>
-            <Text style={styles.welcomeTitle}>Welcome Back</Text>
-            <Text style={styles.welcomeSubtitle}>
-              Log in to access your HealthMate account.
+    <SafeArea>
+      <Wrapper>
+        <View style={styles.headerContainer}>
+          <Text style={styles.welcomeTitle}>Welcome Back</Text>
+          <Text style={styles.welcomeSubtitle}>
+            Log in to access your HealthMate account.
+          </Text>
+        </View>
+        
+        {/* Custom Tab Implementation matching the design */}
+        <View style={styles.tabContainer}>
+          <TouchableOpacity 
+            style={[
+              styles.tabButton, 
+              activeTab === 'email' && styles.activeTabButton
+            ]}
+            onPress={() => setActiveTab('email')}
+          >
+            <Text style={[
+              styles.tabText,
+              activeTab === 'email' && styles.activeTabText
+            ]}>
+              Email
             </Text>
-          </View>
+          </TouchableOpacity>
           
-          {/* Custom Tab Implementation matching the design */}
-          <View style={styles.tabContainer}>
-            <TouchableOpacity 
-              style={[
-                styles.tabButton, 
-                activeTab === 'email' && styles.activeTabButton
-              ]}
-              onPress={() => setActiveTab('email')}
-            >
-              <Text style={[
-                styles.tabText,
-                activeTab === 'email' && styles.activeTabText
-              ]}>
-                Email
-              </Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[
-                styles.tabButton, 
-                activeTab === 'phone' && styles.activeTabButton
-              ]}
-              onPress={() => setActiveTab('phone')}
-            >
-              <Text style={[
-                styles.tabText,
-                activeTab === 'phone' && styles.activeTabText
-              ]}>
-                Phone Number
-              </Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity 
+            style={[
+              styles.tabButton, 
+              activeTab === 'phone' && styles.activeTabButton
+            ]}
+            onPress={() => setActiveTab('phone')}
+          >
+            <Text style={[
+              styles.tabText,
+              activeTab === 'phone' && styles.activeTabText
+            ]}>
+              Phone Number
+            </Text>
+          </TouchableOpacity>
+        </View>
 
-          {/* Form Content */}
-          <View style={styles.formContainer}>
-            <EmailInput
-              {...inputConfig}
-              value={inputValue[inputKey]}
-              onChangeText={(value) => handleChange(inputKey, value)}
+        {/* Form Content */}
+        <View style={styles.formContainer}>
+          <EmailInput
+            {...inputConfig}
+            value={inputValue[inputKey]}
+            onChangeText={(value) => handleChange(inputKey, value)}
+          />
+          <View style={{marginTop: 7}}>
+            <PasswordInput 
+              {...inputData.password}
+              value={inputValue.password}
+              onChangeText={(value) => handleChange('password', value)}
+              secureTextEntry={!passwordVisibility}
+              onToggleVisibility={handleToggleVisibility}
+              isPasswordVisible={passwordVisibility}
             />
-            <View style={{marginTop: 7}}>
-              <PasswordInput 
-                {...inputData.password}
-                value={inputValue.password}
-                onChangeText={(value) => handleChange('password', value)}
-                secureTextEntry={!passwordVisibility}
-                onToggleVisibility={handleToggleVisibility}
-                isPasswordVisible={passwordVisibility}
-              />
+          </View>
+        </View>
+        
+        {/* Remember Me and Forgot Password Row */}
+        <View style={styles.optionsRow}>
+          <TouchableOpacity 
+            style={styles.rememberMeContainer}
+            onPress={() => setRememberMe(!rememberMe)}
+          >
+            <View style={[
+              styles.checkbox, 
+              rememberMe && styles.checkedCheckbox
+            ]}>
+              {rememberMe && <Text style={styles.checkmark}>✓</Text>}
             </View>
-          </View>
-          
-          {/* Remember Me and Forgot Password Row */}
-          <View style={styles.optionsRow}>
-            <TouchableOpacity 
-              style={styles.rememberMeContainer}
-              onPress={() => setRememberMe(!rememberMe)}
-            >
-              <View style={[
-                styles.checkbox, 
-                rememberMe && styles.checkedCheckbox
-              ]}>
-                {rememberMe && <Text style={styles.checkmark}>✓</Text>}
-              </View>
-              <Text style={styles.rememberMeText}>Remember me</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => router.push(ROUTES.forgotPassword)}>
-              <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Login Button */}
-          <TouchableOpacity style={styles.loginButton}>
-            <Text style={styles.loginButtonText}>Login</Text>
+            <Text style={styles.rememberMeText}>Remember me</Text>
           </TouchableOpacity>
-
-          {/* Sign Up Link */}
-          <View style={styles.signUpContainer}>
-            <Text style={styles.signUpText}>Don't have an account? </Text>
-            <TouchableOpacity onPress={() => router.push(ROUTES.signup)}> 
-              <Text style={styles.signUpLink}>Sign Up</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Divider */}
-          <View style={styles.dividerContainer}>
-            <View style={styles.dividerLine} />
-            <Text style={styles.dividerText}>Or</Text>
-            <View style={styles.dividerLine} />
-          </View>
-
-          {/* Google Sign In */}
-          <TouchableOpacity style={styles.googleButton}>
-            <Image source={goggleLogo} alt='Goggle Logo' style={{width: 20,height:20}} />
-            <Text style={styles.googleButtonText}> Sign in with Google</Text>
+          <TouchableOpacity onPress={() => router.push(ROUTES.forgotPassword)}>
+            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
           </TouchableOpacity>
-        </Wrapper>
-      </ScreenOverFlowLayout>
-    </ScreenLayout>
+        </View>
+
+        {/* Login Button */}
+        <TouchableOpacity style={styles.loginButton}>
+          <Text style={styles.loginButtonText}>Login</Text>
+        </TouchableOpacity>
+
+        {/* Sign Up Link */}
+        <View style={styles.signUpContainer}>
+          <Text style={styles.signUpText}>Don't have an account? </Text>
+          <TouchableOpacity onPress={() => router.push(ROUTES.signup)}> 
+            <Text style={styles.signUpLink}>Sign Up</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Divider */}
+        <View style={styles.dividerContainer}>
+          <View style={styles.dividerLine} />
+          <Text style={styles.dividerText}>Or</Text>
+          <View style={styles.dividerLine} />
+        </View>
+
+        {/* Google Sign In */}
+        <TouchableOpacity style={styles.googleButton}>
+          <Image source={goggleLogo} alt='Goggle Logo' style={{width: 20,height:20}} />
+          <Text style={styles.googleButtonText}> Sign in with Google</Text>
+        </TouchableOpacity>
+      </Wrapper>
+    </SafeArea>
   )
 }
 

@@ -1,7 +1,5 @@
-import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout'
 import React, { useState, useRef, useCallback } from 'react'
 import { Text, View, StyleSheet, TouchableOpacity, TextInput, Alert, Keyboard } from 'react-native'
-import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
 import { Wrapper, Title, SubmitButton, } from '@/components/typography/Typography';
 import { colors } from '@/lib/colors';
 import EmailInput from '@/components/Input/EmailInput';
@@ -13,10 +11,12 @@ import { router } from 'expo-router';
 import { ROUTES } from '@/lib/routes';
 import useTracker from '@/hooks/useTrackers';
 import { FormStep } from '@/lib/constant';
-import Nav from '@/components/Header/Nav';
 import Modal from '@/components/modal/Modal';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import useDisplay from '@/hooks/useDisplay';
+import SafeArea from '@/components/safeAreaView/SafeAreaView';
+
+
 
 // Improved type definitions
 interface SignUpForm {
@@ -232,156 +232,153 @@ const SignUpPage = () => {
   const inputConfig = activeTab === 'email' ? inputData.email : inputData.phone
 
   return (
-    <ScreenLayout>
-      <ScreenOverFlowLayout>
-        <Nav />
-        <Wrapper>
-          {displayComponents === FormStep.ZERO && (
-            <View>
-              <View style={styles.headerContainer}>
-                <Text style={styles.welcomeTitle}>Create your HealthMate account</Text>
-                <Text style={styles.welcomeSubtitle}>
-                  Sign up with your phone number or email to begin.
-                </Text>
-              </View>
-              
-              {/* Custom Tab Implementation */}
-              <View style={styles.tabContainer}>
-                <TouchableOpacity 
-                  style={[
-                    styles.tabButton, 
-                    activeTab === 'email' && styles.activeTabButton
-                  ]}
-                  onPress={() => handleTabSwitch('email')}
-                  accessibilityRole="tab"
-                  accessibilityState={{ selected: activeTab === 'email' }}
-                  accessibilityLabel="Email signup option"
-                >
-                  <Text style={[
-                    styles.tabText,
-                    activeTab === 'email' && styles.activeTabText
-                  ]}>
-                    Email
-                  </Text>
-                </TouchableOpacity>
-                
-                <TouchableOpacity 
-                  style={[
-                    styles.tabButton, 
-                    activeTab === 'phone' && styles.activeTabButton
-                  ]}
-                  onPress={() => handleTabSwitch('phone')}
-                  accessibilityRole="tab"
-                  accessibilityState={{ selected: activeTab === 'phone' }}
-                  accessibilityLabel="Phone number signup option"
-                >
-                  <Text style={[
-                    styles.tabText,
-                    activeTab === 'phone' && styles.activeTabText
-                  ]}>
-                    Phone Number
-                  </Text>
-                </TouchableOpacity>
-              </View>
-
-              {/* Form Content */}
-              <View style={styles.formContainer}>
-                <EmailInput
-                  {...inputConfig}
-                  value={inputValue[inputKey as keyof SignUpForm] || ''}
-                  onChangeText={(value) => handleChange(inputKey, value)}
-                //   accessibilityLabel={`Enter your ${activeTab}`}
-                />
-                {errors[inputKey] && <Text style={styles.errorText}>{errors[inputKey]}</Text>}
-                
-                <View style={{ marginTop: 16 }}>
-                  <PasswordInput 
-                    {...inputData.password}
-                    value={inputValue.password}
-                    onChangeText={(value) => handleChange('password', value)}
-                    secureTextEntry={!passwordVisibility}
-                    onToggleVisibility={() => handleToggleVisibility('password')}
-                    isPasswordVisible={passwordVisibility}
-                    // accessibilityLabel="Enter your password"
-                  />
-                  {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
-                  
-                  <View style={{ marginTop: 12 }}>
-                    <PasswordInput 
-                      {...inputData.confirmPassword}
-                      value={inputValue.confirmPassword}
-                      onChangeText={(value) => handleChange('confirmPassword', value)}
-                      secureTextEntry={!confirmPasswordVisibility}
-                      onToggleVisibility={() => handleToggleVisibility('confirmPassword')}
-                      isPasswordVisible={confirmPasswordVisibility}
-                    //   accessibilityLabel="Confirm your password"
-                    />
-                    {errors.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword}</Text>}
-                  </View>
-                </View>
-              </View>
-
-              {/* Sign up Button */}
+    <SafeArea>
+      <Wrapper>
+        {displayComponents === FormStep.ZERO && (
+          <View>
+            <View style={styles.headerContainer}>
+              <Text style={styles.welcomeTitle}>Create your HealthMate account</Text>
+              <Text style={styles.welcomeSubtitle}>
+                Sign up with your phone number or email to begin.
+              </Text>
+            </View>
+            
+            {/* Custom Tab Implementation */}
+            <View style={styles.tabContainer}>
               <TouchableOpacity 
                 style={[
-                  styles.loginButton,
-                  isLoading && styles.loginButtonDisabled
-                ]} 
-                onPress={handleSignUp}
-                disabled={isLoading}
-                accessibilityRole="button"
-                accessibilityLabel="Create account"
+                  styles.tabButton, 
+                  activeTab === 'email' && styles.activeTabButton
+                ]}
+                onPress={() => handleTabSwitch('email')}
+                accessibilityRole="tab"
+                accessibilityState={{ selected: activeTab === 'email' }}
+                accessibilityLabel="Email signup option"
               >
-                <Text style={styles.loginButtonText}>
-                  {isLoading ? 'Creating Account...' : 'Sign Up'}
+                <Text style={[
+                  styles.tabText,
+                  activeTab === 'email' && styles.activeTabText
+                ]}>
+                  Email
                 </Text>
               </TouchableOpacity>
-
-              {/* Login Link */}
-              <View style={styles.signUpContainer}>
-                <Text style={styles.signUpText}>Already have an account? </Text>
-                <TouchableOpacity 
-                  onPress={() => router.push(ROUTES.login)}
-                  accessibilityRole="link"
-                  accessibilityLabel="Go to login page"
-                >
-                  <Text style={styles.signUpLink}>Login</Text>
-                </TouchableOpacity>
-              </View>
-
-              {/* Divider */}
-              <View style={styles.dividerContainer}>
-                <View style={styles.dividerLine} />
-                <Text style={styles.dividerText}>Or</Text>
-                <View style={styles.dividerLine} />
-              </View>
-
-              {/* Google Sign In */}
+              
               <TouchableOpacity 
-                style={styles.googleButton}
-                accessibilityRole="button"
-                accessibilityLabel="Sign up with Google"
+                style={[
+                  styles.tabButton, 
+                  activeTab === 'phone' && styles.activeTabButton
+                ]}
+                onPress={() => handleTabSwitch('phone')}
+                accessibilityRole="tab"
+                accessibilityState={{ selected: activeTab === 'phone' }}
+                accessibilityLabel="Phone number signup option"
               >
-                <Image source={goggleLogo} alt='Google Logo' style={{ width: 20, height: 20 }} />
-                <Text style={styles.googleButtonText}> Sign up with Google</Text>
+                <Text style={[
+                  styles.tabText,
+                  activeTab === 'phone' && styles.activeTabText
+                ]}>
+                  Phone Number
+                </Text>
               </TouchableOpacity>
             </View>
-          )}
-          
-          {displayComponents === FormStep.ONE && (
-            <VerifyCode 
-              inputValue={inputValue} 
-              handleChange={handleChange} 
-              handleNextComponent={handleVerifyCode}
-              isLoading={isLoading}
-              resendTimer={resendTimer}
-              onResendCode={handleResendCode}
-              errors={errors}
-            />
-          )}
-        </Wrapper>
-      </ScreenOverFlowLayout>
-    </ScreenLayout>
+
+            {/* Form Content */}
+            <View style={styles.formContainer}>
+              <EmailInput
+                {...inputConfig}
+                value={inputValue[inputKey as keyof SignUpForm] || ''}
+                onChangeText={(value) => handleChange(inputKey, value)}
+              //   accessibilityLabel={`Enter your ${activeTab}`}
+              />
+              {errors[inputKey] && <Text style={styles.errorText}>{errors[inputKey]}</Text>}
+              
+              <View style={{ marginTop: 16 }}>
+                <PasswordInput 
+                  {...inputData.password}
+                  value={inputValue.password}
+                  onChangeText={(value) => handleChange('password', value)}
+                  secureTextEntry={!passwordVisibility}
+                  onToggleVisibility={() => handleToggleVisibility('password')}
+                  isPasswordVisible={passwordVisibility}
+                  // accessibilityLabel="Enter your password"
+                />
+                {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
+                
+                <View style={{ marginTop: 12 }}>
+                  <PasswordInput 
+                    {...inputData.confirmPassword}
+                    value={inputValue.confirmPassword}
+                    onChangeText={(value) => handleChange('confirmPassword', value)}
+                    secureTextEntry={!confirmPasswordVisibility}
+                    onToggleVisibility={() => handleToggleVisibility('confirmPassword')}
+                    isPasswordVisible={confirmPasswordVisibility}
+                  //   accessibilityLabel="Confirm your password"
+                  />
+                  {errors.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword}</Text>}
+                </View>
+              </View>
+            </View>
+
+            {/* Sign up Button */}
+            <TouchableOpacity 
+              style={[
+                styles.loginButton,
+                isLoading && styles.loginButtonDisabled
+              ]} 
+              onPress={handleSignUp}
+              disabled={isLoading}
+              accessibilityRole="button"
+              accessibilityLabel="Create account"
+            >
+              <Text style={styles.loginButtonText}>
+                {isLoading ? 'Creating Account...' : 'Sign Up'}
+              </Text>
+            </TouchableOpacity>
+
+            {/* Login Link */}
+            <View style={styles.signUpContainer}>
+              <Text style={styles.signUpText}>Already have an account? </Text>
+              <TouchableOpacity 
+                onPress={() => router.push(ROUTES.login)}
+                accessibilityRole="link"
+                accessibilityLabel="Go to login page"
+              >
+                <Text style={styles.signUpLink}>Login</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Divider */}
+            <View style={styles.dividerContainer}>
+              <View style={styles.dividerLine} />
+              <Text style={styles.dividerText}>Or</Text>
+              <View style={styles.dividerLine} />
+            </View>
+
+            {/* Google Sign In */}
+            <TouchableOpacity 
+              style={styles.googleButton}
+              accessibilityRole="button"
+              accessibilityLabel="Sign up with Google"
+            >
+              <Image source={goggleLogo} alt='Google Logo' style={{ width: 20, height: 20 }} />
+              <Text style={styles.googleButtonText}> Sign up with Google</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        
+        {displayComponents === FormStep.ONE && (
+          <VerifyCode 
+            inputValue={inputValue} 
+            handleChange={handleChange} 
+            handleNextComponent={handleVerifyCode}
+            isLoading={isLoading}
+            resendTimer={resendTimer}
+            onResendCode={handleResendCode}
+            errors={errors}
+          />
+        )}
+      </Wrapper>
+    </SafeArea>
   )
 }
 

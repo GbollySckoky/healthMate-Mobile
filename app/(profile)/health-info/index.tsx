@@ -12,6 +12,8 @@ import {
 } from '@/components/typography/Typography';
 import { colors } from '@/lib/colors';
 import HealthOverview from './HealthOverview';
+import SafeArea from '@/components/safeAreaView/SafeAreaView';
+
 
 const HealthDataScreen = () => {
     const router = useRouter();
@@ -21,41 +23,43 @@ const HealthDataScreen = () => {
     };
 
     return (
-        <ScreenLayout>
-            <NavHeader
-                title="My Health Info" 
-                _goBack={handleGoBack}
-                backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
-            />
-            <ScreenOverFlowLayout>
-                <Wrapper>
-                    <Card>
-                        {healthData.map((health, index) => {
-                            const { id, title, value, icon } = health;
-                            const isLastItem = index === healthData.length - 1;
-                            
-                            return (
-                                <View 
-                                    key={id} 
-                                    style={[
-                                        styles.enhancedItemContainer,
-                                        isLastItem && styles.lastItem,
-                                    ]}
-                                >
-                                    <View style={styles.textContainer}>
-                                        <Text style={styles.titleText}>{title}</Text>
-                                        <Text style={styles.valueText}>{value}</Text>
+        <SafeArea>
+            <ScreenLayout>
+                <NavHeader
+                    title="My Health Info" 
+                    _goBack={handleGoBack}
+                    backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+                />
+                <ScreenOverFlowLayout>
+                    <Wrapper>
+                        <Card>
+                            {healthData.map((health, index) => {
+                                const { id, title, value, icon } = health;
+                                const isLastItem = index === healthData.length - 1;
+                                
+                                return (
+                                    <View 
+                                        key={id} 
+                                        style={[
+                                            styles.enhancedItemContainer,
+                                            isLastItem && styles.lastItem,
+                                        ]}
+                                    >
+                                        <View style={styles.textContainer}>
+                                            <Text style={styles.titleText}>{title}</Text>
+                                            <Text style={styles.valueText}>{value}</Text>
+                                        </View>
+                                        <Text style={styles.iconText}>{icon}</Text>
                                     </View>
-                                    <Text style={styles.iconText}>{icon}</Text>
-                                </View>
-                            );
-                        })}
-                    </Card>
-                    {/* Health Overview */}
-                    <HealthOverview />
-                </Wrapper>
-            </ScreenOverFlowLayout>
-        </ScreenLayout>
+                                );
+                            })}
+                        </Card>
+                        {/* Health Overview */}
+                        <HealthOverview />
+                    </Wrapper>
+                </ScreenOverFlowLayout>
+            </ScreenLayout>
+        </SafeArea>
     );
 };
 

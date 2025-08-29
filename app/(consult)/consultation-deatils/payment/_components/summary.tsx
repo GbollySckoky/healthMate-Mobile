@@ -19,7 +19,7 @@ const Summary = () => {
         },
     ]
   return (
-    <View>
+    <View style={{marginBottom: 30}}>
         <View style={{
             backgroundColor: colors.white, 
             borderWidth: 1, 

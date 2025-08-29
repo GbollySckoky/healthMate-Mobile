@@ -1,5 +1,5 @@
 import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
-import { SubmitButton, Wrapper } from '@/components/typography/Typography';
+import { BtnFlex, SubmitButton, Wrapper } from '@/components/typography/Typography';
 import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout'
 import Entypo from '@expo/vector-icons/Entypo';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -11,26 +11,40 @@ import { useState } from 'react';
 import { useDisplayList } from '@/hooks/useDisplayList';
 import { CountStep } from '@/lib/constant';
 import Report from './Report';
+import Modal from '@/components/modal/Modal';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import useDisplay from '@/hooks/useDisplay';
+import { ROUTES } from '@/lib/routes';
+import SafeArea from '@/components/safeAreaView/SafeAreaView';
+
 
 const ReportIssue = () => {
     const [selectValue, setSelectValue] = useState('')
     const {currentStep, goToNextStep, goToPreviousStep} = useDisplayList()
-    
+    const {openModal, handleDisplay } = useDisplay()
+
     const handleClick = (value: string) => {
         setSelectValue(value)
     }
     
+    const handleNextComponent = () => {
+        if(currentStep === CountStep.ONE){
+            handleDisplay()
+        }else{
+            goToNextStep()
+        }
+    }
     // Simplified validation - no need for Boolean()
     const isValid = selectValue !== ''
-    
     return (
+        <SafeArea>
         <ScreenLayout>
+            <NavHeader 
+                title='Report an Issue'
+                _goBack={() => router.back()}
+                backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+            />
             <ScreenOverFlowLayout>
-                <NavHeader 
-                    title='Report an Issue'
-                    _goBack={() => router.back()}
-                    backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
-                />
                 <Wrapper>
                     <Text style={styles.title}>
                         What do you need help with?
@@ -59,12 +73,23 @@ const ReportIssue = () => {
                         </View>
                     )}
                     {currentStep === CountStep.ONE && <Report />}
-                    <SubmitButton _fn={goToNextStep} disabled={!isValid}>
-                    {currentStep === CountStep.ONE ? 'Submit' : 'Next' }
+                    <SubmitButton _fn={handleNextComponent} disabled={!isValid}>
+                        {currentStep === CountStep.ONE ? 'Submit' : 'Next' }
                     </SubmitButton>
+                    <Modal
+                        icon={<Ionicons name="checkmark" size={24} color={colors.lightRed} />}
+                        title="Report Received!"
+                        text="Our support team has received your request.
+                        You’ll receive an update soon via in-app message or email."
+                        closeModal={handleDisplay}
+                        isOpen={openModal}
+                        route={() => router.push(ROUTES.home)}
+                        submitText="Go to home"
+                    />
                 </Wrapper>
             </ScreenOverFlowLayout>
         </ScreenLayout>
+        </SafeArea>
     )
 }
 

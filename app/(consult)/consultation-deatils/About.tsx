@@ -34,7 +34,7 @@ const About = () => {
     }
     const id = '1'
     return (
-        <View style={{ marginTop: 30, borderTopWidth: 1, borderTopColor: '#F2F2F2' }}>
+        <View style={{ marginVertical: 30, borderTopWidth: 1, borderTopColor: '#F2F2F2' }}>
             <MinCard
                 title="About"
                 value={data.about}

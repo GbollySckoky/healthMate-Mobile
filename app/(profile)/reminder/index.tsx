@@ -10,7 +10,7 @@ import {
     Wrapper,
     Card
 } from '@/components/typography/Typography';
-
+import SafeArea from '@/components/safeAreaView/SafeAreaView';
 
 const index = () => {
     const router = useRouter();
@@ -19,17 +19,19 @@ const index = () => {
         router.back(); 
     };
   return (
-    <ScreenLayout>
-        <NavHeader
-            title="My Health Info" 
-            _goBack={handleGoBack}
-            backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
-        />
-        <ScreenOverFlowLayout>
-            <Wrapper>
-            </Wrapper>
-        </ScreenOverFlowLayout>
-    </ScreenLayout>
+    <SafeArea>
+        <ScreenLayout>
+            <NavHeader
+                title="My Health Info" 
+                _goBack={handleGoBack}
+                backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+            />
+            <ScreenOverFlowLayout>
+                <Wrapper>
+                </Wrapper>
+            </ScreenOverFlowLayout>
+        </ScreenLayout>
+    </SafeArea>
   )
 }
 

@@ -2,7 +2,8 @@ export const ROUTES = {
     forgotPassword: '/auth/forgot-password',
     login: '/auth/login',
     signup: '/auth/signup',
-    reportIssue: '/home/report-issues'
+    reportIssue: '/home/report-issues',
+    home: '/(tabs)/home'
 } as const;
 
 export type RouteValues = typeof ROUTES[keyof typeof ROUTES];

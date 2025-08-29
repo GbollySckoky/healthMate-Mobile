@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.lightGray,
     borderRadius: 10,
-    marginTop: 20
+    marginVertical: 20
   },
   settingsText: {
     marginLeft: 10,

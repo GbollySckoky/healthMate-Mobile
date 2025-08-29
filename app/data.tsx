@@ -318,3 +318,24 @@ export const reportAnIssue = [
   'Prescription / Medical Record',
   'Others'
 ]
+
+export const slidesData = [
+  {
+    id: 1,
+    image: require('../assets/images/Vector.png'),
+    title: 'Welcome to HealthMate',
+    subTitle: 'Track, Consult, and Stay Healthy.'
+  },
+  {
+    id: 2,
+    image: require('../assets/images/Vector1.png'),
+    title: 'Health Tracking',
+    subTitle: 'Log your BP, mood, weight, sleep & more.'
+  },
+  {
+    id: 1,
+    image: require('../assets/images/Vectors.png'),
+    title: 'Book Consultations Easily',
+    subTitle: 'Connect with verified doctors in just a tap'
+  },
+]

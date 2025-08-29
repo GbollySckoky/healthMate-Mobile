@@ -18,7 +18,9 @@ import useDisplay from '@/hooks/useDisplay';
 import ProfileModal from '@/components/modal/Profile';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { ROUTES } from '@/lib/routes';
-
+import SafeArea from '@/components/safeAreaView/SafeAreaView';
+import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
+import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout';
 
 const AppointmentDetails = () => {
   const { id } = useLocalSearchParams();
@@ -75,69 +77,73 @@ const AppointmentDetails = () => {
   ];
   console.log(id);
   return (
-    <View style={{ backgroundColor: 'white' }}>
-      <NavHeader
-        title="Appointment Details"
-        _goBack={() => router.back()}
-        _optionFn={() => handleDisplay()}
-        backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
-        optionIcon={
-          <Entypo name="dots-three-vertical" size={15} color="black" />
-        }
-      />
-      <Wrapper>
-        <View style={styles.container}>
-          <Image source={profile} style={styles.profileImage} />
-          <View style={styles.infoContainer}>
-            <MinTitle>Dr James Uche</MinTitle>
-            <Text style={styles.specialtyText}>General Practitioner</Text>
-            <View style={styles.locationContainer}>
-              <EvilIcons name="location" size={16} color="#666" />
-              <Text style={styles.locationText}>Lagos Health Hospital</Text>
-            </View>
-          </View>
-        </View>
-        {/* Card */}
-        <Card>
-          {data.map((item, index) => {
-            const { text, title, icon } = item;
-            const isLastItem = index === data.length - 1;
-
-            return (
-              <View
-                key={index}
-                style={[
-                  styles.enhancedItemContainer,
-                  isLastItem && styles.lastItem,
-                ]}
-              >
-                <View style={styles.contentWrapper}>
-                  <Text style={styles.CardTitle}>{title}</Text>
-                  <Text>
-                    {icon && <Text style={styles.iconText}>{icon}</Text>}
-                    <Text style={styles.CardText}>{text}</Text>
-                  </Text>
+    <SafeArea>
+      <ScreenLayout>
+        <NavHeader
+          title="Appointment Details"
+          _goBack={() => router.back()}
+          _optionFn={() => handleDisplay()}
+          backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+          optionIcon={
+            <Entypo name="dots-three-vertical" size={15} color="black" />
+          }
+        />
+        <ScreenOverFlowLayout>
+          <Wrapper>
+            <View style={styles.container}>
+              <Image source={profile} style={styles.profileImage} />
+              <View style={styles.infoContainer}>
+                <MinTitle>Dr James Uche</MinTitle>
+                <Text style={styles.specialtyText}>General Practitioner</Text>
+                <View style={styles.locationContainer}>
+                  <EvilIcons name="location" size={16} color="#666" />
+                  <Text style={styles.locationText}>Lagos Health Hospital</Text>
                 </View>
-                {!isLastItem && <View style={styles.divider} />}
               </View>
-            );
-          })}
-        </Card>
-        <BtnFlex>
-          <RescheduleBtn _fn={() => router.push('/')}>
-            Reschedule
-          </RescheduleBtn>
-          <JoinBtn _fn={() => router.push('/')}>Join Call</JoinBtn>
-        </BtnFlex>
-      </Wrapper>
-      <ProfileModal 
-        isOpen={openModal}
-        closeModal={handleDisplay}
-        options={options}
-        icon={<MaterialIcons name="report-gmailerrorred" size={15} color='#FD6868' />}
-        values='Report Issue'
-      />
-    </View>
+            </View>
+            {/* Card */}
+            <Card>
+              {data.map((item, index) => {
+                const { text, title, icon } = item;
+                const isLastItem = index === data.length - 1;
+
+                return (
+                  <View
+                    key={index}
+                    style={[
+                      styles.enhancedItemContainer,
+                      isLastItem && styles.lastItem,
+                    ]}
+                  >
+                    <View style={styles.contentWrapper}>
+                      <Text style={styles.CardTitle}>{title}</Text>
+                      <Text>
+                        {icon && <Text style={styles.iconText}>{icon}</Text>}
+                        <Text style={styles.CardText}>{text}</Text>
+                      </Text>
+                    </View>
+                    {!isLastItem && <View style={styles.divider} />}
+                  </View>
+                );
+              })}
+            </Card>
+            <BtnFlex>
+              <RescheduleBtn _fn={() => router.push('/')}>
+                Reschedule
+              </RescheduleBtn>
+              <JoinBtn _fn={() => router.push('/')}>Join Call</JoinBtn>
+            </BtnFlex>
+          </Wrapper>
+        </ScreenOverFlowLayout>
+        <ProfileModal 
+          isOpen={openModal}
+          closeModal={handleDisplay}
+          options={options}
+          icon={<MaterialIcons name="report-gmailerrorred" size={15} color='#FD6868' />}
+          values='Report Issue'
+        />
+      </ScreenLayout>
+    </SafeArea>
   );
 };
 
