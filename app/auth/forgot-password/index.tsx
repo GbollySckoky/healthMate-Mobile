@@ -17,7 +17,7 @@ import useDisplay from '@/hooks/useDisplay';
 import Modal from '@/components/modal/Modal';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { ROUTES } from '@/lib/routes';
-
+import SafeArea from '@/components/safeAreaView/SafeAreaView';
 
 type ForgotPasswordType = Record<string, string>
 type PasswordVisibilityType = Record<string, boolean>;
@@ -55,49 +55,49 @@ const ForgotPassword = () => {
     }
 
   return (
-    <ScreenLayout>
+    <SafeArea>
         <NavHeader
             title="Forgot Password"
             _goBack={() => router.back()}
             backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
         />
-        <ScreenOverFlowLayout>
-            <Wrapper>
-                {displayComponents === FormStep.ZERO && (
-                    <View>
-                        <Title>Forgot Password?</Title>
-                        <Text style={{fontFamily: 'LibreFranklin_400Regular', fontWeight: '400', fontSize: 16, marginTop: 4, marginBottom: 10,color: colors.gray}}>
-                            Enter your email or phone number. We'll send you a reset code.
-                        </Text>
-                        <Input 
-                            {...email}
-                            value={inputValue.info || ''}
-                            onChangeText={(value) => handleChange('info', value)}
-                        />
-                        <Text style={{color: colors.red, fontFamily: 'Inter_400Regular', fontWeight: '400',fontSize: 12}}>
-                            We couldn't find an account with that email
-                        </Text>
-                        <SubmitButton _fn={handleNext}>
-                            Reset Password
-                        </SubmitButton>
-                    </View>
-                )}
-                {displayComponents === FormStep.ONE && (
-                    <VerifyCode 
-                        inputValue={inputValue} 
-                        handleChange={handleChange}
-                        handleNext={handleNext}
+        <Wrapper>
+            <ScreenOverFlowLayout>
+            {displayComponents === FormStep.ZERO && (     
+                <View>
+                    <Title>Forgot Password?</Title>
+                    <Text style={{fontFamily: 'LibreFranklin_400Regular', fontWeight: '400', fontSize: 13, marginTop: 5, marginBottom: 10,color: colors.gray}}>
+                        Enter your email or phone number. We'll send you a reset code.
+                    </Text>
+                    <Input 
+                        {...email}
+                        value={inputValue.info || ''}
+                        onChangeText={(value) => handleChange('info', value)}
                     />
-                )}
-                {displayComponents === FormStep.TWO && (
-                    <ChangePassword
-                        inputValue={inputValue} 
-                        handleChange={handleChange}
-                    />
-                )}
-            </Wrapper>
-        </ScreenOverFlowLayout>
-    </ScreenLayout>
+                    <Text style={{color: colors.red, fontFamily: 'Inter_400Regular', fontWeight: '400',fontSize: 12}}>
+                        We couldn't find an account with that email
+                    </Text>
+                    <SubmitButton _fn={handleNext}>
+                        Reset Password
+                    </SubmitButton>
+                </View>
+            )}
+            {displayComponents === FormStep.ONE && (
+                <VerifyCode 
+                    inputValue={inputValue} 
+                    handleChange={handleChange}
+                    handleNext={handleNext}
+                />
+            )}
+            {displayComponents === FormStep.TWO && (
+                <ChangePassword
+                    inputValue={inputValue} 
+                    handleChange={handleChange}
+                />
+            )}
+            </ScreenOverFlowLayout>
+        </Wrapper>
+    </SafeArea>
   )
 }
 
@@ -127,10 +127,10 @@ const VerifyCode = ({
         {/* Code input fields */}
         <View 
             style={{
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                  gap: 10,
-                  marginTop: 25
+                flexDirection: 'row',
+                justifyContent: 'center',
+                gap: 10,
+                marginTop: 25
             }}>
             {[0, 1, 2, 3].map((index) => (
                 <Inputs
@@ -187,7 +187,7 @@ const ChangePassword = ({
       };
 
     return(
-    <View >
+    <View>
         <Title>Set New Password</Title>
         <Text style={{
             fontFamily: 'Lato_400Regular', 

@@ -1,6 +1,5 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import Feather from '@expo/vector-icons/Feather';
-import { Children, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import Entypo from '@expo/vector-icons/Entypo';
 
 export const Button = ({
@@ -21,7 +20,7 @@ export const Button = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //   marginTop: 29,
+      
   },
   fixedButton: {
     position: 'absolute',
@@ -35,6 +34,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     //   justifyContent: 'c',
     width: 200,
+    marginBottom: 29,
   },
   btnText: {
     color: 'white',

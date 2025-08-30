@@ -8,14 +8,14 @@
     "scheme": "healthmate",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/Group 19156.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.healthMate",
-      "splash": {
-        "image": "./assets/images/Group 19156.png",
-        "resizeMode": "contain",
-        "backgroundColor": "#ffffff"
-      }
+      "bundleIdentifier": "com.anonymous.healthMate"
     },
     "android": {
       "adaptiveIcon": {
@@ -29,6 +29,18 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/Group 19156.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
+        }
+      ],
+      "expo-font"
+    ],
     "experiments": {
       "typedRoutes": true
     }

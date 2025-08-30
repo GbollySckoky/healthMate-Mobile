@@ -8,84 +8,87 @@ import { Wrapper } from '@/components/typography/Typography';
 import RadioInput from '@/components/Input/RadioInput';
 import { trackData } from '../../data';
 import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout';
+import SafeArea from '@/components/safeAreaView/SafeAreaView';
 
 const index = () => {
   const handleInput = () => {};
   return (
-    <ScreenLayout>
-      <NavHeader
-        title="All Reminders"
-        _goBack={() => router.back()}
-        _optionFn={() => router.back()}
-        backIcon={
-          <Entypo
-            name="chevron-small-left"
-            size={24}
-            color="black"
-            style={{ paddingRight: 90 }}
-          />
-        }
-      />
-      <ScreenOverFlowLayout>
-        <Wrapper>
-          {trackData.map((data, index) => {
-            const { id, med, time, icon } = data;
-            const isLastItem = index === trackData.length - 1;
-            return (
-              <View
-                key={id}
-                style={[style.container, isLastItem && style.lastItem]}
-              >
+    <SafeArea>
+      <ScreenLayout>
+        <NavHeader
+          title="All Reminders"
+          _goBack={() => router.back()}
+          _optionFn={() => router.back()}
+          backIcon={
+            <Entypo
+              name="chevron-small-left"
+              size={24}
+              color="black"
+              style={{ paddingRight: 90 }}
+            />
+          }
+        />
+        <ScreenOverFlowLayout>
+          <Wrapper>
+            {trackData.map((data, index) => {
+              const { id, med, time, icon } = data;
+              const isLastItem = index === trackData.length - 1;
+              return (
                 <View
-                  style={{
-                    flexDirection: 'row',
-                    alignContent: 'center',
-                    justifyContent: 'space-between',
-                  }}
+                  key={id}
+                  style={[style.container, isLastItem && style.lastItem]}
                 >
                   <View
-                    style={{ flexDirection: 'row', alignContent: 'center' }}
+                    style={{
+                      flexDirection: 'row',
+                      alignContent: 'center',
+                      justifyContent: 'space-between',
+                    }}
                   >
-                    <Text
-                      style={{
-                        backgroundColor: '#FDF2FA',
-                        padding: 5,
-                        borderRadius: 4,
-                      }}
+                    <View
+                      style={{ flexDirection: 'row', alignContent: 'center' }}
                     >
-                      {icon}
-                    </Text>
-                    <View style={{ paddingLeft: 15 }}>
                       <Text
                         style={{
-                          fontWeight: 500,
-                          fontSize: 14,
-                          fontFamily: 'Lato_400Regular',
+                          backgroundColor: '#FDF2FA',
+                          padding: 5,
+                          borderRadius: 4,
                         }}
                       >
-                        {med}
+                        {icon}
                       </Text>
-                      <Text
-                        style={{
-                          color: '#717680',
-                          fontWeight: 400,
-                          fontSize: 12,
-                          paddingTop: 3,
-                          fontFamily: 'Lato_400Regular',
-                        }}
-                      >
-                        {time}
-                      </Text>
+                      <View style={{ paddingLeft: 15 }}>
+                        <Text
+                          style={{
+                            fontWeight: 500,
+                            fontSize: 14,
+                            fontFamily: 'Lato_400Regular',
+                          }}
+                        >
+                          {med}
+                        </Text>
+                        <Text
+                          style={{
+                            color: '#717680',
+                            fontWeight: 400,
+                            fontSize: 12,
+                            paddingTop: 3,
+                            fontFamily: 'Lato_400Regular',
+                          }}
+                        >
+                          {time}
+                        </Text>
+                      </View>
                     </View>
+                    <RadioInput selected={true} onPress={handleInput} />
                   </View>
-                  <RadioInput selected={true} onPress={handleInput} />
                 </View>
-              </View>
-            );
-          })}
-        </Wrapper>
-      </ScreenOverFlowLayout>
-    </ScreenLayout>
+              );
+            })}
+          </Wrapper>
+        </ScreenOverFlowLayout>
+      </ScreenLayout>
+    </SafeArea>
   );
 };
 

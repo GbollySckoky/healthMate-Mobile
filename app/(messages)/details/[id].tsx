@@ -8,7 +8,7 @@ import {
   } from '@/components/typography/Typography';
 import { useRouter } from 'expo-router';
 import MessageInput from './MessageInput';
-
+import SafeArea from '@/components/safeAreaView/SafeAreaView';
 
 
 const MessageDetails = () => {
@@ -18,22 +18,24 @@ const MessageDetails = () => {
         router.back()
     }
   return (
-    <ScreenLayout>
-        <MessageHeader 
-            title="Dr James Uche"
-            text="General Practitioner"
-            image={image}
-            backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
-            _goBack={handleBack}
-            alt='profile image'
-            status='Active'
-        />
-        <ScreenOverFlowLayout>
-            <Wrapper>
-                <MessageInput />
-            </Wrapper>
-        </ScreenOverFlowLayout>
-    </ScreenLayout>
+    <SafeArea>
+      <ScreenLayout>
+          <MessageHeader 
+              title="Dr James Uche"
+              text="General Practitioner"
+              image={image}
+              backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+              _goBack={handleBack}
+              alt='profile image'
+              status='Active'
+          />
+          <ScreenOverFlowLayout>
+              <Wrapper>
+                  <MessageInput />
+              </Wrapper>
+          </ScreenOverFlowLayout>
+      </ScreenLayout>
+    </SafeArea>
   )
 }
 
