@@ -12,7 +12,7 @@ import useToggle from '@/hooks/useToggle';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Feather from '@expo/vector-icons/Feather';
 import useToggles from '@/hooks/useToggles';
-
+import SafeArea from '@/components/safeAreaView/SafeAreaView';
 
 const ConsultationDetails = () => {
   const router = useRouter()
@@ -22,50 +22,52 @@ const ConsultationDetails = () => {
 
 
   return (
-    <ScreenLayout>
-      <NavHeader
-        title="Doctor's Profile"
-        _goBack={() => router.back()}
-        backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
-      />
-      <ScreenOverFlowLayout>
-        <Wrapper>
-          <View>
-            <View style={styles.imageContainer}>
-              <Image 
-                source={image1} 
-                style={styles.image} 
-                accessibilityLabel="Doctor's background image" 
-              />
-              <Image 
-                source={profile} 
-                style={styles.profileImage}
-                accessibilityLabel="Dr James Uche profile picture" 
-              />
-              <Pressable style={styles.love} onPress={() => handleToggle()}>
-                  {toggle ? <AntDesign name="heart" size={24} color={colors.red} />  :
-                    <Feather name="heart" size={24} color="black" /> 
-                    }
-                </Pressable>
-            </View>
+    <SafeArea>
+      <ScreenLayout>
+        <NavHeader
+          title="Doctor's Profile"
+          _goBack={() => router.back()}
+          backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+        />
+        <ScreenOverFlowLayout>
+          <Wrapper>
             <View>
-              <View style={styles.flexContainer}>
-                <View>
-                  <SubTitle>Dr James Uche</SubTitle>
-                  <Text style={styles.specialtyText}>General Practitioner</Text>                      
-                  <Text style={styles.hospitalText}>
-                  <EvilIcons name="location" size={13} style={{paddingRight:10}} />
-                    Lagos Health Hospital
-                    </Text>
+              <View style={styles.imageContainer}>
+                <Image 
+                  source={image1} 
+                  style={styles.image} 
+                  accessibilityLabel="Doctor's background image" 
+                />
+                <Image 
+                  source={profile} 
+                  style={styles.profileImage}
+                  accessibilityLabel="Dr James Uche profile picture" 
+                />
+                <Pressable style={styles.love} onPress={() => handleToggle()}>
+                    {toggle ? <AntDesign name="heart" size={24} color={colors.red} />  :
+                      <Feather name="heart" size={24} color="black" /> 
+                      }
+                  </Pressable>
+              </View>
+              <View>
+                <View style={styles.flexContainer}>
+                  <View>
+                    <SubTitle>Dr James Uche</SubTitle>
+                    <Text style={styles.specialtyText}>General Practitioner</Text>                      
+                    <Text style={styles.hospitalText}>
+                    <EvilIcons name="location" size={13} style={{paddingRight:10}} />
+                      Lagos Health Hospital
+                      </Text>
+                  </View>
+                  <Text style={styles.rating}>⭐ 4.2(38)</Text>
                 </View>
-                <Text style={styles.rating}>⭐ 4.2(38)</Text>
               </View>
             </View>
-          </View>
-          <About />
-        </Wrapper>
-      </ScreenOverFlowLayout>
-    </ScreenLayout>
+            <About />
+          </Wrapper>
+        </ScreenOverFlowLayout>
+      </ScreenLayout>
+    </SafeArea>
   )
 }
 

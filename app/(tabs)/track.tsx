@@ -1,12 +1,12 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import TrackPage from '../(track)';
-
+import SafeArea from '@/components/safeAreaView/SafeAreaView';
 const Track = () => {
   return (
-    <View>
+    <SafeArea>
       <TrackPage />
-    </View>
+    </SafeArea>
   );
 };
 

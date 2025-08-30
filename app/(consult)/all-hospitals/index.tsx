@@ -16,7 +16,7 @@ import { Link } from 'expo-router';
 import Feather from '@expo/vector-icons/Feather';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import useToggle from '@/hooks/useToggle';
-
+import SafeArea from '@/components/safeAreaView/SafeAreaView';
 
 
 const AllHospitalsPage = () => {
@@ -24,67 +24,69 @@ const AllHospitalsPage = () => {
     const [searchInput, setSearchInput] = useState("")
     const {isToggle, handleToggle} = useToggle()
   return (
-    <ScreenLayout>
-    <NavHeader
-       title="All Hospitals"
-       _goBack={() => router.back()}
-       backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
-    />
-    <ScreenOverFlowLayout>
-      <Wrapper>
-            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20}}>
-                <SearchInput 
-                    placeholder='Search for a doctor, specialty, or ho...'
-                    value={searchInput}
-                    onChangeText={(value) => setSearchInput(value)}
-                />
-                <Text style={{borderWidth: 1, borderColor: colors.broderColor, padding: 9, borderRadius: 5, marginLeft: 10}}>
-                    <Ionicons name="filter-outline" size={20} color="black" />
-                </Text>
-            </View>
-            {/* Hospitals */}
-            <View>
-                {consultationData.map((consult) => {
-                    const {id, image, hospital, address, text, rating, linkText} = consult;
-                    return(
-                        <View key={id} style={styles.card} >
-                        <View  style={styles.imageContainer}>
-                            <Image 
-                            source={image} 
-                            alt='Hospital Image' 
-                            style={styles.image}
-                            resizeMode="cover"
-                            />
-                            <Pressable style={styles.love} onPress={() => handleToggle(id)}>
-                              {isToggle === id ? <AntDesign name="heart" size={24} color={colors.red} />  :
-                               <Feather name="heart" size={24} color="black" /> 
-                               }
-                            </Pressable>
-                        </View>
-                        
-                        <View style={styles.content}>
-                            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                            <View style={styles.hospitalInfo}>
-                                <Text style={styles.hospitalName}>{hospital}</Text>
-                                <Text style={styles.address}>{address}</Text>
-                                <Text style={styles.description}>{text}</Text>
-                            </View>
-                            <Text style={styles.rating}>⭐ {rating}</Text>
-                            </View>
-                            <View style={styles.footer}>
-                            
-                            <Link href={'/(consult)'} style={styles.linkButton}>
-                                <Text style={styles.linkText}>{linkText}</Text>
-                            </Link>
-                            </View>
-                        </View>
-                        </View>
-                    )
-                })}
-            </View>
-        </Wrapper>
-      </ScreenOverFlowLayout>
-    </ScreenLayout>
+    <SafeArea>
+      <ScreenLayout>
+      <NavHeader
+        title="All Hospitals"
+        _goBack={() => router.back()}
+        backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+      />
+      <ScreenOverFlowLayout>
+        <Wrapper>
+              <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20}}>
+                  <SearchInput 
+                      placeholder='Search for a doctor, specialty, or ho...'
+                      value={searchInput}
+                      onChangeText={(value) => setSearchInput(value)}
+                  />
+                  <Text style={{borderWidth: 1, borderColor: colors.broderColor, padding: 9, borderRadius: 5, marginLeft: 10}}>
+                      <Ionicons name="filter-outline" size={20} color="black" />
+                  </Text>
+              </View>
+              {/* Hospitals */}
+              <View>
+                  {consultationData.map((consult) => {
+                      const {id, image, hospital, address, text, rating, linkText} = consult;
+                      return(
+                          <View key={id} style={styles.card} >
+                          <View  style={styles.imageContainer}>
+                              <Image 
+                              source={image} 
+                              alt='Hospital Image' 
+                              style={styles.image}
+                              resizeMode="cover"
+                              />
+                              <Pressable style={styles.love} onPress={() => handleToggle(id)}>
+                                {isToggle === id ? <AntDesign name="heart" size={24} color={colors.red} />  :
+                                <Feather name="heart" size={24} color="black" /> 
+                                }
+                              </Pressable>
+                          </View>
+                          
+                          <View style={styles.content}>
+                              <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                              <View style={styles.hospitalInfo}>
+                                  <Text style={styles.hospitalName}>{hospital}</Text>
+                                  <Text style={styles.address}>{address}</Text>
+                                  <Text style={styles.description}>{text}</Text>
+                              </View>
+                              <Text style={styles.rating}>⭐ {rating}</Text>
+                              </View>
+                              <View style={styles.footer}>
+                              
+                              <Link href={'/(consult)'} style={styles.linkButton}>
+                                  <Text style={styles.linkText}>{linkText}</Text>
+                              </Link>
+                              </View>
+                          </View>
+                          </View>
+                      )
+                  })}
+              </View>
+          </Wrapper>
+        </ScreenOverFlowLayout>
+      </ScreenLayout>
+    </SafeArea>
   )
 }
 

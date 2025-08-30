@@ -21,6 +21,8 @@ import Feather from '@expo/vector-icons/Feather';
 import { Button } from '@/components/button/Button';
 import WeightModal from './_component/WeightModal';
 import { useModal } from '@/context/ModalContext';
+import SafeArea from '@/components/safeAreaView/SafeAreaView';
+
 
 const Weight = () => {
   const { openModal } = useModal();
@@ -74,166 +76,168 @@ const Weight = () => {
   };
   const handleClick = () => {};
   return (
-    <ScreenLayout>
-      <NavHeader
-        title="Track Your Weight"
-        _goBack={() => router.back()}
-        backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
-        text="Tracking your mood helps you understand your...."
-      />
-      <ScreenOverFlowLayout>
-        <Wrapper>
-          <DetailsContainer>
-            <FontAwesome
-              name="balance-scale"
-              size={24}
-              color="#C11574"
-              style={styles.icon}
-            />
-            <CardText>Current Weight</CardText>
-            <CardAmount>65 kg</CardAmount>
-            <CardText>Recorded on: Jun 22, 09:45</CardText>
-          </DetailsContainer>
-          {/* Weight Goal */}
-          <Card>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginBottom: 9,
-              }}
-            >
-              <Feather
-                name="target"
-                size={20}
-                color="#05A505"
-                style={{ marginRight: 5 }}
+    <SafeArea>
+      <ScreenLayout>
+        <NavHeader
+          title="Track Your Weight"
+          _goBack={() => router.back()}
+          backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+          text="Tracking your mood helps you understand your...."
+        />
+        <ScreenOverFlowLayout>
+          <Wrapper>
+            <DetailsContainer>
+              <FontAwesome
+                name="balance-scale"
+                size={24}
+                color="#C11574"
+                style={styles.icon}
               />
-              <SubTitle>Goal Weight: 60Kg</SubTitle>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginBottom: 2,
-              }}
-            >
-              <Text style={styles.text}>Progress to Goal</Text>
-              <Text style={styles.text}>70%</Text>
-            </View>
-            <View
-              style={{
-                backgroundColor: '#05A5051F',
-                width: '100%',
-                borderRadius: 40,
-                padding: 3,
-                marginTop: 2,
-              }}
-            >
+              <CardText>Current Weight</CardText>
+              <CardAmount>65 kg</CardAmount>
+              <CardText>Recorded on: Jun 22, 09:45</CardText>
+            </DetailsContainer>
+            {/* Weight Goal */}
+            <Card>
               <View
                 style={{
-                  backgroundColor: '#05A505',
-                  width: '70%',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginBottom: 9,
+                }}
+              >
+                <Feather
+                  name="target"
+                  size={20}
+                  color="#05A505"
+                  style={{ marginRight: 5 }}
+                />
+                <SubTitle>Goal Weight: 60Kg</SubTitle>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginBottom: 2,
+                }}
+              >
+                <Text style={styles.text}>Progress to Goal</Text>
+                <Text style={styles.text}>70%</Text>
+              </View>
+              <View
+                style={{
+                  backgroundColor: '#05A5051F',
+                  width: '100%',
                   borderRadius: 40,
                   padding: 3,
+                  marginTop: 2,
                 }}
+              >
+                <View
+                  style={{
+                    backgroundColor: '#05A505',
+                    width: '70%',
+                    borderRadius: 40,
+                    padding: 3,
+                  }}
+                />
+              </View>
+            </Card>
+            {/* Chart */}
+            <View style={styles.chartContainer}>
+              <SubTitle>Weight Trends</SubTitle>
+              <LineChart
+                data={chartData}
+                width={width - 48} // Adjust for card padding
+                height={220}
+                chartConfig={chartConfig}
+                bezier
+                style={styles.chart}
+                withInnerLines={true}
+                withOuterLines={false}
+                yAxisSuffix=""
+                yAxisInterval={1}
+                fromZero={false}
+                // color={true}
+                segments={6}
               />
             </View>
-          </Card>
-          {/* Chart */}
-          <View style={styles.chartContainer}>
-            <SubTitle>Weight Trends</SubTitle>
-            <LineChart
-              data={chartData}
-              width={width - 48} // Adjust for card padding
-              height={220}
-              chartConfig={chartConfig}
-              bezier
-              style={styles.chart}
-              withInnerLines={true}
-              withOuterLines={false}
-              yAxisSuffix=""
-              yAxisInterval={1}
-              fromZero={false}
-              // color={true}
-              segments={6}
-            />
-          </View>
-          {/* Weight */}
-          <View style={{ marginBottom: 40 }}>
-            <Card>
-              <SubTitle>Weight History</SubTitle>
-              {recentWeight.map((recent, index) => {
-                const { icon, date, time, weight } = recent;
-                const isLastItem = index === recentWeight.length - 1;
-                return (
-                  <View
-                    key={index}
-                    style={[
-                      styles.enhancedItemContainer,
-                      isLastItem && styles.lastItem,
-                    ]}
-                  >
-                    <View style={styles.flex}>
-                      <View
-                        style={{ flexDirection: 'row', alignItems: 'center' }}
-                      >
-                        <Text
-                          style={{
-                            borderColor: '#f2f2f2',
-                            borderWidth: 1,
-                            padding: 6,
-                            borderRadius: 5,
-                          }}
+            {/* Weight */}
+            <View style={{ marginBottom: 40 }}>
+              <Card>
+                <SubTitle>Weight History</SubTitle>
+                {recentWeight.map((recent, index) => {
+                  const { icon, date, time, weight } = recent;
+                  const isLastItem = index === recentWeight.length - 1;
+                  return (
+                    <View
+                      key={index}
+                      style={[
+                        styles.enhancedItemContainer,
+                        isLastItem && styles.lastItem,
+                      ]}
+                    >
+                      <View style={styles.flex}>
+                        <View
+                          style={{ flexDirection: 'row', alignItems: 'center' }}
                         >
-                          {' '}
-                          {icon}{' '}
-                        </Text>
-                        <View style={{ paddingLeft: 16 }}>
                           <Text
                             style={{
-                              fontWeight: 500,
-                              fontSize: 14,
-                              fontFamily: 'Lato_400Regular',
+                              borderColor: '#f2f2f2',
+                              borderWidth: 1,
+                              padding: 6,
+                              borderRadius: 5,
                             }}
                           >
-                            {weight}
+                            {' '}
+                            {icon}{' '}
                           </Text>
-                          <Text
-                            style={{
-                              fontWeight: '400',
-                              fontSize: 12,
-                              color: '#717680',
-                              paddingTop: 2,
-                              fontFamily: 'Lato_400Regular',
-                            }}
-                          >
-                            {date} at {time}
-                          </Text>
+                          <View style={{ paddingLeft: 16 }}>
+                            <Text
+                              style={{
+                                fontWeight: 500,
+                                fontSize: 14,
+                                fontFamily: 'Lato_400Regular',
+                              }}
+                            >
+                              {weight}
+                            </Text>
+                            <Text
+                              style={{
+                                fontWeight: '400',
+                                fontSize: 12,
+                                color: '#717680',
+                                paddingTop: 2,
+                                fontFamily: 'Lato_400Regular',
+                              }}
+                            >
+                              {date} at {time}
+                            </Text>
+                          </View>
                         </View>
                       </View>
                     </View>
-                  </View>
-                );
-              })}
-            </Card>
-          </View>
-        </Wrapper>
-      </ScreenOverFlowLayout>
-      <Button
-        _fn={() =>
-          openModal(<WeightModal />, {
-            title: 'Log New Weight',
-            description: '',
-            onClose: () => {},
-            // btnText: 'Save Reading'
-          })
-        }
-      >
-        Log New Weight
-      </Button>
-    </ScreenLayout>
+                  );
+                })}
+              </Card>
+            </View>
+          </Wrapper>
+        </ScreenOverFlowLayout>
+        <Button
+          _fn={() =>
+            openModal(<WeightModal />, {
+              title: 'Log New Weight',
+              description: '',
+              onClose: () => {},
+              // btnText: 'Save Reading'
+            })
+          }
+        >
+          Log New Weight
+        </Button>
+      </ScreenLayout>
+    </SafeArea>
   );
 };
 

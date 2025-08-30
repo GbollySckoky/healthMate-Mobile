@@ -2,11 +2,13 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import { useCallback, useEffect } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useEffect } from 'react';
 import { KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { ModalProvider } from '@/context/ModalContext';
 import '../global.css';
+
+// Font imports
 import { Inter_600SemiBold } from '@expo-google-fonts/inter/600SemiBold';
 import { Inter_400Regular } from '@expo-google-fonts/inter/400Regular';
 import { Inter_500Medium } from '@expo-google-fonts/inter/500Medium';
@@ -19,7 +21,7 @@ import { LibreFranklin_400Regular } from '@expo-google-fonts/libre-franklin/400R
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const [fontsLoaded] = useFonts({
+  const [fontsLoaded, fontError] = useFonts({
     Inter_600SemiBold,
     Inter_400Regular,
     Inter_500Medium,
@@ -29,40 +31,33 @@ export default function RootLayout() {
     Lato_400Regular,
   });
 
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
-
   useEffect(() => {
-    if (fontsLoaded) {
-      // Hide splash screen after app is ready
+    if (fontsLoaded || fontError) {
       SplashScreen.hideAsync();
     }
-  }, [fontsLoaded]);
+  }, [fontsLoaded, fontError]);
 
-  if (!fontsLoaded) {
-    return null; // Show nothing while fonts load
+  if (!fontsLoaded && !fontError) {
+    return null;
   }
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 180 : 0}
-    >
-      <SafeAreaView style={styles.container} onLayout={onLayoutRootView}>
-        <StatusBar style= {Platform.OS === 'ios' ? 'light' : "dark" }/>
-        <ModalProvider>
-          <Stack
-            screenOptions={{
-              headerShown: false,
-            }}
-          />
-        </ModalProvider>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+    <SafeAreaProvider style={styles.container}>
+        <StatusBar style="dark" />
+        <KeyboardAvoidingView
+          style={styles.container}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 50 : 20}
+        >
+          <ModalProvider>
+            <Stack
+              screenOptions={{
+                headerShown: false,
+              }}
+            />
+          </ModalProvider>
+        </KeyboardAvoidingView>
+    </SafeAreaProvider>
   );
 }
 

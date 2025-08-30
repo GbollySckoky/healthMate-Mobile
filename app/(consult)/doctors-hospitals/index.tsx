@@ -13,72 +13,74 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Image } from 'react-native';
 import { topRatedData } from '@/app/data'
 import EvilIcons from '@expo/vector-icons/EvilIcons';
-
+import SafeArea from '@/components/safeAreaView/SafeAreaView';
 
 const index = () => {
     const router = useRouter()
     const [searchInput, setSearchInput] = useState("")
     const profile = require('../../../assets/images/Ellipse 165.png')
   return (
-    <ScreenLayout>
-    <NavHeader
-       title="Lagos General Hospital"
-       _goBack={() => router.back()}
-       backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
-    />
-    <ScreenOverFlowLayout>
-      <Wrapper>
-            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20}}>
-                <SearchInput 
-                    placeholder='Search for a doctor, specialty, or ho...'
-                    value={searchInput}
-                    onChangeText={(value) => setSearchInput(value)}
-                />
-                <Text style={{borderWidth: 1, borderColor: colors.broderColor, padding: 9, borderRadius: 5, marginLeft: 10}}>
-                    <Ionicons name="filter-outline" size={20} color="black" />
-                </Text>
-            </View>
-            <View>  
-                {topRatedData.map((rated) => {
-                    const {id, doctorName, type,address} = rated;
-                    return(
-                        <View style={style.Card} key={id}>
-                            <View style={style.Flex}>
-                                <View style={{ width: 50 }}>
-                                    <Image
-                                    style={style.image}
-                                    source={profile}
-                                    />
-                                </View>
-                                <View style={style.Flexs}>
-                                    <View style={{ marginLeft: 5 }}>
-                                        <SubTitle>{doctorName}</SubTitle>
-                                        <Text style={style.Text}>{type}</Text>                      
-                                        <Text style={style.smallText}>
-                                          <EvilIcons name="location" size={13} style={{paddingRight:10}} />
-                                          {address}
-                                        </Text>
-                                    </View>
-                                    <Text style={style.rating}>⭐ 4.2(38)</Text>
-                                </View>
-                            </View>
-                            <View style={style.ButtonRow}>
-                                <Text style={[style.buttonTexts, { color: colors.green }]}>
-                                ₦10,000
-                                </Text>
-                            <TouchableOpacity style={style.joinBtn}>
-                                <Text style={[style.buttonText, { color: '#F2F2F2' }]}>
-                                View Profile
-                                </Text>
-                            </TouchableOpacity>
-                            </View>
-                        </View>
-                    )
-                })}
-            </View>
-        </Wrapper>
-      </ScreenOverFlowLayout>
-    </ScreenLayout>
+    <SafeArea>
+      <ScreenLayout>
+      <NavHeader
+        title="Lagos General Hospital"
+        _goBack={() => router.back()}
+        backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+      />
+      <ScreenOverFlowLayout>
+        <Wrapper>
+              <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20}}>
+                  <SearchInput 
+                      placeholder='Search for a doctor, specialty, or ho...'
+                      value={searchInput}
+                      onChangeText={(value) => setSearchInput(value)}
+                  />
+                  <Text style={{borderWidth: 1, borderColor: colors.broderColor, padding: 9, borderRadius: 5, marginLeft: 10}}>
+                      <Ionicons name="filter-outline" size={20} color="black" />
+                  </Text>
+              </View>
+              <View>  
+                  {topRatedData.map((rated) => {
+                      const {id, doctorName, type,address} = rated;
+                      return(
+                          <View style={style.Card} key={id}>
+                              <View style={style.Flex}>
+                                  <View style={{ width: 50 }}>
+                                      <Image
+                                      style={style.image}
+                                      source={profile}
+                                      />
+                                  </View>
+                                  <View style={style.Flexs}>
+                                      <View style={{ marginLeft: 5 }}>
+                                          <SubTitle>{doctorName}</SubTitle>
+                                          <Text style={style.Text}>{type}</Text>                      
+                                          <Text style={style.smallText}>
+                                            <EvilIcons name="location" size={13} style={{paddingRight:10}} />
+                                            {address}
+                                          </Text>
+                                      </View>
+                                      <Text style={style.rating}>⭐ 4.2(38)</Text>
+                                  </View>
+                              </View>
+                              <View style={style.ButtonRow}>
+                                  <Text style={[style.buttonTexts, { color: colors.green }]}>
+                                  ₦10,000
+                                  </Text>
+                              <TouchableOpacity style={style.joinBtn}>
+                                  <Text style={[style.buttonText, { color: '#F2F2F2' }]}>
+                                  View Profile
+                                  </Text>
+                              </TouchableOpacity>
+                              </View>
+                          </View>
+                      )
+                  })}
+              </View>
+          </Wrapper>
+        </ScreenOverFlowLayout>
+      </ScreenLayout>
+    </SafeArea>
   )
 }
 

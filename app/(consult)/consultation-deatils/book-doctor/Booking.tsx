@@ -48,7 +48,7 @@ const Booking = () => {
         'Video Call','Audio Call','Physical Appointment'
     ]
     return (
-        <View>
+        <View style={{marginBottom: 30}}>
              <View 
              style={{marginBottom: 15}}>
                 <DateInput
