@@ -256,7 +256,7 @@ export const consultationData = [
     rating: '4.2(38)',
     linkText: 'View Doctors'
   },
-    {
+  {
     image: image3,
     id: '3',
     hospital: 'Lagos General Hospital',
@@ -265,7 +265,7 @@ export const consultationData = [
     rating: '4.2(38)',
     linkText: 'View Doctors'
   },
-   {
+  {
     image: image4,
     id: '4',
     hospital: 'Lagos General Hospital',

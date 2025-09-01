@@ -7,6 +7,7 @@ import {
   Title,
 } from '@/components/typography/Typography';
 import { useLinkTo } from '@react-navigation/native';
+import { colors } from '@/lib/colors';
 
 const HealthOverview = () => {
   const linkTo = useLinkTo();
@@ -48,7 +49,7 @@ const HealthOverview = () => {
             <Text style={style.iconContainer}>{icon}</Text>
             <CardTitle>{title}</CardTitle>
             <View style={style.valueContainer}>
-              <Title>{value}</Title>
+              <Text style={style.title} numberOfLines={1} ellipsizeMode="tail">{value}</Text>
               <CardText>{text}</CardText>
             </View>
           </Pressable>
@@ -103,5 +104,11 @@ export const style = StyleSheet.create({
     color: '#666',
     textAlign: 'center',
   },
-
+  title:{
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 3,
+    color: colors.black,
+    fontFamily: 'LibreFranklin_600SemiBold',
+  }
 });
