@@ -50,5 +50,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     minHeight: 120, // Add this line - roughly 6 lines of text
+    fontFamily: 'Inter_400Regular',
+    fontWeight: '400',
+    fontSize: 14,
   },
 });

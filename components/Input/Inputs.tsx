@@ -37,6 +37,9 @@ const styles = StyleSheet.create({
     borderColor: '#D6D7DA',
     borderWidth: 1,
     borderRadius: 10,
-    textAlign: 'center'
+    textAlign: 'center',
+    fontFamily: 'Inter_400Regular',
+    fontWeight: '400',
+    fontSize: 14,
   },
 });
