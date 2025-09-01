@@ -146,8 +146,7 @@ export const style = StyleSheet.create({
   },
   Wrapper: {
     width: '92%',
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    margin: 'auto',
     marginTop: 15,
     color: '#414651',
     paddingBottom: 20,

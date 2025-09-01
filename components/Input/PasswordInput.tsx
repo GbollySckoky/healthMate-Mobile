@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     fontFamily: 'Inter_400Regular',
     fontWeight: '400',
-    fontSize: 16,
+    fontSize: 14,
   },
   eyeButton: {
     position: 'absolute',

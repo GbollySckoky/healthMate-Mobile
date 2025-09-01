@@ -32,6 +32,9 @@ const styles = StyleSheet.create({
     width: 10,
     borderRadius: 5,
     backgroundColor: '#C11574',
+    fontFamily: 'Inter_400Regular',
+    fontWeight: '400',
+    fontSize: 14,
   },
 });
 
