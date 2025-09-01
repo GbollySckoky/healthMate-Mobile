@@ -44,7 +44,7 @@ const ConsultationDetails = () => {
                   accessibilityLabel="Dr James Uche profile picture" 
                 />
                 <Pressable style={styles.love} onPress={() => handleToggle()}>
-                    {toggle ? <AntDesign name="heart" size={24} color={colors.red} />  :
+                    {toggle ? <AntDesign name="heart" size={24} color='#FF6760' />  :
                       <Feather name="heart" size={24} color="black" /> 
                       }
                   </Pressable>

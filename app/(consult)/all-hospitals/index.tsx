@@ -96,17 +96,8 @@ const styles = StyleSheet.create({
     card: {
         backgroundColor: '#FAFAFA',
         borderRadius: 12,
-        shadowColor: '#000',
-        shadowOffset: {
-          width: 0,
-          height: 2,
-        },
-        shadowOpacity: 0.1,
-        shadowRadius: 3.84,
-        elevation: 5,
-        overflow: 'hidden',
         padding: 10,
-        borderColor: '#D6D7D8',
+        borderColor: '#f2f2f2',
         borderWidth: 1,
         marginBottom: 20
     },
@@ -168,7 +159,7 @@ const styles = StyleSheet.create({
         fontWeight: '400',
       },
       linkButton: {
-        borderColor: colors.broderColor,
+        borderColor: '#f2f2f2',
         borderWidth: 1,
         paddingVertical: 12,
         borderRadius: 10,
