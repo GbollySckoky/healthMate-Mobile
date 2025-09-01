@@ -135,8 +135,9 @@ export const VerifyCode = ({
   codeInputContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 10,
+    gap: 3,
     marginBottom: 20,
+    marginHorizontal: 20
   },
   
   codeInput: {

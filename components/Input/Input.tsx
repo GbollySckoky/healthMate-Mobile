@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: 'Inter_500Medium',
     fontSize: 14,
-    fontWeight: 500,
+    fontWeight: '500',
     paddingBottom: 6,
     color: '#414651',
   },

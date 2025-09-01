@@ -48,7 +48,7 @@ const Booking = () => {
         'Video Call','Audio Call','Physical Appointment'
     ]
     return (
-        <View style={{marginBottom: 30}}>
+        <View style={{marginBottom: 50}}>
              <View 
              style={{marginBottom: 15}}>
                 <DateInput
@@ -77,8 +77,8 @@ const Booking = () => {
                     <View 
                         key={index}
                         style={{
-                            width: '22%', // Approximately 4 columns with gaps
-                            minWidth: 70, // Minimum width for readability
+                            width: '22%', 
+                            minWidth: 70, 
                         }}
                     >
                         <Pressable onPress={(() => handleChange('time', timeSlot))}>

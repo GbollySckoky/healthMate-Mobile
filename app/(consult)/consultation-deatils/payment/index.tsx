@@ -25,7 +25,8 @@ const PaymentPage = () => {
         <ScreenOverFlowLayout>
         <Wrapper>
           <Card>
-              <Text style={{fontSize: 16, fontWeight: '600', fontFamily: 'LibreFranklin_600SemiBold'}}>Booking Summary</Text>
+              <Text style={{fontSize: 16, fontWeight: '600', fontFamily: 'LibreFranklin_600SemiBold'}}>
+                Booking Summary</Text>
               <View style={style.Card}>
               <View style={style.Flex}>
                   <View style={{ width: 50 }}>
@@ -84,15 +85,6 @@ const style = StyleSheet.create({
       borderWidth: 1,
       borderRadius: 10,
       backgroundColor: '#fff',
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.1,
-      shadowRadius: 2,
-      elevation: 3,
-      overflow: 'hidden',
       marginBottom: 20,
       marginTop: 15   
     },

@@ -37,7 +37,7 @@ const Consultation = () => {
                   resizeMode="cover"
                 />
                 <Pressable style={styles.love} onPress={() => handleToggle(id)}>
-                  {isToggle === id ? <AntDesign name="heart" size={24} color={colors.red} />  :
+                  {isToggle === id ? <AntDesign name="heart" size={24} color='#FF6760' />  :
                     <Feather name="heart" size={24} color="black" /> 
                     }
                 </Pressable>
@@ -89,17 +89,8 @@ const styles = StyleSheet.create({
     width: 300,
     backgroundColor: '#FAFAFA',
     borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-    overflow: 'hidden',
     padding: 10,
-    borderColor: '#D6D7D8',
+    borderColor: '#F2F2F2',
     borderWidth: 1,
   },
   imageContainer: {
@@ -151,7 +142,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   linkButton: {
-    borderColor: colors.broderColor,
+    borderColor: '#f2f2f2',
     borderWidth: 1,
     paddingVertical: 12,
     borderRadius: 10,
