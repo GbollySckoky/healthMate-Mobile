@@ -2,7 +2,6 @@ import {
   Card,
   LatoText,
   SubTitle,
-  Texts,
 } from '@/components/typography/Typography';
 import { colors } from '@/lib/colors';
 import { Image } from 'expo-image';
@@ -15,7 +14,9 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Entypo from '@expo/vector-icons/Entypo';
 import { Link, router } from 'expo-router';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import Modal from '@/components/modal/Modal';
+import useDisplay from '@/hooks/useDisplay';
+import LogoutModal from '@/components/modal/LogoutModal';
 
 const Profile = () => {
   const profileImage = require('../../../assets/images/Ellipse 165.png');
@@ -91,6 +92,8 @@ const Profile = () => {
   const handleMenuNavigation = (route: string) => {
     router.push(route as any); // Type assertion for dynamic navigation
   };
+
+  const {openModal, handleDisplay} = useDisplay()
 
   return (
     <View>
@@ -227,10 +230,21 @@ const Profile = () => {
       </View>
 
       {/*Log out */}
-      <Pressable onPress={navigateToSettings} style={styles.settingsContainer}>
+      <Pressable style={styles.settingsContainer} onPressIn={handleDisplay}>
         <MaterialIcons name="logout" size={17} color={colors.lightRed} />
         <Text style={styles.settingsText}>Log out</Text>
       </Pressable>
+      <LogoutModal
+            icon={
+              <Ionicons name="alert-circle-outline" size={24} color="#D92D20" />
+            }
+            title="Are you sure you want to log out?"
+            text="You'll need to sign in again to access your health dashboard."
+            closeModal={handleDisplay}
+            isOpen={openModal}
+            // route={() => router.push('/(consult)')}
+            // submitText='Log out'
+          />
     </View>
   );
 };

@@ -51,7 +51,7 @@ export const VerifyCode = ({
   
   
     return (
-      <View style={{ alignItems: 'center' }}>
+      <View style={{ alignItems: 'center', marginTop: 20 }}>
         <Title>Verify Your Account</Title>
         <Text style={styles.verifySubtitle}>
           We've sent a 6-digit verification code to your phone/email.
