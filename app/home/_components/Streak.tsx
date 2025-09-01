@@ -35,13 +35,7 @@ export const style = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     backgroundColor: '#F4ECFF',
-    marginRight: 10,
     marginBottom: 10,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
     marginTop: 15,
     position: 'relative'
   },

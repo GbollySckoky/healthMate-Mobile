@@ -6,7 +6,7 @@ import { View} from 'react-native';
 export default function HomeScreen() {
   return (
     <SafeArea>
-      <View className="bg-red-900">
+      <View style={{backgroundColor: 'red', flex: 1}}>
         <Link href="/(tabs)/home">Homes</Link>
         <Link href="/onboarding">Homs</Link>
         <Link href="/onboarding">Homs</Link>

@@ -46,8 +46,8 @@ export default function RootLayout() {
         <StatusBar style="dark" />
         <KeyboardAvoidingView
           style={styles.container}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 50 : 20}
+          // behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          // keyboardVerticalOffset={Platform.OS === 'ios' ? 50 : 20}
         >
           <ModalProvider>
             <Stack

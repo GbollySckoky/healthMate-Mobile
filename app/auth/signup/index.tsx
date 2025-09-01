@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react'
-import { Text, View, StyleSheet, TouchableOpacity, TextInput, Alert, Keyboard } from 'react-native'
-import { Wrapper, Title, SubmitButton, } from '@/components/typography/Typography';
+import { Text, View, StyleSheet, TouchableOpacity, Keyboard } from 'react-native'
+import { Wrapper} from '@/components/typography/Typography';
 import { colors } from '@/lib/colors';
 import EmailInput from '@/components/Input/EmailInput';
 import PasswordInput from '@/components/Input/PasswordInput';
@@ -10,16 +10,17 @@ import { Image } from 'react-native';
 import { router } from 'expo-router';
 import { ROUTES } from '@/lib/routes';
 import useTracker from '@/hooks/useTrackers';
-import { FormStep } from '@/lib/constant';
-import Modal from '@/components/modal/Modal';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import { CountStep } from '@/lib/constant';
+import { VerifyCode } from './VerifyCode';
 import useDisplay from '@/hooks/useDisplay';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
+import { useDisplayList } from '@/hooks/useDisplayList';
+// import Success from './Success';
 
 
 
 // Improved type definitions
-interface SignUpForm {
+export interface SignUpForm {
   email?: string;
   phone?: string;
   password: string;
@@ -74,58 +75,58 @@ const SignUpPage = () => {
   const [passwordVisibility, setPasswordVisibility] = useState(false)
   const [confirmPasswordVisibility, setConfirmPasswordVisibility] = useState(false)
   const goggleLogo = require('../../../assets/images/google-logo.webp')
-  const { handleDisplay } = useDisplay()
-
+  const { openModal, handleDisplay } = useDisplay()
+  const {currentStep, goToNextStep, goToPreviousStep} = useDisplayList()
   // Validation functions
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     return emailRegex.test(email)
   }
 
-  const validatePhone = (phone: string): boolean => {
-    const phoneRegex = /^\+?[\d\s\-\(\)]{10,}$/
-    return phoneRegex.test(phone.replace(/\s/g, ''))
-  }
+  // const validatePhone = (phone: string): boolean => {
+  //   const phoneRegex = /^\+?[\d\s\-\(\)]{10,}$/
+  //   return phoneRegex.test(phone.replace(/\s/g, ''))
+  // }
 
-  const validatePassword = (password: string): boolean => {
-    return password.length >= 8 && /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)
-  }
+  // const validatePassword = (password: string): boolean => {
+  //   return password.length >= 8 && /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)
+  // }
 
-  const validateForm = useCallback((): boolean => {
-    const newErrors: FormErrors = {}
+  // const validateForm = useCallback((): boolean => {
+  //   const newErrors: FormErrors = {}
 
     // Validate email or phone
-    if (activeTab === 'email') {
-      if (!inputValue.email) {
-        newErrors.email = 'Email is required'
-      } else if (!validateEmail(inputValue.email)) {
-        newErrors.email = 'Please enter a valid email address'
-      }
-    } else {
-      if (!inputValue.phone) {
-        newErrors.phone = 'Phone number is required'
-      } else if (!validatePhone(inputValue.phone)) {
-        newErrors.phone = 'Please enter a valid phone number'
-      }
-    }
+    // if (activeTab === 'email') {
+    //   if (!inputValue.email) {
+    //     newErrors.email = 'Email is required'
+    //   } else if (!validateEmail(inputValue.email)) {
+    //     newErrors.email = 'Please enter a valid email address'
+    //   }
+    // } else {
+    //   if (!inputValue.phone) {
+    //     newErrors.phone = 'Phone number is required'
+    //   } else if (!validatePhone(inputValue.phone)) {
+    //     newErrors.phone = 'Please enter a valid phone number'
+    //   }
+    // }
 
     // Validate password
-    if (!inputValue.password) {
-      newErrors.password = 'Password is required'
-    } else if (!validatePassword(inputValue.password)) {
-      newErrors.password = 'Password must be at least 8 characters with uppercase, lowercase, and number'
-    }
+    // if (!inputValue.password) {
+    //   newErrors.password = 'Password is required'
+    // } else if (!validatePassword(inputValue.password)) {
+    //   newErrors.password = 'Password must be at least 8 characters with uppercase, lowercase, and number'
+    // }
 
     // Validate confirm password
-    if (!inputValue.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password'
-    } else if (inputValue.password !== inputValue.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match'
-    }
+  //   if (!inputValue.confirmPassword) {
+  //     newErrors.confirmPassword = 'Please confirm your password'
+  //   } else if (inputValue.password !== inputValue.confirmPassword) {
+  //     newErrors.confirmPassword = 'Passwords do not match'
+  //   }
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }, [activeTab, inputValue])
+  //   setErrors(newErrors)
+  //   return Object.keys(newErrors).length === 0
+  // }, [activeTab, inputValue])
 
   const validateVerificationCode = useCallback((): boolean => {
     const code = [0, 1, 2, 3, 4, 5].map(i => inputValue[`code${i}` as keyof SignUpForm] || '').join('')
@@ -169,64 +170,50 @@ const SignUpPage = () => {
   const handleSignUp = async () => {
     Keyboard.dismiss()
     
-    if (!validateForm()) {
-      return
-    }
+    // if (!validateForm()) {
+    //   return
+    // }
 
-    setIsLoading(true)
+    // setIsLoading(true)
     
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000))
+    // try {
+    //   // Simulate API call
+    //   await new Promise(resolve => setTimeout(resolve, 2000))
       
-      if (displayComponents === FormStep.ZERO) {
-        handleDisplayComponent(FormStep.ONE)
-        // Start resend timer
-        setResendTimer(30)
-        const timer = setInterval(() => {
-          setResendTimer(prev => {
-            if (prev <= 1) {
-              clearInterval(timer)
-              return 0
-            }
-            return prev - 1
-          })
-        }, 1000)
+      if (currentStep === CountStep.ONE) {
+        handleDisplay()
+      }else{
+        goToNextStep()
       }
-    } catch (error) {
-      Alert.alert('Error', 'Something went wrong. Please try again.')
-    } finally {
-      setIsLoading(false)
-    }
   }
 
-  const handleVerifyCode = () => {
-    handleDisplay()
-  }
+  // const handleVerifyCode = () => {
+  //   handleDisplay()
+  // }
 
-  const handleResendCode = async () => {
-    if (resendTimer > 0) return
+  // const handleResendCode = async () => {
+  //   if (resendTimer > 0) return
     
-    try {
-      // Simulate resend API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
+  //   try {
+  //     // Simulate resend API call
+  //     await new Promise(resolve => setTimeout(resolve, 1000))
       
-      setResendTimer(30)
-      const timer = setInterval(() => {
-        setResendTimer(prev => {
-          if (prev <= 1) {
-            clearInterval(timer)
-            return 0
-          }
-          return prev - 1
-        })
-      }, 1000)
+  //     setResendTimer(30)
+  //     const timer = setInterval(() => {
+  //       setResendTimer(prev => {
+  //         if (prev <= 1) {
+  //           clearInterval(timer)
+  //           return 0
+  //         }
+  //         return prev - 1
+  //       })
+  //     }, 1000)
       
-      Alert.alert('Success', 'Verification code sent!')
-    } catch (error) {
-      Alert.alert('Error', 'Failed to resend code. Please try again.')
-    }
-  }
+  //     Alert.alert('Success', 'Verification code sent!')
+  //   } catch (error) {
+  //     Alert.alert('Error', 'Failed to resend code. Please try again.')
+  //   }
+  // }
 
   const inputKey = activeTab === 'email' ? 'email' : 'phone'
   const inputConfig = activeTab === 'email' ? inputData.email : inputData.phone
@@ -234,7 +221,7 @@ const SignUpPage = () => {
   return (
     <SafeArea>
       <Wrapper>
-        {displayComponents === FormStep.ZERO && (
+        {currentStep === CountStep.ZERO && (
           <View>
             <View style={styles.headerContainer}>
               <Text style={styles.welcomeTitle}>Create your HealthMate account</Text>
@@ -366,136 +353,24 @@ const SignUpPage = () => {
           </View>
         )}
         
-        {displayComponents === FormStep.ONE && (
+        {currentStep === CountStep.ONE && (
           <VerifyCode 
             inputValue={inputValue} 
             handleChange={handleChange} 
-            handleNextComponent={handleVerifyCode}
+            handleNextComponent={ handleSignUp}
             isLoading={isLoading}
             resendTimer={resendTimer}
-            onResendCode={handleResendCode}
+            openModal={openModal}
             errors={errors}
           />
         )}
+        {/* {currentStep === CountStep.TWO && <Success /> } */}
       </Wrapper>
     </SafeArea>
   )
 }
 
-const VerifyCode = ({
-  inputValue, 
-  handleChange, 
-  handleNextComponent,
-  isLoading,
-  resendTimer,
-  onResendCode,
-  errors
-}: {
-  inputValue: SignUpForm, 
-  handleChange: (key: string, value: string) => void,
-  handleNextComponent: () => void,
-  isLoading: boolean,
-  resendTimer: number,
-  onResendCode: () => void,
-  errors: FormErrors
-}) => {
-  const { openModal, handleDisplay } = useDisplay()
-  console.log(openModal)
-  const inputRefs = useRef<(TextInput | null)[]>([])
-  const { displayComponents } = useTracker()
-  const handleCodeChange = useCallback((index: number, value: string) => {
-    if (value.length <= 1) {
-      handleChange(`code${index}`, value)
-      
-      // Auto-focus next input if value is entered
-      if (value && index < 5 && inputRefs.current[index + 1]) {
-        inputRefs.current[index + 1]?.focus()
-      }
-    }
-  }, [handleChange])
 
-  const handleKeyPress = useCallback((index: number, key: string) => {
-    // Focus previous input on backspace if current input is empty
-    if (key === 'Backspace' && !inputValue[`code${index}` as keyof SignUpForm] && index > 0) {
-      inputRefs.current[index - 1]?.focus()
-    }
-  }, [inputValue])
-
-//   const handleNext = () => {
-//     if (displayComponents === FormStep.ONE) {
-//         handleDisplay()
-//       }
-//   }
-
-  return (
-    <View style={{ alignItems: 'center' }}>
-      <Title>Verify Your Account</Title>
-      <Text style={styles.verifySubtitle}>
-        We've sent a 6-digit verification code to your phone/email.
-      </Text>
-      
-      {/* Code input fields */}
-      <View style={styles.codeInputContainer}>
-        {[0, 1, 2, 3, 4, 5].map((index) => (
-          <TextInput
-            key={index}
-            // ref={(ref) => inputRefs.current[index] = ref}
-            style={[
-              styles.codeInput,
-              errors.code && styles.codeInputError
-            ]}
-            value={inputValue[`code${index}` as keyof SignUpForm] || ''}
-            onChangeText={(value) => handleCodeChange(index, value)}
-            onKeyPress={({ nativeEvent }) => handleKeyPress(index, nativeEvent.key)}
-            keyboardType="numeric"
-            maxLength={1}
-            textAlign="center"
-            accessibilityLabel={`Verification code digit ${index + 1}`}
-          />
-        ))}
-      </View>
-      
-      {errors.code && <Text style={styles.errorText}>{errors.code}</Text>}
-      
-      <View style={styles.resendContainer}>
-        <Text style={styles.resendText}>
-          Didn't receive it? 
-        </Text>
-        <TouchableOpacity 
-          onPress={onResendCode} 
-          disabled={resendTimer > 0}
-          accessibilityRole="button"
-          accessibilityLabel="Resend verification code"
-        >
-          <Text style={[
-            styles.resendLink,
-            resendTimer > 0 && styles.resendLinkDisabled
-          ]}>
-            {resendTimer > 0 ? `Resend in ${resendTimer}s` : 'Resend code'}
-          </Text>
-        </TouchableOpacity>
-      </View>
-      
-      <SubmitButton 
-        _fn={handleNextComponent}
-        // disabled={isLoading}/
-        // accessibilityLabel="Verify account"
-      >
-        {isLoading ? 'Verifying...' : 'Verify'}
-      </SubmitButton>
-      
-      <Modal
-        icon={<Ionicons name="checkmark" size={24} color={colors.lightRed} />}
-        title="Successful!"
-        text="Account verification successful. You can now log in"
-        closeModal={handleNextComponent}
-        isOpen={openModal}
-        route={() => router.push(ROUTES.login)}
-        submitText="Go to Login"
-      />
-    </View>
-  )
-}
 
 export default SignUpPage
 
@@ -627,65 +502,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontFamily: 'Inter_600SemiBold',
   },
-  
-  // Verification code styles
-  verifySubtitle: {
-    fontFamily: 'Lato_400Regular', 
-    fontSize: 16, 
-    fontWeight: '400',
-    color: colors.gray, 
-    marginTop: 4,
-    textAlign: 'center',
-    marginBottom: 25,
-  },
-  
-  codeInputContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 10,
-    marginBottom: 20,
-  },
-  
-  codeInput: {
-    width: 50,
-    height: 50,
-    borderWidth: 1,
-    borderColor: '#d1d5db',
-    borderRadius: 8,
-    fontSize: 18,
-    fontWeight: '600',
-    backgroundColor: 'white',
-  },
-  
-  codeInputError: {
-    borderColor: '#ef4444',
-  },
-  
-  resendContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 30,
-  },
-  
-  resendText: {
-    fontWeight: '500',
-    fontSize: 14,
-    fontFamily: 'Lato_400Regular',
-    color: colors.gray,
-  },
-  
-  resendLink: {
-    fontWeight: '500',
-    fontSize: 14,
-    fontFamily: 'Lato_400Regular',
-    color: colors.lightRed,
-    marginLeft: 4,
-  },
-  
-  resendLinkDisabled: {
-    color: '#9ca3af',
-  },
-  
+
   // Error text style
   errorText: {
     color: '#ef4444',

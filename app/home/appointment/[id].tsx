@@ -155,16 +155,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#fff',
     padding: 16,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 3,
-    // marginTop: 10,
+    borderRadius: 10,
+    borderColor: '#F2F2F2',
+    borderWidth: 1,
   },
   profileImage: {
     width: 80,
@@ -197,20 +190,7 @@ const styles = StyleSheet.create({
     fontFamily: 'LibreFranklin_400Regular',
   },
   lastItem: {
-    borderBottomWidth: 0, // Remove border from last item
-  },
-  enhancedCard: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 3,
-    marginVertical: 8,
+    borderBottomWidth: 0, 
   },
   enhancedItemContainer: {
     padding: 4,

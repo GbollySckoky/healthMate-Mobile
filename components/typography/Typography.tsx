@@ -136,9 +136,7 @@ export const style = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 3,
     color: colors.black,
-    // backgroundColor: 'red',
     fontFamily: 'LibreFranklin_600SemiBold',
-    // fontStyle: 'italic'
   },
   MinTitle: {
     fontSize: 18,
@@ -203,16 +201,6 @@ export const style = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 3,
-    overflow: 'hidden',
-
   },
   ButtonRow: {
     flexDirection: 'row',
@@ -258,7 +246,7 @@ export const style = StyleSheet.create({
     fontWeight: 500,
     fontSize: 12,
     textAlign: 'center',
-    height: 30,
+    height: 35 ,
     fontFamily: 'Inter_500Medium',
   },
   cardAmount: {
