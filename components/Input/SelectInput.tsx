@@ -17,7 +17,9 @@ const SelectInput = ({ options, value, onChangeText, label }: SelectInputType) =
 
   return (
     <View style={{ marginTop: 10 }}>
-      <Text>{label}</Text>
+      <Text style={{fontWeight: '500', fontSize: 14, fontFamily: 'Inter_500Medium', marginBottom: 3, color: '#414651'}}>
+         {label}
+      </Text>
 
       <Pressable style={styles.input} onPress={handleToggle}>
         <Text>{value || 'Select option'}</Text>

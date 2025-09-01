@@ -20,7 +20,7 @@ const inputData = {
     placeholder: 'Enter email',
   },
   phone: {
-    label: '*********', 
+    label: 'Phone Number', 
     placeholder: 'Enter phone number',
   },
   password: {
@@ -134,7 +134,7 @@ const LoginPage = () => {
         </View>
 
         {/* Login Button */}
-        <TouchableOpacity style={styles.loginButton}>
+        <TouchableOpacity style={styles.loginButton} onPress={() => router.push(ROUTES.home)}>
           <Text style={styles.loginButtonText}>Login</Text>
         </TouchableOpacity>
 

@@ -28,7 +28,7 @@ const index = () => {
         backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
       />
       <ScreenOverFlowLayout>
-        <Wrapper>
+          <Wrapper>
               <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20}}>
                   <SearchInput 
                       placeholder='Search for a doctor, specialty, or ho...'
@@ -39,7 +39,7 @@ const index = () => {
                       <Ionicons name="filter-outline" size={20} color="black" />
                   </Text>
               </View>
-              <View>  
+              <View style={{marginBottom: 50}}>  
                   {topRatedData.map((rated) => {
                       const {id, doctorName, type,address} = rated;
                       return(
@@ -67,7 +67,9 @@ const index = () => {
                                   <Text style={[style.buttonTexts, { color: colors.green }]}>
                                   ₦10,000
                                   </Text>
-                              <TouchableOpacity style={style.joinBtn}>
+                              <TouchableOpacity 
+                                style={style.joinBtn}
+                                onPress={() => router.push(`/(consult)/consultation-deatils/${id}`)}>
                                   <Text style={[style.buttonText, { color: '#F2F2F2' }]}>
                                   View Profile
                                   </Text>
@@ -93,15 +95,6 @@ const style = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 10,
         backgroundColor: '#fff',
-        shadowColor: '#000',
-        shadowOffset: {
-          width: 0,
-          height: 2,
-        },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-        elevation: 3,
-        overflow: 'hidden',
         marginBottom: 20
       },
     Flex: {

@@ -23,7 +23,7 @@ const Summary = () => {
         <View style={{
             backgroundColor: colors.white, 
             borderWidth: 1, 
-            borderColor: colors.broderColor, 
+            borderColor: '#F2F2F2', 
             borderRadius: 5, 
             padding: 10
         }}>
@@ -42,7 +42,7 @@ const Summary = () => {
                 alignItems: 'center', 
                 justifyContent: 'space-between', 
                 borderTopWidth: 1, 
-                borderTopColor: colors.broderColor, 
+                borderTopColor: '#F2F2F2', 
                 // borderStyle: 'dashed',
                 paddingVertical: 10
             }}>
@@ -56,7 +56,7 @@ const Summary = () => {
         <View style={{
             backgroundColor: colors.white, 
             borderWidth: 1, 
-            borderColor: colors.broderColor, 
+            borderColor: '#F2F2F2', 
             borderRadius: 5, 
             padding: 10,
             marginTop: 25

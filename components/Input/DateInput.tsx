@@ -32,7 +32,7 @@ export default DateInput;
 
 const styles = StyleSheet.create({
   text: {
-    fontFamily: 'Inter',
+    fontFamily: 'Inter_500Medium',
     fontSize: 14,
     fontWeight: 500,
     paddingBottom: 6,
