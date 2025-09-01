@@ -8,11 +8,7 @@
     "scheme": "healthmate",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/images/Group 19156.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
+   
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.anonymous.healthMate"

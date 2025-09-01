@@ -10,7 +10,7 @@ export const NavHeader = ({
   optionIcon,
   _optionFn,
 }: {
-  title: string;
+  title?: string;
   text?: string;
   _goBack: () => void;
   _optionFn?: () => void;

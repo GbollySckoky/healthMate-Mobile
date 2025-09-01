@@ -3,7 +3,9 @@ export const ROUTES = {
     login: '/auth/login',
     signup: '/auth/signup',
     reportIssue: '/home/report-issues',
-    home: '/(tabs)/home'
+    home: '/(tabs)/home',
+    signUpSuccess: '/auth/success',
+    about: '/auth/about'
 } as const;
 
 export type RouteValues = typeof ROUTES[keyof typeof ROUTES];

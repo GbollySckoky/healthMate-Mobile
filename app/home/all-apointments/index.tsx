@@ -31,72 +31,74 @@ const AllApointments = () => {
         />
         <ScreenOverFlowLayout>
           <Wrapper>
-            {allAppointmentData.map((all) => {
-              const { id, doctorName, date, time, status, type } = all;
-              return (
-                <View key={id} style={style.Card}>
-                  <View style={style.Flex}>
-                    <View style={{ width: 50 }}>
-                      <Image
-                        style={style.image}
-                        source={{
-                          uri: 'https://picsum.photos/seed/696/3000/2000',
-                        }}
-                        placeholder={{ blurhash }}
-                        contentFit="cover"
-                        transition={1000}
-                      />
-                    </View>
-                    <View style={style.Flexs}>
-                      <View style={{ marginLeft: 5 }}>
-                        <SubTitle>{doctorName}</SubTitle>
-                        <View style={[style.flex, { marginTop: 5 }]}>
-                          <View style={{ marginRight: 3 }}>
-                            <Feather name="clock" size={13} color="#717680" />
-                          </View>
-                          <SmallText>
-                            {' '}
-                            {time} | {date}{' '}
-                          </SmallText>
-                        </View>
-                        <View style={[style.flex, { marginTop: 5 }]}>
-                          <View style={{ marginRight: 3 }}>
-                            <Feather name="video" size={13} color="#717680" />
-                          </View>
-                          <SmallText> {type}</SmallText>
-                        </View>
+            <View style={{marginBottom:30}}>
+              {allAppointmentData.map((all) => {
+                const { id, doctorName, date, time, status, type } = all;
+                return (
+                  <View key={id} style={style.Card}>
+                    <View style={style.Flex}>
+                      <View style={{ width: 50 }}>
+                        <Image
+                          style={style.image}
+                          source={{
+                            uri: 'https://picsum.photos/seed/696/3000/2000',
+                          }}
+                          placeholder={{ blurhash }}
+                          contentFit="cover"
+                          transition={1000}
+                        />
                       </View>
-                      <Text
-                        style={{
-                          color: '#5924DC',
-                          backgroundColor: '#F4F3FF',
-                          borderRadius: 10,
-                          padding: 10,
-                          fontWeight: 500,
-                          fontSize: 12,
-                          height: 30,
-                          fontFamily: 'Inter_500Medium',
-                        }}
-                      >
-                        {status}
-                      </Text>
+                      <View style={style.Flexs}>
+                        <View style={{ marginLeft: 5 }}>
+                          <SubTitle>{doctorName}</SubTitle>
+                          <View style={[style.flex, { marginTop: 5 }]}>
+                            <View style={{ marginRight: 3 }}>
+                              <Feather name="clock" size={13} color="#717680" />
+                            </View>
+                            <SmallText>
+                              {' '}
+                              {time} | {date}{' '}
+                            </SmallText>
+                          </View>
+                          <View style={[style.flex, { marginTop: 5 }]}>
+                            <View style={{ marginRight: 3 }}>
+                              <Feather name="video" size={13} color="#717680" />
+                            </View>
+                            <SmallText> {type}</SmallText>
+                          </View>
+                        </View>
+                        <Text
+                          style={{
+                            color: '#5924DC',
+                            backgroundColor: '#F4F3FF',
+                            borderRadius: 10,
+                            padding: 10,
+                            fontWeight: 500,
+                            fontSize: 12,
+                            height: 35,
+                            fontFamily: 'Inter_500Medium',
+                          }}
+                        >
+                          {status}
+                        </Text>
+                      </View>
+                    </View>
+                    <View style={style.ButtonRow}>
+                      <TouchableOpacity style={style.rescheduleBtn}>
+                        <Text style={[style.buttonText, { color: '#252B37' }]}>
+                          Reschedule
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={style.joinBtn}>
+                        <Text style={[style.buttonText, { color: '#F2F2F2' }]}>
+                          Join Call
+                        </Text>
+                      </TouchableOpacity>
                     </View>
                   </View>
-                  <View style={style.ButtonRow}>
-                    <TouchableOpacity style={style.rescheduleBtn}>
-                      <Text style={[style.buttonText, { color: '#252B37' }]}>
-                        Reschedule
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={style.joinBtn}>
-                      <Text style={[style.buttonText, { color: '#F2F2F2' }]}>
-                        Join Call
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              );
-            })}
+                );
+              })}
+            </View>
           </Wrapper>
         </ScreenOverFlowLayout>
       </ScreenLayout>
@@ -132,19 +134,10 @@ export const style = StyleSheet.create({
   },
   Card: {
     padding: 15,
-    borderColor: '#F1F1',
+    borderColor: '#F2F2F2',
     borderWidth: 1,
     borderRadius: 10,
     backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 3,
-    overflow: 'hidden',
     marginBottom: 20,
   },
   ButtonRow: {
