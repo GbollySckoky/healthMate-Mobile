@@ -46,5 +46,8 @@ const styles = StyleSheet.create({
     borderColor: '#D6D7DA',
     borderWidth: 1,
     borderRadius: 5,
+    fontFamily: 'Inter_400Regular',
+    fontWeight: '400',
+    fontSize: 14,
   },
 });

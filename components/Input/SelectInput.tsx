@@ -32,7 +32,7 @@ const SelectInput = ({ options, value, onChangeText, label }: SelectInputType) =
               style={styles.option}
               onPress={() => {
                 onChangeText(option);
-                handleToggle(); // ✅ fixes closing issue
+                handleToggle(); 
               }}
             >
               <Text style={{ fontWeight: '300', color: value === option ? colors.red : colors.black,
@@ -60,6 +60,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     flexDirection: 'row',
     alignItems: 'center',
+    fontFamily: 'Inter_400Regular',
+    fontWeight: '400',
+    fontSize: 14,
   },
   option: {
     padding: 4,

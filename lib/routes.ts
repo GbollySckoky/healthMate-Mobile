@@ -5,7 +5,8 @@ export const ROUTES = {
     reportIssue: '/home/report-issues',
     home: '/(tabs)/home',
     signUpSuccess: '/auth/success',
-    about: '/auth/about'
+    about: '/auth/about',
+    welcome: '/auth/welcome'
 } as const;
 
 export type RouteValues = typeof ROUTES[keyof typeof ROUTES];
