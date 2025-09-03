@@ -48,7 +48,7 @@ const ChangePassword = () => {
     <ScreenLayout>
       <NavHeader
         title="Change Password"
-        _goBack={() => router.replace('/(profile)/settings')}
+        _goBack={() => router.back()}
         backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
       />
       <ScreenOverFlowLayout>
@@ -79,15 +79,17 @@ const ChangePassword = () => {
             onToggleVisibility={() => handleToggleVisibility('confirmPassword')}
             isPasswordVisible={passwordVisibility.confirmPassword}
           />
-          <SubmitButton _fn={handleClick}>Update Password</SubmitButton>
+          <SubmitButton _fn={handleClick}>Save Password</SubmitButton>
           <Modal
             icon={
               <Ionicons name="checkmark" size={24} color={colors.lightRed} />
             }
             title="Password Updated"
             text="Your password has been updated successfully. You can change at any time."
-            _fn={handleDisplay}
+            closeModal={handleDisplay}
             isOpen={openModal}
+            route={() => router.push('/(consult)')}
+            submitText='Done'
           />
         </Wrapper>
       </ScreenOverFlowLayout>

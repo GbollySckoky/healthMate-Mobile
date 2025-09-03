@@ -1,23 +1,22 @@
+import SafeArea from '@/components/safeAreaView/SafeAreaView';
 import { Link } from 'expo-router';
-import { View, Dimensions, StyleSheet, ScrollView } from 'react-native';
+import { View} from 'react-native';
 // import '../global.css'
 
 export default function HomeScreen() {
   return (
-    <View>
-      <View className="bg-red-900">
+    <SafeArea>
+      <View style={{backgroundColor: 'red', flex: 1}}>
+        <Link href="/(tabs)/home">Homes</Link>
+        <Link href="/onboarding">Homs</Link>
+        <Link href="/onboarding">Homs</Link>
+        <Link href="/onboarding">Homs</Link>
+        <Link href="/onboarding">Homs</Link>
+        <Link href="/(tabs)/home">Homes</Link>
+        <Link href="/(tabs)/home">Homes</Link>
         <Link href="/(tabs)/home">Homes</Link>
       </View>
       {/* </ScrollView> */}
-    </View>
+    </SafeArea>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    // backgroundColor:'red'
-  },
-});

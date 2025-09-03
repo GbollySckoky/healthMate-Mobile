@@ -2,7 +2,6 @@ import {
   Card,
   LatoText,
   SubTitle,
-  Texts,
 } from '@/components/typography/Typography';
 import { colors } from '@/lib/colors';
 import { Image } from 'expo-image';
@@ -15,7 +14,10 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Entypo from '@expo/vector-icons/Entypo';
 import { Link, router } from 'expo-router';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import Modal from '@/components/modal/Modal';
+import useDisplay from '@/hooks/useDisplay';
+import LogoutModal from '@/components/modal/LogoutModal';
+import { ROUTES } from '@/lib/routes';
 
 const Profile = () => {
   const profileImage = require('../../../assets/images/Ellipse 165.png');
@@ -50,7 +52,10 @@ const Profile = () => {
       value: 'Jan 20, 1996',
       id: 4,
       icon: <Feather name="calendar" size={20} color={colors.lightRed} />,
-    },
+    }
+  ];
+
+  const otherMenuItems = [
     {
       title: 'My Health Info',
       id: 5,
@@ -61,6 +66,7 @@ const Profile = () => {
           color={colors.lightRed}
         />
       ),
+      route: '/(profile)/health-info' as const
     },
     {
       title: 'My Reminders',
@@ -72,6 +78,7 @@ const Profile = () => {
           color={colors.lightRed}
         />
       ),
+      route: ROUTES.reminder  // Changed to a more appropriate route
     },
   ];
 
@@ -80,8 +87,15 @@ const Profile = () => {
   };
 
   const navigateToSettings = () => {
-    router.push('/(profile)/settings');
+    router.push('/settings');
   };
+
+  const handleMenuNavigation = (route: string) => {
+    router.push(route as any); // Type assertion for dynamic navigation
+  };
+
+  const {openModal, handleDisplay} = useDisplay()
+
   return (
     <View>
       <View
@@ -129,17 +143,18 @@ const Profile = () => {
           38 years
         </Text>
       </View>
+
       {/* Account Info */}
       <View>
         <LatoText>Account Information</LatoText>
         <Card>
-          {profileData.slice(0, 4).map((profile) => {
+          {profileData.map((profile, index) => {
             const { title, value, id, icon, next } = profile;
-            const isLastItem = id === profileData.length - 1;
+            const isLastItem = index === profileData.length - 1;
             return (
               <View
                 key={id}
-                style={[isLastItem && styles.lastItem, styles.container]}
+                style={[styles.container, isLastItem && styles.lastItem]}
               >
                 <View
                   style={{
@@ -180,43 +195,55 @@ const Profile = () => {
           })}
         </Card>
       </View>
+
       {/* Other */}
       <View>
         <LatoText>Other</LatoText>
         <Card>
-          {profileData.slice(4, 6).map((profile) => {
-            const { title, id, icon } = profile;
-            const isLastItem = id === profileData.length - 1;
+          {otherMenuItems.map((item, index) => {
+            const { title, id, icon, route } = item;
+            const isLastItem = index === otherMenuItems.length - 1;
             return (
               <View
                 key={id}
-                style={[isLastItem && styles.lastItem, styles.container]}
+                style={[styles.container, isLastItem && styles.lastItem]}
               >
-                <View style={{ flexDirection: 'row' }}>
-                  <Text>{icon}</Text>
-                  <View style={{ marginLeft: 10 }}>
-                    <Text
-                      style={{
-                        fontFamily: 'Lato_700Bold',
-                        fontWeight: '600',
-                        color: colors.lightBlack,
-                      }}
-                    >
-                      {title}
-                    </Text>
-                    {/* <Text style={{fontFamily: 'Lato_400Regular', fontWeight: '400', color: colors.gray, paddingTop:3}}>{value}</Text> */}
+                <Pressable onPress={() => handleMenuNavigation(route)}>
+                  <View style={{ flexDirection: 'row' }}>
+                    <Text>{icon}</Text>
+                    <View style={{ marginLeft: 10 }}>
+                      <Text
+                        style={{
+                          fontFamily: 'Lato_700Bold',
+                          fontWeight: '600',
+                          color: colors.lightBlack,
+                        }}
+                      >
+                        {title}
+                      </Text>
+                    </View>
                   </View>
-                </View>
+                </Pressable>
               </View>
             );
           })}
         </Card>
       </View>
-      {/* Settings */}
-      <Pressable onPress={navigateToSettings}>
-        <AntDesign name="setting" size={24} color="black" />
-        <Text>Settings</Text>
+
+      {/*Log out */}
+      <Pressable style={styles.settingsContainer} onPressIn={handleDisplay}>
+        <MaterialIcons name="logout" size={17} color={colors.lightRed} />
+        <Text style={styles.settingsText}>Log out</Text>
       </Pressable>
+      <LogoutModal
+            icon={
+              <Ionicons name="alert-circle-outline" size={24} color="#D92D20" />
+            }
+            title="Are you sure you want to log out?"
+            text="You'll need to sign in again to access your health dashboard."
+            closeModal={handleDisplay}
+            isOpen={openModal}
+          />
     </View>
   );
 };
@@ -232,5 +259,20 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.lightGray,
     paddingBottom: 20,
+  },
+  settingsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 15,
+    borderWidth: 1,
+    borderColor: colors.lightGray,
+    borderRadius: 10,
+    marginVertical: 20
+  },
+  settingsText: {
+    marginLeft: 10,
+    fontFamily: 'Lato_700Bold',
+    fontWeight: '600',
+    color: colors.lightRed
   },
 });

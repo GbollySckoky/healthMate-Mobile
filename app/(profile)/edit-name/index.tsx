@@ -6,6 +6,9 @@ import Entypo from '@expo/vector-icons/Entypo';
 import { SubmitButton, Wrapper } from '@/components/typography/Typography';
 import { useRouter } from 'expo-router';
 import Input from '@/components/Input/Input';
+import SafeArea from '@/components/safeAreaView/SafeAreaView';
+
+
 
 type EditInputType = Record<string, string>;
 const EditName = () => {
@@ -31,13 +34,13 @@ const EditName = () => {
   const handleClick = () => {};
   console.log(inputValue);
   return (
-    <ScreenLayout>
-      <NavHeader
-        title="Edit Name"
-        _goBack={() => router.replace('/(profile)')}
-        backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
-      />
-      <ScreenOverFlowLayout>
+    <SafeArea>
+      <ScreenLayout>
+        <NavHeader
+          title="Edit Name"
+          _goBack={() => router.replace('/(profile)')}
+          backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+        />
         <Wrapper>
           <Input
             {...data.firstName}
@@ -51,8 +54,8 @@ const EditName = () => {
           />
           <SubmitButton _fn={handleClick}>Save Changes</SubmitButton>
         </Wrapper>
-      </ScreenOverFlowLayout>
-    </ScreenLayout>
+      </ScreenLayout>
+    </SafeArea>
   );
 };
 

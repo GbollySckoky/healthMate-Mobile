@@ -1,5 +1,7 @@
 import React from 'react';
 import { TextInput, View, StyleSheet, Text } from 'react-native';
+import { colors } from '@/lib/colors';
+
 
 interface NumberInputType {
   label: string;
@@ -22,6 +24,7 @@ const Input = ({
         onChangeText={onChangeText}
         value={value}
         placeholder={placeholder}
+        placeholderTextColor={colors.black}
       />
     </View>
   );
@@ -33,7 +36,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: 'Inter_500Medium',
     fontSize: 14,
-    fontWeight: 500,
+    fontWeight: '500',
     paddingBottom: 6,
     color: '#414651',
   },
@@ -45,6 +48,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     fontFamily: 'Inter_400Regular',
     fontWeight: '400',
-    fontSize: 16,
+    fontSize: 14,
   },
 });

@@ -3,8 +3,11 @@ import { Ionicons } from '@expo/vector-icons';
 import Feather from '@expo/vector-icons/Feather';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function TabsLayout() {
+  const insets = useSafeAreaInsets();
+
   return (
     <Tabs
       screenOptions={{
@@ -14,8 +17,8 @@ export default function TabsLayout() {
         tabBarStyle: {
           backgroundColor: '#FFFFFF',
           borderTopColor: '#E5E7EB',
-          height: 60,
-          paddingBottom: 8,
+          height: 60 + insets.bottom, // make room for safe area
+          paddingBottom: insets.bottom, // push content above home indicator
           paddingTop: 8,
         },
         tabBarLabelStyle: {
@@ -29,11 +32,7 @@ export default function TabsLayout() {
         options={{
           title: 'Home',
           tabBarIcon: ({ color, size, focused }) => (
-            <Feather
-              name={focused ? 'home' : 'home'}
-              size={size}
-              color={color}
-            />
+            <Feather name="home" size={size} color={color} />
           ),
         }}
       />
@@ -44,8 +43,8 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
               name={focused ? 'analytics' : 'analytics-outline'}
-              color={color}
               size={size}
+              color={color}
             />
           ),
         }}

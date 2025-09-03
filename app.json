@@ -1,13 +1,14 @@
 {
   "expo": {
-    "name": "healthMate",
-    "slug": "healthMate",
+    "name": "healthmate",
+    "slug": "healthmate",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "healthmate",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+   
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.anonymous.healthMate"
@@ -29,8 +30,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
+          "image": "./assets/images/Group 19156.png",
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }

@@ -19,6 +19,9 @@ import { recentMood } from '../../data';
 import { Button } from '@/components/button/Button';
 import MoodModal from './_components/MoodModal';
 import { useModal } from '@/context/ModalContext';
+import SafeArea from '@/components/safeAreaView/SafeAreaView';
+
+
 
 const Mood = () => {
   const { openModal } = useModal();
@@ -72,130 +75,132 @@ const Mood = () => {
   };
 
   return (
-    <ScreenLayout>
-      <NavHeader
-        title="How Are You Feeling Today?"
-        _goBack={() => router.push('/(tabs)/home')}
-        backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
-        text="Tracking your mood helps you understand your...."
-      />
-      <ScreenOverFlowLayout>
-        <Wrapper>
-          <DetailsContainer>
-            <Text style={{ fontSize: 35, marginBottom: 3 }}>🙂</Text>
-            <CardText>Today’s mood</CardText>
-            <CardAmount>Happy</CardAmount>
-            <CardText>Recorded on: Jun 22, 09:45</CardText>
-            <Text style={styles.colorText}>Positive</Text>
-          </DetailsContainer>
-          {/* Chart */}
-          <View style={styles.chartContainer}>
-            <SubTitle>Mood Trends</SubTitle>
-            <LineChart
-              data={chartData}
-              width={width - 48} // Adjust for card padding
-              height={220}
-              chartConfig={chartConfig}
-              bezier
-              style={styles.chart}
-              withInnerLines={true}
-              withOuterLines={false}
-              yAxisSuffix=""
-              yAxisInterval={1}
-              fromZero={false}
-              // color={true}
-              segments={6}
-            />
-          </View>
-          <View style={{ marginBottom: 40 }}>
-            <Card>
-              <SubTitle>Recent Moods</SubTitle>
-              {recentMood.map((recent, index) => {
-                const { icon, date, time, mood, status } = recent;
-                const isLastItem = index === recentMood.length - 1;
-                return (
-                  <View
-                    key={index}
-                    style={[
-                      styles.enhancedItemContainer,
-                      isLastItem && styles.lastItem,
-                    ]}
-                  >
-                    <View style={styles.flex}>
-                      <View
-                        style={{ flexDirection: 'row', alignItems: 'center' }}
-                      >
+    <SafeArea>
+      <ScreenLayout>
+        <NavHeader
+          title="How Are You Feeling Today?"
+          _goBack={() => router.back()}
+          backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+          text="Tracking your mood helps you understand your...."
+        />
+        <ScreenOverFlowLayout>
+          <Wrapper>
+            <DetailsContainer>
+              <Text style={{ fontSize: 35, marginBottom: 3 }}>🙂</Text>
+              <CardText>Today’s mood</CardText>
+              <CardAmount>Happy</CardAmount>
+              <CardText>Recorded on: Jun 22, 09:45</CardText>
+              <Text style={styles.colorText}>Positive</Text>
+            </DetailsContainer>
+            {/* Chart */}
+            <View style={styles.chartContainer}>
+              <SubTitle>Mood Trends</SubTitle>
+              <LineChart
+                data={chartData}
+                width={width - 48} // Adjust for card padding
+                height={220}
+                chartConfig={chartConfig}
+                bezier
+                style={styles.chart}
+                withInnerLines={true}
+                withOuterLines={false}
+                yAxisSuffix=""
+                yAxisInterval={1}
+                fromZero={false}
+                // color={true}
+                segments={6}
+              />
+            </View>
+            <View style={{ marginBottom: 40 }}>
+              <Card>
+                <SubTitle>Recent Moods</SubTitle>
+                {recentMood.map((recent, index) => {
+                  const { icon, date, time, mood, status } = recent;
+                  const isLastItem = index === recentMood.length - 1;
+                  return (
+                    <View
+                      key={index}
+                      style={[
+                        styles.enhancedItemContainer,
+                        isLastItem && styles.lastItem,
+                      ]}
+                    >
+                      <View style={styles.flex}>
+                        <View
+                          style={{ flexDirection: 'row', alignItems: 'center' }}
+                        >
+                          <Text
+                            style={{
+                              borderColor: '#f2f2f2',
+                              borderWidth: 1,
+                              padding: 6,
+                              borderRadius: 5,
+                            }}
+                          >
+                            {' '}
+                            {icon}{' '}
+                          </Text>
+                          <View style={{ paddingLeft: 16 }}>
+                            <Text
+                              style={{
+                                fontWeight: 500,
+                                fontSize: 14,
+                                fontFamily: 'Lato_400Regular',
+                              }}
+                            >
+                              {mood}
+                            </Text>
+                            <Text
+                              style={{
+                                fontWeight: '400',
+                                fontSize: 12,
+                                color: '#717680',
+                                paddingTop: 2,
+                                fontFamily: 'Lato_400Regular',
+                              }}
+                            >
+                              {date} at {time}
+                            </Text>
+                          </View>
+                        </View>
                         <Text
                           style={{
-                            borderColor: '#f2f2f2',
-                            borderWidth: 1,
-                            padding: 6,
-                            borderRadius: 5,
+                            backgroundColor: `${
+                              (status === 'Normal' && '#ECFDF3') ||
+                              (status === 'Low' && '#FEF3F2') ||
+                              (status === 'Balanced' && '#FFFAEB')
+                            }`,
+                            color: `${(status === 'Normal' && '#027A48') || (status === 'Low' && '#B42318') || (status === 'Balanced' && '#B54708')}`,
+                            paddingHorizontal: 15,
+                            paddingVertical: 7,
+                            borderRadius: 30,
+                            fontFamily: 'Inter_500Medium',
                           }}
                         >
-                          {' '}
-                          {icon}{' '}
+                          {status}
                         </Text>
-                        <View style={{ paddingLeft: 16 }}>
-                          <Text
-                            style={{
-                              fontWeight: 500,
-                              fontSize: 14,
-                              fontFamily: 'Lato_400Regular',
-                            }}
-                          >
-                            {mood}
-                          </Text>
-                          <Text
-                            style={{
-                              fontWeight: '400',
-                              fontSize: 12,
-                              color: '#717680',
-                              paddingTop: 2,
-                              fontFamily: 'Lato_400Regular',
-                            }}
-                          >
-                            {date} at {time}
-                          </Text>
-                        </View>
                       </View>
-                      <Text
-                        style={{
-                          backgroundColor: `${
-                            (status === 'Normal' && '#ECFDF3') ||
-                            (status === 'Low' && '#FEF3F2') ||
-                            (status === 'Balanced' && '#FFFAEB')
-                          }`,
-                          color: `${(status === 'Normal' && '#027A48') || (status === 'Low' && '#B42318') || (status === 'Balanced' && '#B54708')}`,
-                          paddingHorizontal: 15,
-                          paddingVertical: 7,
-                          borderRadius: 30,
-                          fontFamily: 'Inter_500Medium',
-                        }}
-                      >
-                        {status}
-                      </Text>
                     </View>
-                  </View>
-                );
-              })}
-            </Card>
-          </View>
-        </Wrapper>
-      </ScreenOverFlowLayout>
-      <Button
-        _fn={() =>
-          openModal(<MoodModal />, {
-            title: 'Log New Mood',
-            description: '',
-            onClose: () => {},
-            // btnText: 'Save Reading'
-          })
-        }
-      >
-        Log New Weight
-      </Button>
-    </ScreenLayout>
+                  );
+                })}
+              </Card>
+            </View>
+          </Wrapper>
+        </ScreenOverFlowLayout>
+        <Button
+          _fn={() =>
+            openModal(<MoodModal />, {
+              title: 'Log New Mood',
+              description: '',
+              onClose: () => {},
+              // btnText: 'Save Reading'
+            })
+          }
+        >
+          Log New Weight
+        </Button>
+      </ScreenLayout>
+    </SafeArea>
   );
 };
 

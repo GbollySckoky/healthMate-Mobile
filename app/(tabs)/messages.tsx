@@ -1,10 +1,13 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import MessagePage from '../(messages)';
+import SafeArea from '@/components/safeAreaView/SafeAreaView';
+
+
 const Settings = () => {
   return (
-    <View>
-      <Text>settingd</Text>
-    </View>
+    <SafeArea>
+    <MessagePage />
+    </SafeArea>
   );
 };
 

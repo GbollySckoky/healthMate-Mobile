@@ -1,24 +1,18 @@
-import { NavHeader } from '@/components/Header/Header';
-import { useRouter } from 'expo-router';
 import React from 'react';
-import { Text, View } from 'react-native';
-import Entypo from '@expo/vector-icons/Entypo';
-import { useNavigation } from '@react-navigation/native';
-import { healthOverview } from '../data';
 import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout';
 import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
 import { Wrapper } from '@/components/typography/Typography';
 import HealthOverview from './_components/HealthOverview';
+import Nav from '@/components/Header/Nav';
+import { Pressable, Text } from 'react-native';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import { colors } from '@/lib/colors';
 
 const TrackPage = () => {
-  const router = useRouter();
   return (
     <ScreenLayout>
-      <NavHeader
+      <Nav
         title="Track your Health"
-        _goBack={() => router.push('/(tabs)/home')}
-        _optionFn={() => router.push('/(tabs)/home')}
-        backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
       />
       <ScreenOverFlowLayout>
         <Wrapper>
@@ -26,6 +20,21 @@ const TrackPage = () => {
           <HealthOverview />
         </Wrapper>
       </ScreenOverFlowLayout>
+      <Pressable 
+        style={{
+          backgroundColor: colors.lightRed, 
+          width: 'auto', 
+          borderRadius: 40,
+          padding: 15, 
+          position: 'absolute', 
+          bottom: 20,
+          right: 20,
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <AntDesign name="plus" size={24} color="white" />
+      </Pressable>
     </ScreenLayout>
   );
 };

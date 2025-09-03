@@ -115,11 +115,13 @@ export const Status = ({ children }: { children: React.ReactNode }) => (
 export const SubmitButton = ({
   children,
   _fn,
+  disabled
 }: {
   children: React.ReactNode;
   _fn: () => void;
+  disabled?: boolean
 }) => (
-  <TouchableOpacity style={style.closeBtn} onPress={_fn}>
+  <TouchableOpacity style={style.closeBtn} onPress={_fn} disabled={disabled}>
     <Text style={style.closeBtnText}>{children}</Text>
   </TouchableOpacity>
 );
@@ -134,9 +136,7 @@ export const style = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 3,
     color: colors.black,
-    // backgroundColor: 'red',
     fontFamily: 'LibreFranklin_600SemiBold',
-    // fontStyle: 'italic'
   },
   MinTitle: {
     fontSize: 18,
@@ -145,9 +145,8 @@ export const style = StyleSheet.create({
     fontFamily: 'LibreFranklin_600SemiBold',
   },
   Wrapper: {
-    width: '95%',
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    width: '92%',
+    margin: 'auto',
     marginTop: 15,
     color: '#414651',
     paddingBottom: 20,
@@ -179,7 +178,7 @@ export const style = StyleSheet.create({
   SubTitle: {
     fontFamily: 'LibreFranklin_600SemiBold',
     fontSize: 14,
-    color: '#414651',
+    color: colors.black,
     fontWeight: 600,
   },
   CardTitle: {
@@ -188,7 +187,6 @@ export const style = StyleSheet.create({
     color: '#414651',
     fontStyle: 'normal',
     fontWeight: 400,
-    // backgroundColor: 'red'
   },
   CardText: {
     fontFamily: 'Inter_400Regular',
@@ -202,15 +200,6 @@ export const style = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 3,
-    overflow: 'hidden',
   },
   ButtonRow: {
     flexDirection: 'row',
@@ -256,7 +245,7 @@ export const style = StyleSheet.create({
     fontWeight: 500,
     fontSize: 12,
     textAlign: 'center',
-    height: 30,
+    height: 35 ,
     fontFamily: 'Inter_500Medium',
   },
   cardAmount: {
@@ -289,7 +278,7 @@ export const style = StyleSheet.create({
     fontSize: 14,
     color: 'white',
     fontWeight: '600',
-    fontFamily: 'Inter',
+    fontFamily: 'Inter_600SemiBold',
   },
   latoText: {
     fontFamily: 'Lato_400Regular',

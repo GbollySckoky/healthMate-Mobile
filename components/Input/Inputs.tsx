@@ -1,3 +1,4 @@
+import { colors } from '@/lib/colors';
 import React, { useState } from 'react';
 import { TextInput, View, StyleSheet, Text } from 'react-native';
 
@@ -15,6 +16,7 @@ const Inputs = ({ value, onChangeText }: NumberInputType) => {
       onChangeText={onChangeText}
       value={value}
       // placeholder={placeholder}
+      placeholderTextColor={colors.black}
     />
   );
 };
@@ -36,5 +38,9 @@ const styles = StyleSheet.create({
     borderColor: '#D6D7DA',
     borderWidth: 1,
     borderRadius: 10,
+    textAlign: 'center',
+    fontFamily: 'Inter_400Regular',
+    fontWeight: '400',
+    fontSize: 14,
   },
 });

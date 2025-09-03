@@ -4,6 +4,7 @@ import Feather from '@expo/vector-icons/Feather';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Entypo from '@expo/vector-icons/Entypo';
 
+
 export const healthOverview = [
   {
     title: 'Blood Pressure',
@@ -229,3 +230,112 @@ export const recentMood = [
     status: 'Low',
   },
 ];
+
+const image1 = require('../assets/images/adhy-savala-zbpgmGe27p8-unsplash (1).jpg')
+const image2 = require('../assets/images/marcelo-leal-6pcGTJDuf6M-unsplash (1).jpg')
+const image3 = require('../assets/images/martha-dominguez-de-gouveia-KF-h9HMxRKg-unsplash (1).jpg')
+const image4 = require('../assets/images/stephen-andrews-GwgFPDXiSIs-unsplash.webp')
+
+
+export const consultationData = [
+  {
+    image: image1,
+    id: '1',
+    hospital: 'Lagos General Hospital',
+    address: '2 Olayinka Atiku St, Ajah, Lagos',
+    text: 'Over 50 experienced Doctors',
+    rating: '4.2(38)',
+    linkText: 'View Doctors'
+  },
+  {
+    image: image2,
+    id: '2',
+    hospital: 'Braithway Memorial Hospital',
+    address: '2 Olayinka Atiku St, Ajah, Lagos',
+    text: 'Over 50 experienced Doctors',
+    rating: '4.2(38)',
+    linkText: 'View Doctors'
+  },
+  {
+    image: image3,
+    id: '3',
+    hospital: 'Lagos General Hospital',
+    address: '2 Olayinka Atiku St, Ajah, Lagos',
+    text: 'Over 50 experienced Doctors',
+    rating: '4.2(38)',
+    linkText: 'View Doctors'
+  },
+  {
+    image: image4,
+    id: '4',
+    hospital: 'Lagos General Hospital',
+    address: '2 Olayinka Atiku St, Ajah, Lagos',
+    text: 'Over 50 experienced Doctors',
+    rating: '4.2(38)',
+    linkText: 'View Doctors'
+  },
+]
+
+export const topRatedData = [
+  {
+    id: 'dr-james-uche-june15',
+    doctorName: 'Dr James Uche',
+    date: 'June 15',
+    time: '2:00pm',
+    type: 'General Practitioner',
+    address: 'Lagos Health Hospital',
+  },
+  {
+    id: 'dr-jame-uche-june15',
+    doctorName: 'Dr James Uche',
+    date: 'June 15',
+    time: '2:00pm',
+    type: 'General Practitioner',
+    address: 'Lagos Health Hospital',
+  },
+  {
+    id: 'dr-jmes-uche-june15',
+    doctorName: 'Dr James Uche',
+    date: 'June 15',
+    time: '2:00pm',
+    type: 'General Practitioner',
+    address: 'Lagos Health Hospital',
+  },
+  {
+    id: 'd-james-uche-june15',
+    doctorName: 'Dr James Uche',
+    date: 'June 15',
+    time: '2:00pm',
+    type: 'General Practitioner',
+    address: 'Lagos Health Hospital',
+  },
+]
+
+export const reportAnIssue = [
+  'Appointment / Booking Problem',
+  'Payment / Refund Issue',
+  'Video Call Issue',
+  'Prescription / Medical Record',
+  'Others'
+]
+
+export const slidesData = [
+  {
+    id: 1,
+    image: require('../assets/images/Vector.png'),
+    title: 'Welcome to HealthMate',
+    subTitle: 'Track, Consult, and Stay Healthy.'
+  },
+  {
+    id: 2,
+    image: require('../assets/images/Vector1.png'),
+    title: 'Health Tracking',
+    subTitle: 'Log your BP, mood, weight, sleep & more.'
+  },
+  {
+    id: 1,
+    image: require('../assets/images/Vectors.png'),
+    title: 'Book Consultations Easily',
+    subTitle: 'Connect with verified doctors in just a tap'
+  },
+]

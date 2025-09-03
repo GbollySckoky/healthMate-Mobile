@@ -1,26 +1,31 @@
 import React from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import Entypo from '@expo/vector-icons/Entypo';
 import {
   BtnFlex,
   Card,
-  CardTitle,
   JoinBtn,
   MinTitle,
   RescheduleBtn,
-  SubTitles,
-  Title,
   Wrapper,
 } from '@/components/typography/Typography';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
 import { Image } from 'expo-image';
 import Feather from '@expo/vector-icons/Feather';
 import { NavHeader } from '@/components/Header/Header';
+import useDisplay from '@/hooks/useDisplay';
+import ProfileModal from '@/components/modal/Profile';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { ROUTES } from '@/lib/routes';
+import SafeArea from '@/components/safeAreaView/SafeAreaView';
+import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
+import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout';
 
 const AppointmentDetails = () => {
   const { id } = useLocalSearchParams();
   const profile = require('../../../assets/images/Mobile.png');
+  const { openModal, handleDisplay } = useDisplay();
   const data = [
     {
       text: 'I am a General Practitioner with over 8years experience. I help patients manage chronic migraines and sleep issues with comprehensive care approaches.',
@@ -51,71 +56,94 @@ const AppointmentDetails = () => {
       title: 'Health Concern',
     },
   ];
+
+  const options = [
+    {
+      name: "View Profile",
+      url: '/(profile)',
+    },
+    {
+      name: "Cancel Booking",
+      url: '/settings'
+    },
+    {
+      name: "Chat Doctor",
+      url: '/'
+    },
+    {
+      name: "Report Issue",
+      url: ROUTES.reportIssue 
+    }
+  ];
   console.log(id);
   return (
-    <View style={{ backgroundColor: 'white' }}>
-      <NavHeader
-        title="Appointment Details"
-        _goBack={() => router.push('/(tabs)/home')}
-        _optionFn={() => router.push('/(tabs)/home')}
-        backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
-        optionIcon={
-          <Entypo name="dots-three-vertical" size={15} color="black" />
-        }
-      />
-      <ScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}
-        style={{ backgroundColor: '#ffffff' }}
-      >
-        <Wrapper>
-          <View style={styles.container}>
-            <Image source={profile} style={styles.profileImage} />
-            <View style={styles.infoContainer}>
-              <MinTitle>Dr James Uche</MinTitle>
-              <Text style={styles.specialtyText}>General Practitioner</Text>
-              <View style={styles.locationContainer}>
-                <EvilIcons name="location" size={16} color="#666" />
-                <Text style={styles.locationText}>Lagos Health Hospital</Text>
+    <SafeArea>
+      <ScreenLayout>
+        <NavHeader
+          title="Appointment Details"
+          _goBack={() => router.back()}
+          _optionFn={() => handleDisplay()}
+          backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+          optionIcon={
+            <Entypo name="dots-three-vertical" size={15} color="black" />
+          }
+        />
+        <ScreenOverFlowLayout>
+          <Wrapper>
+            <View style={styles.container}>
+              <Image source={profile} style={styles.profileImage} />
+              <View style={styles.infoContainer}>
+                <MinTitle>Dr James Uche</MinTitle>
+                <Text style={styles.specialtyText}>General Practitioner</Text>
+                <View style={styles.locationContainer}>
+                  <EvilIcons name="location" size={16} color="#666" />
+                  <Text style={styles.locationText}>Lagos Health Hospital</Text>
+                </View>
               </View>
             </View>
-          </View>
-          {/* Card */}
-          <Card>
-            {data.map((item, index) => {
-              const { text, title, icon } = item;
-              const isLastItem = index === data.length - 1;
+            {/* Card */}
+            <Card>
+              {data.map((item, index) => {
+                const { text, title, icon } = item;
+                const isLastItem = index === data.length - 1;
 
-              return (
-                <View
-                  key={index}
-                  style={[
-                    styles.enhancedItemContainer,
-                    isLastItem && styles.lastItem,
-                  ]}
-                >
-                  <View style={styles.contentWrapper}>
-                    <Text style={styles.CardTitle}>{title}</Text>
-                    <Text>
-                      {icon && <Text style={styles.iconText}>{icon}</Text>}
-                      <Text style={styles.CardText}>{text}</Text>
-                    </Text>
+                return (
+                  <View
+                    key={index}
+                    style={[
+                      styles.enhancedItemContainer,
+                      isLastItem && styles.lastItem,
+                    ]}
+                  >
+                    <View style={styles.contentWrapper}>
+                      <Text style={styles.CardTitle}>{title}</Text>
+                      <Text>
+                        {icon && <Text style={styles.iconText}>{icon}</Text>}
+                        <Text style={styles.CardText}>{text}</Text>
+                      </Text>
+                    </View>
+                    {!isLastItem && <View style={styles.divider} />}
                   </View>
-                  {!isLastItem && <View style={styles.divider} />}
-                </View>
-              );
-            })}
-          </Card>
-          <BtnFlex>
-            <RescheduleBtn _fn={() => router.push('/')}>
-              {' '}
-              Reschedule
-            </RescheduleBtn>
-            <JoinBtn _fn={() => router.push('/')}>Join Call</JoinBtn>
-          </BtnFlex>
-        </Wrapper>
-      </ScrollView>
-    </View>
+                );
+              })}
+            </Card>
+            <BtnFlex>
+              <RescheduleBtn _fn={() => router.push('/')}>
+                Reschedule
+              </RescheduleBtn>
+              <JoinBtn _fn={() => router.push('/')}>Join Call</JoinBtn>
+            </BtnFlex>
+          </Wrapper>
+        </ScreenOverFlowLayout>
+        <ProfileModal 
+          isOpen={openModal}
+          closeModal={handleDisplay}
+          options={options}
+          icon={<MaterialIcons name="report-gmailerrorred" size={15} color='#FD6868' />}
+          values='Report Issue'
+        />
+      </ScreenLayout>
+    </SafeArea>
   );
 };
 
@@ -127,16 +155,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#fff',
     padding: 16,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 3,
-    // marginTop: 10,
+    borderRadius: 10,
+    borderColor: '#F2F2F2',
+    borderWidth: 1,
   },
   profileImage: {
     width: 80,
@@ -169,20 +190,7 @@ const styles = StyleSheet.create({
     fontFamily: 'LibreFranklin_400Regular',
   },
   lastItem: {
-    borderBottomWidth: 0, // Remove border from last item
-  },
-  enhancedCard: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 3,
-    marginVertical: 8,
+    borderBottomWidth: 0, 
   },
   enhancedItemContainer: {
     padding: 4,

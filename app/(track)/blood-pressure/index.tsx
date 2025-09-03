@@ -19,6 +19,8 @@ import { useState } from 'react';
 import { Button } from '@/components/button/Button';
 import BloodPressureModal from './BloodPressureModal';
 import { useModal } from '@/context/ModalContext';
+import SafeArea from '@/components/safeAreaView/SafeAreaView';
+
 
 const { width } = Dimensions.get('window');
 
@@ -74,150 +76,152 @@ const BloodPressure = () => {
   };
 
   return (
-    <ScreenLayout>
-      <NavHeader
-        title="Blood Pressure Tracker"
-        _goBack={() => router.replace('/(tabs)/home')}
-        backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
-        text="Track your readings to monitor your heart health"
-      />
-      <ScreenOverFlowLayout>
-        <Wrapper>
-          <DetailsContainer>
-            <AntDesign
-              name="hearto"
-              size={24}
-              color="#DF0000"
-              style={styles.icon}
-            />
-            <CardText>Today’s Readings</CardText>
-            <CardAmount>120/80 mmHg</CardAmount>
-            <CardText>Recorded on: Jun 22, 09:45</CardText>
-            <Text style={styles.colorText}>Normal</Text>
-          </DetailsContainer>
-          {/* Line Chart */}
-          <View style={styles.chartContainer}>
-            <SubTitle>BP Trends</SubTitle>
-            <LineChart
-              data={chartData}
-              width={width - 48} // Adjust for card padding
-              height={220}
-              chartConfig={chartConfig}
-              bezier
-              style={styles.chart}
-              withInnerLines={true}
-              withOuterLines={false}
-              yAxisSuffix=""
-              yAxisInterval={1}
-              fromZero={false}
-              // color={true}
-              segments={6}
-            />
+    <SafeArea>
+      <ScreenLayout>
+        <NavHeader
+          title="Blood Pressure Tracker"
+          _goBack={() => router.back()}
+          backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+          text="Track your readings to monitor your heart health"
+        />
+        <ScreenOverFlowLayout>
+          <Wrapper>
+            <DetailsContainer>
+              <AntDesign
+                name="hearto"
+                size={24}
+                color="#DF0000"
+                style={styles.icon}
+              />
+              <CardText>Today’s Readings</CardText>
+              <CardAmount>120/80 mmHg</CardAmount>
+              <CardText>Recorded on: Jun 22, 09:45</CardText>
+              <Text style={styles.colorText}>Normal</Text>
+            </DetailsContainer>
+            {/* Line Chart */}
+            <View style={styles.chartContainer}>
+              <SubTitle>BP Trends</SubTitle>
+              <LineChart
+                data={chartData}
+                width={width - 48} // Adjust for card padding
+                height={220}
+                chartConfig={chartConfig}
+                bezier
+                style={styles.chart}
+                withInnerLines={true}
+                withOuterLines={false}
+                yAxisSuffix=""
+                yAxisInterval={1}
+                fromZero={false}
+                // color={true}
+                segments={6}
+              />
 
-            {/* Legend */}
-            <View style={styles.legend}>
-              <View style={styles.legendItem}>
-                <View
-                  style={[styles.legendDot, { backgroundColor: '#EF4444' }]}
-                />
-                <Text style={styles.legendText}>Systolic</Text>
-              </View>
-              <View style={styles.legendItem}>
-                <View
-                  style={[styles.legendDot, { backgroundColor: '#3B82F6' }]}
-                />
-                <Text style={styles.legendText}>Diastolic</Text>
+              {/* Legend */}
+              <View style={styles.legend}>
+                <View style={styles.legendItem}>
+                  <View
+                    style={[styles.legendDot, { backgroundColor: '#EF4444' }]}
+                  />
+                  <Text style={styles.legendText}>Systolic</Text>
+                </View>
+                <View style={styles.legendItem}>
+                  <View
+                    style={[styles.legendDot, { backgroundColor: '#3B82F6' }]}
+                  />
+                  <Text style={styles.legendText}>Diastolic</Text>
+                </View>
               </View>
             </View>
-          </View>
-          {/* Recnnt Readings */}
-          <View style={{ marginBottom: 40 }}>
-            <Card>
-              <SubTitle>Recent Readings</SubTitle>
-              {recenntReadings.map((recent, index) => {
-                const { icon, bloodRate, date, status, time } = recent;
-                const isLastItem = index === recenntReadings.length - 1;
-                return (
-                  <View
-                    key={index}
-                    style={[
-                      styles.enhancedItemContainer,
-                      isLastItem && styles.lastItem,
-                    ]}
-                  >
-                    <View style={styles.flex}>
-                      <View
-                        style={{ flexDirection: 'row', alignItems: 'center' }}
-                      >
+            {/* Recnnt Readings */}
+            <View style={{ marginBottom: 40 }}>
+              <Card>
+                <SubTitle>Recent Readings</SubTitle>
+                {recenntReadings.map((recent, index) => {
+                  const { icon, bloodRate, date, status, time } = recent;
+                  const isLastItem = index === recenntReadings.length - 1;
+                  return (
+                    <View
+                      key={index}
+                      style={[
+                        styles.enhancedItemContainer,
+                        isLastItem && styles.lastItem,
+                      ]}
+                    >
+                      <View style={styles.flex}>
+                        <View
+                          style={{ flexDirection: 'row', alignItems: 'center' }}
+                        >
+                          <Text
+                            style={{
+                              borderColor: '#f2f2f2',
+                              borderWidth: 1,
+                              padding: 6,
+                              borderRadius: 5,
+                            }}
+                          >
+                            {' '}
+                            {icon}{' '}
+                          </Text>
+                          <View style={{ paddingLeft: 16 }}>
+                            <Text
+                              style={{
+                                fontWeight: '500',
+                                fontSize: 14,
+                                color: '#414651',
+                                paddingTop: 2,
+                                fontFamily: 'Lato_400Regular',
+                              }}
+                            >
+                              {bloodRate}
+                            </Text>
+                            <Text
+                              style={{
+                                fontWeight: '400',
+                                fontSize: 12,
+                                color: '#717680',
+                                paddingTop: 2,
+                                fontFamily: 'Lato_400Regular',
+                              }}
+                            >
+                              {date} at {time}
+                            </Text>
+                          </View>
+                        </View>
                         <Text
                           style={{
-                            borderColor: '#f2f2f2',
-                            borderWidth: 1,
-                            padding: 6,
-                            borderRadius: 5,
+                            backgroundColor: `${(status === 'Normal' && '#ECFDF3') || (status === 'High' && '#FEF3F2')}`,
+                            color: `${(status === 'Normal' && '#027A48') || (status === 'High' && '#B42318')}`,
+                            paddingHorizontal: 15,
+                            paddingVertical: 7,
+                            borderRadius: 30,
+                            fontFamily: 'Inter_500Medium',
                           }}
                         >
-                          {' '}
-                          {icon}{' '}
+                          {status}
                         </Text>
-                        <View style={{ paddingLeft: 16 }}>
-                          <Text
-                            style={{
-                              fontWeight: '500',
-                              fontSize: 14,
-                              color: '#414651',
-                              paddingTop: 2,
-                              fontFamily: 'Lato_400Regular',
-                            }}
-                          >
-                            {bloodRate}
-                          </Text>
-                          <Text
-                            style={{
-                              fontWeight: '400',
-                              fontSize: 12,
-                              color: '#717680',
-                              paddingTop: 2,
-                              fontFamily: 'Lato_400Regular',
-                            }}
-                          >
-                            {date} at {time}
-                          </Text>
-                        </View>
                       </View>
-                      <Text
-                        style={{
-                          backgroundColor: `${(status === 'Normal' && '#ECFDF3') || (status === 'High' && '#FEF3F2')}`,
-                          color: `${(status === 'Normal' && '#027A48') || (status === 'High' && '#B42318')}`,
-                          paddingHorizontal: 15,
-                          paddingVertical: 7,
-                          borderRadius: 30,
-                          fontFamily: 'Inter_500Medium',
-                        }}
-                      >
-                        {status}
-                      </Text>
                     </View>
-                  </View>
-                );
-              })}
-            </Card>
-          </View>
-        </Wrapper>
-      </ScreenOverFlowLayout>
-      <Button
-        _fn={() =>
-          openModal(<BloodPressureModal />, {
-            title: 'Add Blood Pressure Reading',
-            description: '',
-            onClose: () => {},
-            // btnText: 'Save Reading'
-          })
-        }
-      >
-        Add New Reading
-      </Button>
-    </ScreenLayout>
+                  );
+                })}
+              </Card>
+            </View>
+          </Wrapper>
+        </ScreenOverFlowLayout>
+        <Button
+          _fn={() =>
+            openModal(<BloodPressureModal />, {
+              title: 'Add Blood Pressure Reading',
+              description: '',
+              onClose: () => {},
+              // btnText: 'Save Reading'
+            })
+          }
+        >
+          Add New Reading
+        </Button>
+      </ScreenLayout>
+    </SafeArea>
   );
 };
 

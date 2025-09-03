@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback} from 'react';
 import { NavHeader } from '@/components/Header/Header';
 import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout';
 import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
@@ -6,18 +6,28 @@ import Entypo from '@expo/vector-icons/Entypo';
 import { Link, useRouter } from 'expo-router';
 import {
   Card,
-  LatoText,
-  SubmitButton,
   Wrapper,
 } from '@/components/typography/Typography';
 import { settingsData } from './data';
 import { Text, View, StyleSheet, Pressable } from 'react-native';
 import { colors } from '@/lib/colors';
 import useToggle from '@/hooks/useToggle';
+import { useLinkTo } from '@react-navigation/native';
+
 
 const SettingsPage = () => {
   const router = useRouter();
   const { isToggle, handleToggle } = useToggle();
+  const linkTo = useLinkTo(); 
+
+  // Optimized navigation handler
+  const handlePress = useCallback(
+    (url: string) => {
+      linkTo(url);
+    },
+    [linkTo]
+  );
+
   return (
     <ScreenLayout>
       <NavHeader
@@ -32,10 +42,10 @@ const SettingsPage = () => {
             <Card>
               {settingsData.slice(0, 2).map((setting, index) => {
                 const { icon, title, id, url, rightIcon } = setting;
-                const isLastItem = id === settingsData.length - 1;
+                const isLastItem = index === settingsData.length - 1;
                 return (
                   <View
-                    key={id}
+                    key={index}
                     style={[
                       styles.enhancedItemContainer,
                       isLastItem && styles.lastItem,
@@ -48,7 +58,7 @@ const SettingsPage = () => {
                         <Text>{icon}</Text>
                         <Text style={{ marginLeft: 7 }}>{title}</Text>
                       </View>
-                      <Link href={url}>{rightIcon}</Link>
+                     {url && <Pressable onPress={() => handlePress(url)}>{rightIcon}</Pressable>}  
                     </View>
                     {!isLastItem && <View style={styles.divider} />}
                   </View>
