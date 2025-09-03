@@ -76,3 +76,30 @@ export const healthOverview = [
       url: '/(track)/medication',
     },
   ];
+
+  export const reminderData = {
+    title:{
+      placeholder: 'e.g Medication',
+      label: 'Title',
+    },
+    type:{
+      placeholder:'Medication',
+      label: 'Type',
+      options:[
+        'Medication',
+        'BP Check',
+        'Sleep',
+        'Weight',
+        'Mood',
+        'Custom'
+      ]
+    },
+    frequency:{
+      placeholder:'Daily',
+      label: 'Frequency',
+      options:[
+        'Daily',
+        'Weekly',
+      ]
+    }
+  }

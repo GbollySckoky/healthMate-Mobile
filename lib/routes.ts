@@ -6,7 +6,10 @@ export const ROUTES = {
     home: '/(tabs)/home',
     signUpSuccess: '/auth/success',
     about: '/auth/about',
-    welcome: '/auth/welcome'
+    welcome: '/auth/welcome',
+    profile: '/(profile)',
+    reminder: '/(profile)/reminder',
+    addReminder: '/(profile)/reminder/add-reminder',
 } as const;
 
 export type RouteValues = typeof ROUTES[keyof typeof ROUTES];

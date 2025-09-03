@@ -20,7 +20,7 @@ const Reminder = () => {
   };
   const handleInput = () => {};
   return (
-    <View style={{marginBottom: 25}}>
+    <View style={{marginBottom: 35}}>
       <View style={style.flexs}>
         <SubTitle>Today's Reminders</SubTitle>
         <TouchableOpacity

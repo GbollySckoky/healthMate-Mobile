@@ -17,6 +17,7 @@ import { Link, router } from 'expo-router';
 import Modal from '@/components/modal/Modal';
 import useDisplay from '@/hooks/useDisplay';
 import LogoutModal from '@/components/modal/LogoutModal';
+import { ROUTES } from '@/lib/routes';
 
 const Profile = () => {
   const profileImage = require('../../../assets/images/Ellipse 165.png');
@@ -77,7 +78,7 @@ const Profile = () => {
           color={colors.lightRed}
         />
       ),
-      route: '/(profile)/reminders' as const // Changed to a more appropriate route
+      route: ROUTES.reminder  // Changed to a more appropriate route
     },
   ];
 
@@ -153,7 +154,7 @@ const Profile = () => {
             return (
               <View
                 key={id}
-                style={[isLastItem && styles.lastItem, styles.container]}
+                style={[styles.container, isLastItem && styles.lastItem]}
               >
                 <View
                   style={{
@@ -205,7 +206,7 @@ const Profile = () => {
             return (
               <View
                 key={id}
-                style={[isLastItem && styles.lastItem, styles.container]}
+                style={[styles.container, isLastItem && styles.lastItem]}
               >
                 <Pressable onPress={() => handleMenuNavigation(route)}>
                   <View style={{ flexDirection: 'row' }}>
@@ -242,8 +243,6 @@ const Profile = () => {
             text="You'll need to sign in again to access your health dashboard."
             closeModal={handleDisplay}
             isOpen={openModal}
-            // route={() => router.push('/(consult)')}
-            // submitText='Log out'
           />
     </View>
   );

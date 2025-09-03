@@ -24,6 +24,7 @@ const Input = ({
         onChangeText={onChangeText}
         value={value}
         placeholder={placeholder}
+        placeholderTextColor={colors.black}
       />
     </View>
   );
@@ -48,6 +49,5 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter_400Regular',
     fontWeight: '400',
     fontSize: 14,
-    color:'black'
   },
 });
