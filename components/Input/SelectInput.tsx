@@ -37,11 +37,28 @@ const SelectInput = ({ options, value, onChangeText, label }: SelectInputType) =
                 handleToggle(); 
               }}
             >
-              <Text style={{ fontWeight: '300', color: value === option ? colors.red : colors.black,
-                // backgroundColor: value === option ? colors.lightRed : ''
-                 }}>
-                {option}
-              </Text>
+             <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <Text
+                  style={{
+                    fontWeight: '500',
+                    fontSize: 14,
+                    color: value === option ? colors.red : '#181D27',
+                  }}
+                >
+                  {option}
+                </Text>
+
+                {value === option && (
+                  <AntDesign name="check" size={15} color={colors.red} />
+                )}
+              </View>
+
             </TouchableOpacity>
           ))}
         </View>
