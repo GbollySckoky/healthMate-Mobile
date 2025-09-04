@@ -11,7 +11,7 @@ import { router } from 'expo-router';
 import { ROUTES } from '@/lib/routes';
 import useTracker from '@/hooks/useTrackers';
 import { CountStep } from '@/lib/constant';
-import { VerifyCode } from './VerifyCode';
+import VerifyCode  from './VerifyCode';
 import useDisplay from '@/hooks/useDisplay';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
 import { useDisplayList } from '@/hooks/useDisplayList';

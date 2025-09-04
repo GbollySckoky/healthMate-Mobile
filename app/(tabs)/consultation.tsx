@@ -1,6 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
-import ConsultationPage from '../(consult)';
+import ConsultationPage from '../consult-screen/index';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
 const Consultation = () => {
   return (

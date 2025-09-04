@@ -13,7 +13,7 @@ interface FormErrors {
 }
 
 
-export const VerifyCode = ({
+const VerifyCode = ({
     inputValue, 
     handleChange, 
     handleNextComponent,
@@ -119,8 +119,10 @@ export const VerifyCode = ({
       </View>
     )
   }
+export default VerifyCode
 
-  const styles = StyleSheet.create({
+
+const styles = StyleSheet.create({
     // Verification code styles
   verifySubtitle: {
     fontFamily: 'Lato_400Regular', 
@@ -189,3 +191,5 @@ export const VerifyCode = ({
     marginLeft: 4,
   },
   })
+
+

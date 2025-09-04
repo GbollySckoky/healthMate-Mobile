@@ -1,5 +1,5 @@
 import React from 'react';
-import HomePage from '../home';
+import HomePage from '../home-screen/index';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
 
 const Home = () => {
