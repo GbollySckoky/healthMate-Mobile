@@ -12,7 +12,7 @@ import useTracker from '@/hooks/useTrackers';
 import { FormStep } from '@/lib/constant';
 import Inputs from '@/components/Input/Inputs';
 import PasswordInput from '@/components/Input/PasswordInput';
-import { passwordData } from '@/app/settings/data'; 
+import { passwordData } from '@/lib/data'; 
 import useDisplay from '@/hooks/useDisplay';
 import Modal from '@/components/modal/Modal';
 import Ionicons from '@expo/vector-icons/Ionicons';
