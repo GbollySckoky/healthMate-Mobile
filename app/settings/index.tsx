@@ -8,11 +8,12 @@ import {
   Card,
   Wrapper,
 } from '@/components/typography/Typography';
-import { settingsData } from './data';
+import { settingsData } from '@/lib/data';
 import { Text, View, StyleSheet, Pressable } from 'react-native';
 import { colors } from '@/lib/colors';
 import useToggle from '@/hooks/useToggle';
 import { useLinkTo } from '@react-navigation/native';
+import { ROUTES } from '@/lib/routes';
 
 
 const SettingsPage = () => {
@@ -32,7 +33,7 @@ const SettingsPage = () => {
     <ScreenLayout>
       <NavHeader
         title="Settings"
-        _goBack={() => router.replace('/(profile)')}
+        _goBack={() => router.back()}
         backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
       />
       <ScreenOverFlowLayout>

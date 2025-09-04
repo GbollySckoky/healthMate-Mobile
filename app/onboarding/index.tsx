@@ -14,7 +14,7 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent
 } from 'react-native'
-import { slidesData } from '@/app/data'
+import { slidesData } from '@/lib/data'
 import { colors } from '@/lib/colors'
 import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout'
 import { useRouter } from 'expo-router'
