@@ -88,7 +88,7 @@ const BloodPressure = () => {
           <Wrapper>
             <DetailsContainer>
               <AntDesign
-                name="hearto"
+                name="heart"
                 size={24}
                 color="#DF0000"
                 style={styles.icon}

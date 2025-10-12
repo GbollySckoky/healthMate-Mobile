@@ -15,7 +15,7 @@ export const healthOverview = [
     value: '120/80 mmHg',
     text: 'Blood Pressure',
     id: 1,
-    icon: <AntDesign name="hearto" size={24} color="#DF0000" />,
+    icon: <AntDesign name="heart" size={24} color="#DF0000" />,
     url: ROUTES.bloodPressure,
   },
   {
@@ -505,7 +505,7 @@ export const healthOverviews = [
     value: '120/80 mmHg',
     text: 'Blood Pressure',
     id: 1,
-    icon: <AntDesign name="hearto" size={18} color="#DF0000" />,
+    icon: <AntDesign name="heart" size={18} color="#DF0000" />,
     url: '/(track)/blood-pressure',
   },
   {

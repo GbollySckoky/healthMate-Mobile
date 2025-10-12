@@ -22,7 +22,7 @@ const TopRated = () => {
         <Link href={ROUTES.topRatedDoctors}>
           <Text style={style.viewAllText}>
             See All
-            <AntDesign name="arrowright" size={15} />
+            <AntDesign name="arrow-right" size={15} />
           </Text>
         </Link>
       </View>

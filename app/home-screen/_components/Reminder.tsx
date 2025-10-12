@@ -16,7 +16,7 @@ import { useRouter } from 'expo-router';
 const Reminder = () => {
   const router = useRouter();
   const handleViewAllReminders = () => {
-    router.push('/home/all-reminders');
+    router.push('/home-screen/all-reminders');
   };
   const handleInput = () => {};
   return (
@@ -28,7 +28,7 @@ const Reminder = () => {
           onPress={handleViewAllReminders}
         >
           <Text style={style.linkText}> View All </Text>
-          <AntDesign name="arrowright" size={17} color="#DD2590" />
+          <AntDesign name="arrow-right" size={17} color="#DD2590" />
         </TouchableOpacity>
       </View>
       <View>

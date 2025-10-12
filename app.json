@@ -8,7 +8,6 @@
     "scheme": "healthmate",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-   
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.anonymous.healthMate"
@@ -16,7 +15,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff", 
+        "backgroundColor": "#ffffff",
         "softwareKeyboardLayoutMode": "pan"
       },
       "edgeToEdgeEnabled": true
@@ -36,7 +35,8 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      "expo-font"
+      "expo-font",
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true

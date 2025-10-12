@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native'
+import { Text, View, StyleSheet, TouchableOpacity, Pressable } from 'react-native'
 import { Wrapper } from '@/components/typography/Typography';
 import { colors } from '@/lib/colors';
 import EmailInput from '@/components/Input/EmailInput';
@@ -10,6 +10,12 @@ import { Image } from 'react-native';
 import { router } from 'expo-router';
 import { ROUTES } from '@/lib/routes';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
+import { useMutation } from '@tanstack/react-query';
+import { patientService } from '@/service/patientService';
+import { login } from '@/types/login';
+import Toast from 'react-native-toast-message';
+import * as SecureStore from 'expo-secure-store';
+
 
 type LoginType = Record<string, string>
 type TabType = 'email' | 'phone'
@@ -49,8 +55,43 @@ const LoginPage = () => {
     setPasswordVisibility((prev) => !prev)
   }
 
+  async function saveAccessToken(token: string) {
+    await SecureStore.setItemAsync('my_access_token', token);
+  }
+
   const inputKey = activeTab === 'email' ? 'email' : 'phone'
   const inputConfig = activeTab === 'email' ? inputData.email : inputData.phone
+
+  const loginMutation = useMutation({
+    mutationFn: (payload: login) => patientService.login(payload),
+    onSuccess: (response: any) => {
+      saveAccessToken(response.accessToken)
+      Toast.show({
+        type: 'success',
+        text1: 'Logged in successfully'
+      })
+      router.push(ROUTES.home)
+      // console.log("YO1526272!!!",response)
+      // console.log("YO!!!",response.accessToken)
+    },
+    onError: (error: any) => {
+      console.log('ERROR!!!!',error.response.data.message)
+      Toast.show({
+        type: 'error',
+        text1: error.response.data.message
+      })
+    },
+    retry: 3,
+    retryDelay: 1000,
+  });
+
+  const handleLogin = () => {
+  const credentials: login = {
+    email: inputValue[inputKey] || '',
+    password: inputValue.password || ''
+  }; 
+  loginMutation.mutate(credentials);
+};
 
   return (
     <SafeArea>
@@ -134,9 +175,9 @@ const LoginPage = () => {
         </View>
 
         {/* Login Button */}
-        <TouchableOpacity style={styles.loginButton} onPress={() => router.replace(ROUTES.home)}>
-          <Text style={styles.loginButtonText}>Login</Text>
-        </TouchableOpacity>
+        <Pressable style={styles.loginButton} onPress={handleLogin} disabled={loginMutation.isPending}>
+          <Text style={styles.loginButtonText}>{loginMutation.isPending ? 'Logining....' : 'Login'} </Text>
+        </Pressable>
 
         {/* Sign Up Link */}
         <View style={styles.signUpContainer}>

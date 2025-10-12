@@ -74,7 +74,7 @@ const AllHospitalsPage = () => {
                               </View>
                               <View style={styles.footer}>
                               
-                              <Link href={'/consult'} style={styles.linkButton}>
+                              <Link href={`/consult-screen/consultation-deatils/${id}`} style={styles.linkButton}>
                                   <Text style={styles.linkText}>{linkText}</Text>
                               </Link>
                               </View>
