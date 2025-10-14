@@ -18,6 +18,10 @@ import Modal from '@/components/modal/Modal';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { ROUTES } from '@/lib/routes';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
+import { useMutation } from '@tanstack/react-query';
+import { forgotPassword } from '@/types/forgotPassword';
+import { patientService } from '@/service/patientService';
+import Toast from 'react-native-toast-message';
 
 type ForgotPasswordType = Record<string, string>
 type PasswordVisibilityType = Record<string, boolean>;
@@ -39,19 +43,38 @@ const ForgotPassword = () => {
             [key]: value
         }))
     }
+    const forgotPassword = useMutation({
+        mutationFn: (payload: forgotPassword) => patientService.forgotPassword(payload),
+        onSuccess: (response) => {
+            console.log('19292',response)
+        },
+        onError: (error: any) => {
+            Toast.show({
+                type: 'error',
+                text1: error.response.data.message
+            })
+            console.log('TEMA',error.response.data.message)
+        }
+    })
 
     const handleNext = () => {
-        if(displayComponents === FormStep.ZERO){
-            handleDisplayComponent(FormStep.ONE)
-        } else{
-            handleDisplayComponent(FormStep.TWO)
-        }
+        // if(displayComponents === FormStep.ZERO){
+        //     handleDisplayComponent(FormStep.ONE)
+        // } else{
+        //     handleDisplayComponent(FormStep.TWO)
+        // }
 
     }
 
     const handleVerify = () => {
         // Handle verification logic here
-        console.log('Verifying code...')
+        const credential:forgotPassword = {
+            email: inputValue.email
+        } 
+        console.log('YO!!!',credential)
+        console.log('1234',forgotPassword)
+        forgotPassword.mutate(credential)
+       
     }
 
   return (
@@ -71,14 +94,14 @@ const ForgotPassword = () => {
                     </Text>
                     <Input 
                         {...email}
-                        value={inputValue.info || ''}
-                        onChangeText={(value) => handleChange('info', value)}
+                        value={inputValue.email || ''}
+                        onChangeText={(value) => handleChange('email', value)}
                     />
                     <Text style={{color: colors.red, fontFamily: 'Inter_400Regular', fontWeight: '400',fontSize: 12}}>
                         We couldn't find an account with that email
                     </Text>
-                    <SubmitButton _fn={handleNext}>
-                        Reset Password
+                    <SubmitButton disabled={forgotPassword.isPending} _fn={handleVerify}>
+                        {forgotPassword.isPending ? 'Reseting...' : 'Reset Password'}
                     </SubmitButton>
                 </View>
             )}
