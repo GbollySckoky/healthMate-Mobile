@@ -19,7 +19,7 @@ const HealthOverview = () => {
             <Text style={{fontSize: 14, fontWeight: '400', fontFamily: 'Lato_400Regular', color: colors.black}}>Recent Logs Snapshot</Text>
             <Link href={ROUTES.track} style={{color: colors.lightRed}}>
                 View All 
-                <AntDesign name="arrowright" size={15} />
+                <AntDesign name="arrow-right" size={15} />
             </Link>
         </View>
         <Card>

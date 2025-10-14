@@ -20,7 +20,7 @@ const Consultation = () => {
         <Link href={ROUTES.allAppointments} >
           <Text style={styles.viewAllText}>
             View All
-            <AntDesign name="arrowright" size={15} />
+            <AntDesign name="arrow-right" size={15} />
           </Text>
         </Link>
       </View>

@@ -69,7 +69,7 @@ const index = () => {
                                   </Text>
                               <TouchableOpacity 
                                 style={style.joinBtn}
-                                onPress={() => router.push(`/consult/consultation-deatils/${id}`)}>
+                                onPress={() => router.push(`/consult-screen/consultation-deatils/${id}`)}>
                                   <Text style={[style.buttonText, { color: '#F2F2F2' }]}>
                                   View Profile
                                   </Text>

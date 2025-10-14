@@ -1,36 +1,46 @@
 import { Text, View, StyleSheet, TouchableOpacity, TextInput } from 'react-native'
 import { Title, SubmitButton, } from '@/components/typography/Typography';
 import { colors } from '@/lib/colors';
-import React, {  useRef, useCallback } from 'react'
+import React, {  useRef, useCallback, useState, useEffect } from 'react'
 import { router } from 'expo-router';
 import { ROUTES } from '@/lib/routes';
 import { Ionicons } from '@expo/vector-icons';
 import { SignUpForm } from './index';
 import Modal from '@/components/modal/Modal';
+import { useMutation } from '@tanstack/react-query';
+import { verifyEmail } from '@/types/verifyEmail';
+import { patientService } from '@/service/patientService';
+import Toast from 'react-native-toast-message';
 
 interface FormErrors {
     [key: string]: string;
 }
 
-
-const VerifyCode = ({
+const VerifyEmail = ({
     inputValue, 
     handleChange, 
     handleNextComponent,
-    isLoading,
-    resendTimer,
     openModal,
-    errors
   }: {
     inputValue: SignUpForm, 
     handleChange: (key: string, value: string) => void,
     handleNextComponent: () => void,
-    isLoading: boolean,
-    resendTimer: number,
     openModal: boolean,
-    errors: FormErrors
   }) => {
     const inputRefs = useRef<(TextInput | null)[]>([])
+    const [resendTimer, setResendTimer] = useState(60) // Start with 60 seconds
+    const [isModalOpen, setIsModalOpen] = useState(false)
+
+    // Timer countdown effect
+    useEffect(() => {
+      if (resendTimer > 0) {
+        const timer = setTimeout(() => {
+          setResendTimer(resendTimer - 1)
+        }, 1000)
+        return () => clearTimeout(timer)
+      }
+    }, [resendTimer])
+
     const handleCodeChange = useCallback((index: number, value: string) => {
       if (value.length <= 1) {
         handleChange(`code${index}`, value)
@@ -48,13 +58,83 @@ const VerifyCode = ({
         inputRefs.current[index - 1]?.focus()
       }
     }, [inputValue])
-  
-  
+
+    const verifyEmailMutation = useMutation({
+      mutationFn: (payload: verifyEmail) => patientService.verifyEmail(payload),
+      onSuccess: (response: any) => {
+        console.log('RESPONSE!!', response)
+        Toast.show({
+          type: 'success',
+          text1: 'Account verified successfully!',
+          text2: 'You can now access your account'
+        })
+        // Open modal or navigate to next step
+        setIsModalOpen(true)
+      },
+      onError: (error: any) => {
+        const errorMessage = error.response?.data?.message 
+          || error.message
+          || 'An error occurred during verification. Please try again.';
+        Toast.show({
+          type: 'error',
+          text1: errorMessage
+        })
+        console.log('ERROR!!!', errorMessage, error)
+      }
+    })
+
+    const handleVerifyCode = () => {
+      // Concatenate all 6 code digits
+      const otp = [0, 1, 2, 3, 4, 5]
+        .map(i => inputValue[`code${i}` as keyof SignUpForm] || '')
+        .join('')
+
+      // Validate OTP length
+      if (otp.length !== 6) {
+        Toast.show({
+          type: 'error',
+          text1: 'Invalid code',
+          text2: 'Please enter all 6 digits'
+        })
+        return
+      }
+
+      // Validate email exists
+      if (!inputValue.email) {
+        Toast.show({
+          type: 'error',
+          text1: 'Email not found',
+          text2: 'Please go back and enter your email'
+        })
+        return
+      }
+
+      const credentials: verifyEmail = {
+        email: inputValue.email,
+        otp: otp
+      }
+      
+      console.log('Verifying with:', credentials)
+      verifyEmailMutation.mutate(credentials)
+    }
+
+    const handleResendCode = () => {
+      // Reset timer
+      setResendTimer(60)
+      
+      // TODO: Call resend API
+      Toast.show({
+        type: 'info',
+        text1: 'Code resent',
+        text2: 'Check your email for the new verification code'
+      })
+    }
+
     return (
       <View style={{ alignItems: 'center', marginTop: 20 }}>
         <Title>Verify Your Account</Title>
         <Text style={styles.verifySubtitle}>
-          We've sent a 6-digit verification code to your phone/email.
+          We've sent a 6-digit verification code to {inputValue.email || 'your email'}.
         </Text>
         
         {/* Code input fields */}
@@ -62,11 +142,8 @@ const VerifyCode = ({
           {[0, 1, 2, 3, 4, 5].map((index) => (
             <TextInput
               key={index}
-              // ref={(ref) => inputRefs.current[index] = ref}
-              style={[
-                styles.codeInput,
-                errors.code && styles.codeInputError
-              ]}
+              ref={(ref) => { inputRefs.current[index] = ref }}
+              style={styles.codeInput}
               value={inputValue[`code${index}` as keyof SignUpForm] || ''}
               onChangeText={(value) => handleCodeChange(index, value)}
               onKeyPress={({ nativeEvent }) => handleKeyPress(index, nativeEvent.key)}
@@ -76,16 +153,14 @@ const VerifyCode = ({
               accessibilityLabel={`Verification code digit ${index + 1}`}
             />
           ))}
-        </View>
-        {/*  */}
-        {/* {errors.code && <Text style={styles.errorText}>{errors.code}</Text>} */}
+        </View>        
         
         <View style={styles.resendContainer}>
           <Text style={styles.resendText}>
             Didn't receive it? 
           </Text>
           <TouchableOpacity 
-            // onPress={onResendCode} 
+            onPress={handleResendCode} 
             disabled={resendTimer > 0}
             accessibilityRole="button"
             accessibilityLabel="Resend verification code"
@@ -100,30 +175,28 @@ const VerifyCode = ({
         </View>
         
         <SubmitButton 
-          _fn={handleNextComponent}
-          // disabled={isLoading}/
-          // accessibilityLabel="Verify account"
+          _fn={handleVerifyCode}
+          disabled={verifyEmailMutation.isPending}
         >
-          {isLoading ? 'Verifying...' : 'Verify'}
+          {verifyEmailMutation.isPending ? 'Verifying...' : 'Verify'}
         </SubmitButton>
         
         <Modal
           icon={<Ionicons name="checkmark" size={24} color={colors.lightRed} />}
           title="Successful!"
           text="Account successfully Verified"
-          closeModal={handleNextComponent}
-          isOpen={openModal}
+          closeModal={() => setIsModalOpen(false)}
+          isOpen={isModalOpen || openModal}
           route={() => router.push(ROUTES.signUpSuccess)}
           submitText="Continue"
         />
       </View>
     )
   }
-export default VerifyCode
 
+export default VerifyEmail
 
 const styles = StyleSheet.create({
-    // Verification code styles
   verifySubtitle: {
     fontFamily: 'Lato_400Regular', 
     fontSize: 16, 
@@ -182,7 +255,6 @@ const styles = StyleSheet.create({
     color: '#9ca3af',
   },
   
-  // Error text style
   errorText: {
     color: '#ef4444',
     fontSize: 12,
@@ -190,6 +262,4 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginLeft: 4,
   },
-  })
-
-
+})

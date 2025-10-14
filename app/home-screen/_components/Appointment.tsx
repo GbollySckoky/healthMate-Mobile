@@ -40,7 +40,7 @@ const AppointmentCard = () => {
           onPress={handleSeeAllAppointments}
         >
           <Text style={style.linkText}> See All </Text>
-          <AntDesign name="arrowright" size={17} color="#DD2590" />
+          <AntDesign name="arrow-right" size={17} color="#DD2590" />
         </TouchableOpacity>
       </View>
       <TouchableOpacity onPress={handleAppointmentPress} activeOpacity={0.7}>

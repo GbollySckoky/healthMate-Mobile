@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback } from 'react'
-import { Text, View, StyleSheet, TouchableOpacity, Keyboard } from 'react-native'
+import { Text, View, StyleSheet, TouchableOpacity, Keyboard, Pressable } from 'react-native'
 import { Wrapper} from '@/components/typography/Typography';
 import { colors } from '@/lib/colors';
 import EmailInput from '@/components/Input/EmailInput';
@@ -9,12 +9,17 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { Image } from 'react-native';
 import { router } from 'expo-router';
 import { ROUTES } from '@/lib/routes';
-import useTracker from '@/hooks/useTrackers';
 import { CountStep } from '@/lib/constant';
 import VerifyCode  from './VerifyCode';
 import useDisplay from '@/hooks/useDisplay';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
 import { useDisplayList } from '@/hooks/useDisplayList';
+import { signup } from '@/types/signup';
+import { patientService } from '@/service/patientService';
+import { useMutation } from '@tanstack/react-query';
+import Toast from 'react-native-toast-message';
+import Input from '@/components/Input/Input';
+import VerifyEmail from './VerifyCode';
 // import Success from './Success';
 
 
@@ -25,12 +30,8 @@ export interface SignUpForm {
   phone?: string;
   password: string;
   confirmPassword: string;
-  code0?: string;
-  code1?: string;
-  code2?: string;
-  code3?: string;
-  code4?: string;
-  code5?: string;
+  firstName: string;
+  lastName: string
 }
 
 type TabType = 'email' | 'phone'
@@ -47,6 +48,14 @@ const inputData = {
   phone: {
     label: 'Phone Number', 
     placeholder: 'Enter phone number',
+  },
+  firstName: {
+    label: 'First Name', 
+    placeholder: 'Gbolly',
+  },
+  lastName: {
+    label: 'Last Name', 
+    placeholder: 'Sckoky',
   },
   password: {
     label: 'Password',
@@ -65,94 +74,24 @@ const inputData = {
 const SignUpPage = () => {
   const [activeTab, setActiveTab] = useState<TabType>('email')
   const [inputValue, setInputValue] = useState<SignUpForm>({
+    firstName: '',
+    lastName: '',
     password: '',
     confirmPassword: ''
   })
-  const [errors, setErrors] = useState<FormErrors>({})
-  const [isLoading, setIsLoading] = useState(false)
-  const [resendTimer, setResendTimer] = useState(0)
-  const { displayComponents, handleDisplayComponent } = useTracker()
   const [passwordVisibility, setPasswordVisibility] = useState(false)
   const [confirmPasswordVisibility, setConfirmPasswordVisibility] = useState(false)
   const goggleLogo = require('../../../assets/images/google-logo.webp')
   const { openModal, handleDisplay } = useDisplay()
-  const {currentStep, goToNextStep, goToPreviousStep} = useDisplayList()
-  // Validation functions
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return emailRegex.test(email)
-  }
-
-  // const validatePhone = (phone: string): boolean => {
-  //   const phoneRegex = /^\+?[\d\s\-\(\)]{10,}$/
-  //   return phoneRegex.test(phone.replace(/\s/g, ''))
-  // }
-
-  // const validatePassword = (password: string): boolean => {
-  //   return password.length >= 8 && /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)
-  // }
-
-  // const validateForm = useCallback((): boolean => {
-  //   const newErrors: FormErrors = {}
-
-    // Validate email or phone
-    // if (activeTab === 'email') {
-    //   if (!inputValue.email) {
-    //     newErrors.email = 'Email is required'
-    //   } else if (!validateEmail(inputValue.email)) {
-    //     newErrors.email = 'Please enter a valid email address'
-    //   }
-    // } else {
-    //   if (!inputValue.phone) {
-    //     newErrors.phone = 'Phone number is required'
-    //   } else if (!validatePhone(inputValue.phone)) {
-    //     newErrors.phone = 'Please enter a valid phone number'
-    //   }
-    // }
-
-    // Validate password
-    // if (!inputValue.password) {
-    //   newErrors.password = 'Password is required'
-    // } else if (!validatePassword(inputValue.password)) {
-    //   newErrors.password = 'Password must be at least 8 characters with uppercase, lowercase, and number'
-    // }
-
-    // Validate confirm password
-  //   if (!inputValue.confirmPassword) {
-  //     newErrors.confirmPassword = 'Please confirm your password'
-  //   } else if (inputValue.password !== inputValue.confirmPassword) {
-  //     newErrors.confirmPassword = 'Passwords do not match'
-  //   }
-
-  //   setErrors(newErrors)
-  //   return Object.keys(newErrors).length === 0
-  // }, [activeTab, inputValue])
-
-  const validateVerificationCode = useCallback((): boolean => {
-    const code = [0, 1, 2, 3, 4, 5].map(i => inputValue[`code${i}` as keyof SignUpForm] || '').join('')
-    if (code.length !== 6) {
-      setErrors({ code: 'Please enter the complete 6-digit code' })
-      return false
-    }
-    setErrors({})
-    return true
-  }, [inputValue])
+  const {currentStep, goToNextStep,} = useDisplayList()
 
   const handleChange = useCallback((key: string, value: string) => {
     setInputValue((prev) => ({
       ...prev,
       [key]: value
     }))
-    
-    // Clear specific error when user starts typing
-    if (errors[key]) {
-      setErrors(prev => {
-        const newErrors = { ...prev }
-        delete newErrors[key]
-        return newErrors
-      })
-    }
-  }, [errors])
+   
+  },[])
 
   const handleToggleVisibility = useCallback((field: 'password' | 'confirmPassword') => {
     if (field === 'password') {
@@ -164,56 +103,57 @@ const SignUpPage = () => {
 
   const handleTabSwitch = useCallback((tab: TabType) => {
     setActiveTab(tab)
-    setErrors({}) // Clear errors when switching tabs
   }, [])
+
+  const signupMutation = useMutation({
+    mutationFn: (payload: signup) => patientService.signup(payload),
+    onSuccess: (response: any) => {
+      console.log('RESPONSE!!',response)
+      goToNextStep()  
+      Toast.show({
+        type: 'success',
+        text1: 'Account created successfully!',
+        text2: 'Please verify your account'
+      })
+    },
+    onError: (error: any) => {
+      // Handle different error scenarios
+      const errorMessage = error.response?.data?.message 
+        || 'An error occurred during sign up. Please try again.';
+      
+      Toast.show({
+        type: 'error',
+        text1: errorMessage
+      })
+      console.log('ERROR!!!', errorMessage, error)
+    }
+  })
 
   const handleSignUp = async () => {
     Keyboard.dismiss()
-    
-    // if (!validateForm()) {
-    //   return
-    // }
+  
+    const credentials: signup = {
+      email: inputValue[inputKey] || '',
+      password: inputValue.password || '',
+      firstName: inputValue.firstName || '',
+      lastName: inputValue.lastName || '',
+      role: 'user',
+      phoneNumber: "07075408187"
+    }; 
 
-    // setIsLoading(true)
-    
-    // try {
-    //   // Simulate API call
-    //   await new Promise(resolve => setTimeout(resolve, 2000))
-      
-      if (currentStep === CountStep.ONE) {
-        handleDisplay()
-      }else{
-        goToNextStep()
-      }
+    if(inputValue.password !== inputValue.confirmPassword){
+      Toast.show({
+        type: 'error',
+        text1: 'Password and Confirm Password must be same'
+      })
+      return
+    }
+    console.log('CREDENTIALS!!!', credentials)
+    console.log('SIGNUPMUTATION!!!', signupMutation)
+
+    signupMutation.mutate(credentials)
+
   }
-
-  // const handleVerifyCode = () => {
-  //   handleDisplay()
-  // }
-
-  // const handleResendCode = async () => {
-  //   if (resendTimer > 0) return
-    
-  //   try {
-  //     // Simulate resend API call
-  //     await new Promise(resolve => setTimeout(resolve, 1000))
-      
-  //     setResendTimer(30)
-  //     const timer = setInterval(() => {
-  //       setResendTimer(prev => {
-  //         if (prev <= 1) {
-  //           clearInterval(timer)
-  //           return 0
-  //         }
-  //         return prev - 1
-  //       })
-  //     }, 1000)
-      
-  //     Alert.alert('Success', 'Verification code sent!')
-  //   } catch (error) {
-  //     Alert.alert('Error', 'Failed to resend code. Please try again.')
-  //   }
-  // }
 
   const inputKey = activeTab === 'email' ? 'email' : 'phone'
   const inputConfig = activeTab === 'email' ? inputData.email : inputData.phone
@@ -277,9 +217,17 @@ const SignUpPage = () => {
                 onChangeText={(value) => handleChange(inputKey, value)}
               //   accessibilityLabel={`Enter your ${activeTab}`}
               />
-              {errors[inputKey] && <Text style={styles.errorText}>{errors[inputKey]}</Text>}
-              
-              <View style={{ marginTop: 16 }}>
+              <Input
+                {...inputData.firstName}
+                value={inputValue.firstName || ''}
+                onChangeText={(value) => handleChange('firstName', value)}
+              />
+              <Input
+                {...inputData.lastName}
+                value={inputValue.lastName || ''}
+                onChangeText={(value) => handleChange('lastName', value)}
+              />
+              <View >
                 <PasswordInput 
                   {...inputData.password}
                   value={inputValue.password}
@@ -289,9 +237,7 @@ const SignUpPage = () => {
                   isPasswordVisible={passwordVisibility}
                   // accessibilityLabel="Enter your password"
                 />
-                {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
-                
-                <View style={{ marginTop: 12 }}>
+                <View >
                   <PasswordInput 
                     {...inputData.confirmPassword}
                     value={inputValue.confirmPassword}
@@ -301,26 +247,25 @@ const SignUpPage = () => {
                     isPasswordVisible={confirmPasswordVisibility}
                   //   accessibilityLabel="Confirm your password"
                   />
-                  {errors.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword}</Text>}
                 </View>
               </View>
             </View>
 
             {/* Sign up Button */}
-            <TouchableOpacity 
+            <Pressable 
               style={[
                 styles.loginButton,
-                isLoading && styles.loginButtonDisabled
+                signupMutation.isPending && styles.loginButtonDisabled
               ]} 
               onPress={handleSignUp}
-              disabled={isLoading}
+              disabled={signupMutation.isPending}
               accessibilityRole="button"
               accessibilityLabel="Create account"
             >
               <Text style={styles.loginButtonText}>
-                {isLoading ? 'Creating Account...' : 'Sign Up'}
+                {signupMutation.isPending ? 'Creating Account...' : 'Sign Up'}
               </Text>
-            </TouchableOpacity>
+            </Pressable>
 
             {/* Login Link */}
             <View style={styles.signUpContainer}>
@@ -354,17 +299,15 @@ const SignUpPage = () => {
         )}
         
         {currentStep === CountStep.ONE && (
-          <VerifyCode 
+          <VerifyEmail 
             inputValue={inputValue} 
             handleChange={handleChange} 
-            handleNextComponent={ handleSignUp}
-            isLoading={isLoading}
-            resendTimer={resendTimer}
+            handleNextComponent={goToNextStep}
+            // isLoading={signupMutation.isPending}
+            // resendTimer={resendTimer}
             openModal={openModal}
-            errors={errors}
           />
         )}
-        {/* {currentStep === CountStep.TWO && <Success /> } */}
       </Wrapper>
     </SafeArea>
   )

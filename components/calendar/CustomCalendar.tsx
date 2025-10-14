@@ -1,4 +1,3 @@
-import useDisplay from '@/hooks/useDisplay';
 import React, { useState } from 'react';
 import { Modal, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
