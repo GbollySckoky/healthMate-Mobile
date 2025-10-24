@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Text, View, StyleSheet, TouchableOpacity, Pressable } from 'react-native'
+import { Text, View, StyleSheet, TouchableOpacity, Pressable, Keyboard } from 'react-native'
 import { Wrapper } from '@/components/typography/Typography';
 import { colors } from '@/lib/colors';
 import EmailInput from '@/components/Input/EmailInput';
@@ -14,7 +14,8 @@ import { useMutation } from '@tanstack/react-query';
 import { patientService } from '@/service/patientService';
 import { login } from '@/types/login';
 import Toast from 'react-native-toast-message';
-import * as SecureStore from 'expo-secure-store';
+// import * as SecureStore from 'expo-secure-store';
+import { storageService } from '@/lib/storage';
 
 
 type LoginType = Record<string, string>
@@ -55,9 +56,9 @@ const LoginPage = () => {
     setPasswordVisibility((prev) => !prev)
   }
 
-  async function saveAccessToken(token: string) {
-    await SecureStore.setItemAsync('my_access_token', token);
-  }
+  // async function saveAccessToken(token: string) {
+  //   await SecureStore.setItemAsync('my_access_token', token);
+  // }
 
   const inputKey = activeTab === 'email' ? 'email' : 'phone'
   const inputConfig = activeTab === 'email' ? inputData.email : inputData.phone
@@ -65,17 +66,17 @@ const LoginPage = () => {
   const loginMutation = useMutation({
     mutationFn: (payload: login) => patientService.login(payload),
     onSuccess: (response: any) => {
-      saveAccessToken(response.accessToken)
+      console.log(response)
+      storageService.setAuthToken(response.data.accessToken)
       Toast.show({
         type: 'success',
         text1: 'Logged in successfully'
       })
       router.push(ROUTES.home)
-      // console.log("YO1526272!!!",response)
-      // console.log("YO!!!",response.accessToken)
+
     },
     onError: (error: any) => {
-      console.log('ERROR!!!!',error.response.data.message)
+      console.log('ERROR!!!!',error)
       Toast.show({
         type: 'error',
         text1: error.response.data.message
@@ -86,6 +87,7 @@ const LoginPage = () => {
   });
 
   const handleLogin = () => {
+    Keyboard.dismiss()
   const credentials: login = {
     email: inputValue[inputKey] || '',
     password: inputValue.password || ''

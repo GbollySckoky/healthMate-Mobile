@@ -7,6 +7,9 @@ import { ROUTES } from '@/lib/routes';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { colors } from './colors';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import Fontisto from '@expo/vector-icons/Fontisto';
+import EvilIcons from '@expo/vector-icons/EvilIcons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 
 export const healthOverview = [
@@ -649,3 +652,64 @@ export const passwordData = {
     id: '3',
   },
 };
+
+export const profileData = [
+  {
+    title: 'Name',
+    value: 'Sarah Daniels',
+    id: 1,
+    icon: <EvilIcons name="user" size={24} color={colors.lightRed} />,
+    next: (
+      <Entypo
+        name="chevron-small-right"
+        size={24}
+        color={colors.lightBlack}
+      />
+    ),
+  },
+  {
+    title: 'Email',
+    value: 'gbolly@gmail.com',
+    id: 2,
+    icon: <Fontisto name="email" size={20} color={colors.lightRed} />,
+  },
+  {
+    title: 'Phone Number',
+    value: '+2349076536764',
+    id: 3,
+    icon: <Feather name="phone" size={20} color={colors.lightRed} />,
+  },
+  {
+    title: 'Date Of Birth',
+    value: 'Jan 20, 1996',
+    id: 4,
+    icon: <Feather name="calendar" size={20} color={colors.lightRed} />,
+  }
+];
+
+export const otherMenuItems = [
+  {
+    title: 'My Health Info',
+    id: 5,
+    icon: (
+      <MaterialIcons
+        name="medical-services"
+        size={20}
+        color={colors.lightRed}
+      />
+    ),
+    route: '/profile/health-info' as const
+  },
+  {
+    title: 'My Reminders',
+    id: 6,
+    icon: (
+      <Ionicons
+        name="notifications-outline"
+        size={20}
+        color={colors.lightRed}
+      />
+    ),
+    route: ROUTES.reminder  // Changed to a more appropriate route
+  },
+];

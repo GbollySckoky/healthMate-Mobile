@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 import { Text, View, StyleSheet, TouchableOpacity, Keyboard, Pressable } from 'react-native'
 import { Wrapper} from '@/components/typography/Typography';
 import { colors } from '@/lib/colors';
@@ -10,7 +10,6 @@ import { Image } from 'react-native';
 import { router } from 'expo-router';
 import { ROUTES } from '@/lib/routes';
 import { CountStep } from '@/lib/constant';
-import VerifyCode  from './VerifyCode';
 import useDisplay from '@/hooks/useDisplay';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
 import { useDisplayList } from '@/hooks/useDisplayList';
@@ -20,11 +19,8 @@ import { useMutation } from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
 import Input from '@/components/Input/Input';
 import VerifyEmail from './VerifyCode';
-// import Success from './Success';
 
 
-
-// Improved type definitions
 export interface SignUpForm {
   email?: string;
   phone?: string;
@@ -35,10 +31,6 @@ export interface SignUpForm {
 }
 
 type TabType = 'email' | 'phone'
-
-interface FormErrors {
-  [key: string]: string;
-}
 
 const inputData = {
   email: {
@@ -118,14 +110,13 @@ const SignUpPage = () => {
     },
     onError: (error: any) => {
       // Handle different error scenarios
-      const errorMessage = error.response?.data?.message 
+      const errorMessage = error.response.data.message 
         || 'An error occurred during sign up. Please try again.';
       
       Toast.show({
         type: 'error',
         text1: errorMessage
       })
-      console.log('ERROR!!!', errorMessage, error)
     }
   })
 
@@ -137,8 +128,8 @@ const SignUpPage = () => {
       password: inputValue.password || '',
       firstName: inputValue.firstName || '',
       lastName: inputValue.lastName || '',
-      role: 'user',
-      phoneNumber: "07075408187"
+      role: 'patient',
+      phoneNumber: "07075408887"
     }; 
 
     if(inputValue.password !== inputValue.confirmPassword){
@@ -148,8 +139,6 @@ const SignUpPage = () => {
       })
       return
     }
-    console.log('CREDENTIALS!!!', credentials)
-    console.log('SIGNUPMUTATION!!!', signupMutation)
 
     signupMutation.mutate(credentials)
 

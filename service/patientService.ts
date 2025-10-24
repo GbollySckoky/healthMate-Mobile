@@ -3,6 +3,7 @@ import axiosService from "../lib/axios"
 import { signup } from "@/types/signup";
 import { forgotPassword } from "@/types/forgotPassword";
 import { verifyEmail } from "@/types/verifyEmail";
+import { PATIENTS_ENDPOINTS } from "@/lib/endpoints";
 
 export const patientService = {
   login: async (payload: login) => {
@@ -18,4 +19,8 @@ export const patientService = {
   verifyEmail: async (payload: verifyEmail) => {
     return await axiosService().post(`auth/verify-email/`, payload); 
   },
+  getUser: async () => {
+    const response = await axiosService().get(PATIENTS_ENDPOINTS.USER)
+    return await response.data
+  }
 }

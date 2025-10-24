@@ -1,55 +1,58 @@
 // app/index.tsx
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { storageService } from '@/lib/storage';
+import { ROUTES } from '@/lib/routes';
 
 export default function Index() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const clearAndTest = async () => {
-      // Clear storage for testing
-      await AsyncStorage.removeItem('hasLaunched');
-      console.log('Storage cleared - should go to onboarding now');
-      
-      const checkFirstLaunch = async () => {
-        try {
-          const hasLaunched = await AsyncStorage.getItem('hasLaunched');
-          console.log('hasLaunched value:', hasLaunched);
-  
-          if (!hasLaunched) {
-            console.log('First launch detected - navigating to onboarding');
-            await AsyncStorage.setItem('hasLaunched', 'true');
-            router.replace('/onboarding');
-          } else {
-            console.log('Not first launch - navigating to home');
-            router.replace('/(tabs)/home');
-          }
-        } catch (error) {
-          console.error('Error checking first launch:', error);
-          router.replace('/onboarding');
-        } finally {
-          setIsLoading(false);
+    let isMounted = true;
+
+    const initializeApp = async () => {
+      try {
+        const [hasLaunched, isAuthenticated] = await Promise.all([
+          storageService.hasLaunched(),
+          storageService.isAuthenticated(),
+        ]);
+
+        if (!isMounted) return;
+
+        if (!hasLaunched) {
+          // First time opening the app
+          await storageService.setHasLaunched();
+          router.replace(ROUTES.onnBoarding);
+        } else if (isAuthenticated) {
+          // User is logged in
+          router.replace(ROUTES.home);
+        } else {
+          // User needs to login
+          router.replace(ROUTES.login);
         }
-      };
-  
-      checkFirstLaunch();
+      } catch (error) {
+        console.error('Error during app initialization:', error);
+        
+        if (!isMounted) return;
+        
+        router.replace(ROUTES.onnBoarding);
+      }
     };
-  
-    clearAndTest();
+
+    initializeApp();
+
+    return () => {
+      isMounted = false;
+    };
   }, [router]);
 
-  if (isLoading) {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#C11574" />
-      </View>
-    );
-  }
-
-  return null; 
+  return (
+    <View style={styles.container}>
+      <ActivityIndicator size="large" color="#C11574" />
+      {/* Optional: Add your app logo here */}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
