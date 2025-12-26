@@ -1,9 +1,10 @@
 import React, { ReactElement } from 'react';
-import { View, Text, StyleSheet, Dimensions, Modal, TouchableOpacity } from 'react-native';
-import { SubmitButton } from '@/components/typography/Typography';
+import { View, Text, StyleSheet, Dimensions, Modal, TouchableOpacity, Pressable } from 'react-native';
+// import * as SecureStore from 'expo-secure-store';
 import { colors } from '@/lib/colors';
 import { useRouter } from 'expo-router';
 import { ROUTES } from '@/lib/routes';
+import { storageService } from '@/lib/storage';
 
 const { height } = Dimensions.get('window');
 
@@ -17,16 +18,20 @@ interface ModalType {
 
 const LogoutModal = ({ icon, title, text, isOpen, closeModal }: ModalType) => {
   if (!isOpen) return null;
-  const handleRoute = () => {
-    closeModal()
-    router.push(ROUTES.login)
-  }
+
   const router = useRouter()
+
+  const handleLogout = async () => {
+    try {
+      await storageService.clearAuthData(); // Removes token
+      router.push(ROUTES.login);
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
   return (
     <Modal
-    // visible={isOpen}
     transparent={true}
-    // animationType={modalConfig.animationType || 'fade'}
     onRequestClose={closeModal}
     statusBarTranslucent={true}>
       <View style={styles.overlay}>
@@ -34,14 +39,13 @@ const LogoutModal = ({ icon, title, text, isOpen, closeModal }: ModalType) => {
           <Text style={styles.iconWrapper}>{icon}</Text>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.description}>{text}</Text>
-          {/* <SubmitButton _fn={handleRoute}>{submitText}</SubmitButton> */}
           <View style={styles.bottomBtnContainer}>
             <TouchableOpacity style={styles.outlineBtn} onPress={closeModal}>
                 <Text>Cancel</Text>
             </TouchableOpacity>
-            <TouchableOpacity  style={styles.joinBtn} onPress={handleRoute}>
+            <Pressable  style={styles.joinBtn} onPress={handleLogout}>
                 <Text style={styles.buttonText}>Log Out</Text>
-            </TouchableOpacity>
+            </Pressable>
         </View>
         </View>
       </View>

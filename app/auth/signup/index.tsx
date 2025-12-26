@@ -1,6 +1,13 @@
-import React, { useState, useRef, useCallback } from 'react'
-import { Text, View, StyleSheet, TouchableOpacity, Keyboard } from 'react-native'
-import { Wrapper} from '@/components/typography/Typography';
+import React, { useState, useCallback } from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Keyboard,
+  Pressable,
+} from 'react-native';
+import { Wrapper } from '@/components/typography/Typography';
 import { colors } from '@/lib/colors';
 import EmailInput from '@/components/Input/EmailInput';
 import PasswordInput from '@/components/Input/PasswordInput';
@@ -9,35 +16,17 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { Image } from 'react-native';
 import { router } from 'expo-router';
 import { ROUTES } from '@/lib/routes';
-import useTracker from '@/hooks/useTrackers';
 import { CountStep } from '@/lib/constant';
-import { VerifyCode } from './VerifyCode';
 import useDisplay from '@/hooks/useDisplay';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
 import { useDisplayList } from '@/hooks/useDisplayList';
-// import Success from './Success';
+import { patientService } from '@/service/patientService';
+import { useMutation } from '@tanstack/react-query';
+import Toast from 'react-native-toast-message';
+import VerifyEmail from './VerifyCode';
+import { Signup } from '@/lib/interface/signup-interface';
 
-
-
-// Improved type definitions
-export interface SignUpForm {
-  email?: string;
-  phone?: string;
-  password: string;
-  confirmPassword: string;
-  code0?: string;
-  code1?: string;
-  code2?: string;
-  code3?: string;
-  code4?: string;
-  code5?: string;
-}
-
-type TabType = 'email' | 'phone'
-
-interface FormErrors {
-  [key: string]: string;
-}
+type TabType = 'email' | 'phone_number';
 
 const inputData = {
   email: {
@@ -45,8 +34,16 @@ const inputData = {
     placeholder: 'Enter email',
   },
   phone: {
-    label: 'Phone Number', 
+    label: 'Phone Number',
     placeholder: 'Enter phone number',
+  },
+  firstName: {
+    label: 'First Name',
+    placeholder: 'Gbolly',
+  },
+  lastName: {
+    label: 'Last Name',
+    placeholder: 'Sckoky',
   },
   password: {
     label: 'Password',
@@ -60,163 +57,97 @@ const inputData = {
     closeIcon: <Feather name="eye-off" size={20} color="black" />,
     openIcon: <FontAwesome5 name="eye" size={20} color="black" />,
   },
-}
+};
 
 const SignUpPage = () => {
-  const [activeTab, setActiveTab] = useState<TabType>('email')
-  const [inputValue, setInputValue] = useState<SignUpForm>({
-    password: '',
-    confirmPassword: ''
-  })
-  const [errors, setErrors] = useState<FormErrors>({})
-  const [isLoading, setIsLoading] = useState(false)
-  const [resendTimer, setResendTimer] = useState(0)
-  const { displayComponents, handleDisplayComponent } = useTracker()
-  const [passwordVisibility, setPasswordVisibility] = useState(false)
-  const [confirmPasswordVisibility, setConfirmPasswordVisibility] = useState(false)
-  const goggleLogo = require('../../../assets/images/google-logo.webp')
-  const { openModal, handleDisplay } = useDisplay()
-  const {currentStep, goToNextStep, goToPreviousStep} = useDisplayList()
-  // Validation functions
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return emailRegex.test(email)
-  }
-
-  // const validatePhone = (phone: string): boolean => {
-  //   const phoneRegex = /^\+?[\d\s\-\(\)]{10,}$/
-  //   return phoneRegex.test(phone.replace(/\s/g, ''))
-  // }
-
-  // const validatePassword = (password: string): boolean => {
-  //   return password.length >= 8 && /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)
-  // }
-
-  // const validateForm = useCallback((): boolean => {
-  //   const newErrors: FormErrors = {}
-
-    // Validate email or phone
-    // if (activeTab === 'email') {
-    //   if (!inputValue.email) {
-    //     newErrors.email = 'Email is required'
-    //   } else if (!validateEmail(inputValue.email)) {
-    //     newErrors.email = 'Please enter a valid email address'
-    //   }
-    // } else {
-    //   if (!inputValue.phone) {
-    //     newErrors.phone = 'Phone number is required'
-    //   } else if (!validatePhone(inputValue.phone)) {
-    //     newErrors.phone = 'Please enter a valid phone number'
-    //   }
-    // }
-
-    // Validate password
-    // if (!inputValue.password) {
-    //   newErrors.password = 'Password is required'
-    // } else if (!validatePassword(inputValue.password)) {
-    //   newErrors.password = 'Password must be at least 8 characters with uppercase, lowercase, and number'
-    // }
-
-    // Validate confirm password
-  //   if (!inputValue.confirmPassword) {
-  //     newErrors.confirmPassword = 'Please confirm your password'
-  //   } else if (inputValue.password !== inputValue.confirmPassword) {
-  //     newErrors.confirmPassword = 'Passwords do not match'
-  //   }
-
-  //   setErrors(newErrors)
-  //   return Object.keys(newErrors).length === 0
-  // }, [activeTab, inputValue])
-
-  const validateVerificationCode = useCallback((): boolean => {
-    const code = [0, 1, 2, 3, 4, 5].map(i => inputValue[`code${i}` as keyof SignUpForm] || '').join('')
-    if (code.length !== 6) {
-      setErrors({ code: 'Please enter the complete 6-digit code' })
-      return false
-    }
-    setErrors({})
-    return true
-  }, [inputValue])
+  const [activeTab, setActiveTab] = useState<TabType>('email');
+  const [inputValue, setInputValue] = useState({
+    // full_name: '',
+    password1: '',
+    password2: '',
+    phone_number: 0,
+    email: '',
+  });
+  const [passwordVisibility, setPasswordVisibility] = useState(false);
+  const [confirmPasswordVisibility, setConfirmPasswordVisibility] =
+    useState(false);
+  const goggleLogo = require('../../../assets/images/google-logo.webp');
+  const { openModal, handleDisplay } = useDisplay();
+  const { currentStep, goToNextStep } = useDisplayList();
 
   const handleChange = useCallback((key: string, value: string) => {
     setInputValue((prev) => ({
       ...prev,
-      [key]: value
-    }))
-    
-    // Clear specific error when user starts typing
-    if (errors[key]) {
-      setErrors(prev => {
-        const newErrors = { ...prev }
-        delete newErrors[key]
-        return newErrors
-      })
-    }
-  }, [errors])
+      [key]: value,
+    }));
+  }, []);
 
-  const handleToggleVisibility = useCallback((field: 'password' | 'confirmPassword') => {
-    if (field === 'password') {
-      setPasswordVisibility((prev) => !prev)
-    } else {
-      setConfirmPasswordVisibility((prev) => !prev)
-    }
-  }, [])
+  const handleToggleVisibility = useCallback(
+    (field: 'password1' | 'password2') => {
+      if (field === 'password1') {
+        setPasswordVisibility((prev) => !prev);
+      } else {
+        setConfirmPasswordVisibility((prev) => !prev);
+      }
+    },
+    []
+  );
 
   const handleTabSwitch = useCallback((tab: TabType) => {
-    setActiveTab(tab)
-    setErrors({}) // Clear errors when switching tabs
-  }, [])
+    setActiveTab(tab);
+  }, []);
+
+  const signupMutation = useMutation({
+    mutationFn: (payload: Signup) => patientService.signup(payload),
+    onSuccess: (response: any) => {
+      console.log('RESPONSE!!', response);
+      goToNextStep();
+      Toast.show({
+        type: 'success',
+        text1: 'Account created successfully!',
+        text2: 'Please verify your account',
+      });
+    },
+    onError: (error: any) => {
+      console.log(error.response); // look into the error response
+      const errorMessage = error.response.data; //Look into the error response
+      // || 'An error occurred during sign up. Please try again.';
+
+      Toast.show({
+        type: 'error',
+        text1: errorMessage,
+      });
+    },
+  });
 
   const handleSignUp = async () => {
-    Keyboard.dismiss()
-    
-    // if (!validateForm()) {
-    //   return
-    // }
+    Keyboard.dismiss();
 
-    // setIsLoading(true)
-    
-    // try {
-    //   // Simulate API call
-    //   await new Promise(resolve => setTimeout(resolve, 2000))
-      
-      if (currentStep === CountStep.ONE) {
-        handleDisplay()
-      }else{
-        goToNextStep()
-      }
-  }
+    // Validate passwords match
+    if (inputValue.password1 !== inputValue.password2) {
+      Toast.show({
+        type: 'error',
+        text1: 'Password and Confirm Password must be same',
+      });
+      return;
+    }
 
-  // const handleVerifyCode = () => {
-  //   handleDisplay()
-  // }
+    // Map form state to API payload format
+    const credentials: Signup = {
+      email: activeTab === 'email' ? String(inputValue.email) : '',
+      phone_number:
+        activeTab === 'phone_number' ? Number(inputValue.phone_number) : 0,
+      password1: inputValue.password1,
+      password2: inputValue.password2,
+    };
 
-  // const handleResendCode = async () => {
-  //   if (resendTimer > 0) return
-    
-  //   try {
-  //     // Simulate resend API call
-  //     await new Promise(resolve => setTimeout(resolve, 1000))
-      
-  //     setResendTimer(30)
-  //     const timer = setInterval(() => {
-  //       setResendTimer(prev => {
-  //         if (prev <= 1) {
-  //           clearInterval(timer)
-  //           return 0
-  //         }
-  //         return prev - 1
-  //       })
-  //     }, 1000)
-      
-  //     Alert.alert('Success', 'Verification code sent!')
-  //   } catch (error) {
-  //     Alert.alert('Error', 'Failed to resend code. Please try again.')
-  //   }
-  // }
+    console.log(credentials);
+    await signupMutation.mutate(credentials);
+  };
 
-  const inputKey = activeTab === 'email' ? 'email' : 'phone'
-  const inputConfig = activeTab === 'email' ? inputData.email : inputData.phone
+  const inputKey: keyof Signup =
+    activeTab === 'email' ? 'email' : 'phone_number';
+  const inputConfig = activeTab === 'email' ? inputData.email : inputData.phone;
 
   return (
     <SafeArea>
@@ -224,46 +155,52 @@ const SignUpPage = () => {
         {currentStep === CountStep.ZERO && (
           <View>
             <View style={styles.headerContainer}>
-              <Text style={styles.welcomeTitle}>Create your HealthMate account</Text>
+              <Text style={styles.welcomeTitle}>
+                Create your HealthMate account
+              </Text>
               <Text style={styles.welcomeSubtitle}>
                 Sign up with your phone number or email to begin.
               </Text>
             </View>
-            
+
             {/* Custom Tab Implementation */}
             <View style={styles.tabContainer}>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={[
-                  styles.tabButton, 
-                  activeTab === 'email' && styles.activeTabButton
+                  styles.tabButton,
+                  activeTab === 'email' && styles.activeTabButton,
                 ]}
                 onPress={() => handleTabSwitch('email')}
                 accessibilityRole="tab"
                 accessibilityState={{ selected: activeTab === 'email' }}
                 accessibilityLabel="Email signup option"
               >
-                <Text style={[
-                  styles.tabText,
-                  activeTab === 'email' && styles.activeTabText
-                ]}>
+                <Text
+                  style={[
+                    styles.tabText,
+                    activeTab === 'email' && styles.activeTabText,
+                  ]}
+                >
                   Email
                 </Text>
               </TouchableOpacity>
-              
-              <TouchableOpacity 
+
+              <TouchableOpacity
                 style={[
-                  styles.tabButton, 
-                  activeTab === 'phone' && styles.activeTabButton
+                  styles.tabButton,
+                  activeTab === 'phone_number' && styles.activeTabButton,
                 ]}
-                onPress={() => handleTabSwitch('phone')}
+                onPress={() => handleTabSwitch('phone_number')}
                 accessibilityRole="tab"
-                accessibilityState={{ selected: activeTab === 'phone' }}
+                accessibilityState={{ selected: activeTab === 'phone_number' }}
                 accessibilityLabel="Phone number signup option"
               >
-                <Text style={[
-                  styles.tabText,
-                  activeTab === 'phone' && styles.activeTabText
-                ]}>
+                <Text
+                  style={[
+                    styles.tabText,
+                    activeTab === 'phone_number' && styles.activeTabText,
+                  ]}
+                >
                   Phone Number
                 </Text>
               </TouchableOpacity>
@@ -273,59 +210,59 @@ const SignUpPage = () => {
             <View style={styles.formContainer}>
               <EmailInput
                 {...inputConfig}
-                value={inputValue[inputKey as keyof SignUpForm] || ''}
+                value={inputValue[inputKey]?.toString() || ''}
                 onChangeText={(value) => handleChange(inputKey, value)}
-              //   accessibilityLabel={`Enter your ${activeTab}`}
               />
-              {errors[inputKey] && <Text style={styles.errorText}>{errors[inputKey]}</Text>}
-              
-              <View style={{ marginTop: 16 }}>
-                <PasswordInput 
+              {/* <Input
+                {...inputData.firstName}
+                value={inputValue.firstName || ''}
+                onChangeText={(value) => handleChange('firstName', value)}
+              />
+              <Input
+                {...inputData.lastName}
+                value={inputValue.lastName || ''}
+                onChangeText={(value) => handleChange('lastName', value)}
+              /> */}
+              <View>
+                <PasswordInput
                   {...inputData.password}
-                  value={inputValue.password}
-                  onChangeText={(value) => handleChange('password', value)}
+                  value={inputValue.password1}
+                  onChangeText={(value) => handleChange('password1', value)}
                   secureTextEntry={!passwordVisibility}
-                  onToggleVisibility={() => handleToggleVisibility('password')}
+                  onToggleVisibility={() => handleToggleVisibility('password1')}
                   isPasswordVisible={passwordVisibility}
-                  // accessibilityLabel="Enter your password"
                 />
-                {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
-                
-                <View style={{ marginTop: 12 }}>
-                  <PasswordInput 
-                    {...inputData.confirmPassword}
-                    value={inputValue.confirmPassword}
-                    onChangeText={(value) => handleChange('confirmPassword', value)}
-                    secureTextEntry={!confirmPasswordVisibility}
-                    onToggleVisibility={() => handleToggleVisibility('confirmPassword')}
-                    isPasswordVisible={confirmPasswordVisibility}
-                  //   accessibilityLabel="Confirm your password"
-                  />
-                  {errors.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword}</Text>}
-                </View>
+                <PasswordInput
+                  {...inputData.confirmPassword}
+                  value={inputValue.password2}
+                  onChangeText={(value) => handleChange('password2', value)}
+                  secureTextEntry={!confirmPasswordVisibility}
+                  onToggleVisibility={() => handleToggleVisibility('password2')}
+                  isPasswordVisible={confirmPasswordVisibility}
+                />
               </View>
             </View>
 
             {/* Sign up Button */}
-            <TouchableOpacity 
+            <Pressable
               style={[
                 styles.loginButton,
-                isLoading && styles.loginButtonDisabled
-              ]} 
+                signupMutation.isPending && styles.loginButtonDisabled,
+              ]}
               onPress={handleSignUp}
-              disabled={isLoading}
+              disabled={signupMutation.isPending}
               accessibilityRole="button"
               accessibilityLabel="Create account"
             >
               <Text style={styles.loginButtonText}>
-                {isLoading ? 'Creating Account...' : 'Sign Up'}
+                {signupMutation.isPending ? 'Creating Account...' : 'Sign Up'}
               </Text>
-            </TouchableOpacity>
+            </Pressable>
 
             {/* Login Link */}
             <View style={styles.signUpContainer}>
               <Text style={styles.signUpText}>Already have an account? </Text>
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={() => router.push(ROUTES.login)}
                 accessibilityRole="link"
                 accessibilityLabel="Go to login page"
@@ -342,37 +279,35 @@ const SignUpPage = () => {
             </View>
 
             {/* Google Sign In */}
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.googleButton}
               accessibilityRole="button"
               accessibilityLabel="Sign up with Google"
             >
-              <Image source={goggleLogo} alt='Google Logo' style={{ width: 20, height: 20 }} />
+              <Image
+                source={goggleLogo}
+                alt="Google Logo"
+                style={{ width: 20, height: 20 }}
+              />
               <Text style={styles.googleButtonText}> Sign up with Google</Text>
             </TouchableOpacity>
           </View>
         )}
-        
+
         {currentStep === CountStep.ONE && (
-          <VerifyCode 
-            inputValue={inputValue} 
-            handleChange={handleChange} 
-            handleNextComponent={ handleSignUp}
-            isLoading={isLoading}
-            resendTimer={resendTimer}
+          <VerifyEmail
+            inputValue={inputValue}
+            handleChange={handleChange}
+            handleNextComponent={goToNextStep}
             openModal={openModal}
-            errors={errors}
           />
         )}
-        {/* {currentStep === CountStep.TWO && <Success /> } */}
       </Wrapper>
     </SafeArea>
-  )
-}
+  );
+};
 
-
-
-export default SignUpPage
+export default SignUpPage;
 
 const styles = StyleSheet.create({
   headerContainer: {
@@ -392,7 +327,7 @@ const styles = StyleSheet.create({
     marginTop: 3,
     lineHeight: 24,
   },
-  
+
   // Custom tab styling
   tabContainer: {
     flexDirection: 'row',
@@ -428,11 +363,11 @@ const styles = StyleSheet.create({
     color: '#1f2937',
     fontWeight: '600',
   },
-  
+
   formContainer: {
     marginBottom: 16,
   },
-  
+
   loginButton: {
     backgroundColor: '#ec4899',
     paddingVertical: 16,
@@ -449,7 +384,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontFamily: 'Lato_600SemiBold',
   },
-  
+
   signUpContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -460,15 +395,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#6b7280',
     fontFamily: 'LibreFranklin_400Regular',
-    fontWeight: '500'
+    fontWeight: '500',
   },
   signUpLink: {
     fontSize: 14,
     color: colors.lightRed,
     fontFamily: 'LibreFranklin_400Regular',
-    fontWeight: '500'
+    fontWeight: '500',
   },
-  
+
   dividerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -485,7 +420,7 @@ const styles = StyleSheet.create({
     color: '#9ca3af',
     fontFamily: 'Lato_400Regular',
   },
-  
+
   googleButton: {
     borderWidth: 1,
     borderColor: '#e5e7eb',
@@ -511,4 +446,4 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginLeft: 4,
   },
-})
+});

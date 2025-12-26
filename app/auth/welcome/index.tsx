@@ -17,7 +17,7 @@ const WelcomePage = () => {
                 </Text>
                 <Title>Welcome Mary!</Title>
                 <Text style={styles.description}>Set Up Completed. Go to home and start Tracking!</Text>
-                <TouchableOpacity style={styles.bottomBtnContainer} onPress={() => router.push(ROUTES.home)}>
+                <TouchableOpacity style={styles.bottomBtnContainer} onPress={() => router.replace(ROUTES.home)}>
                     <Text style={styles.buttonText}>
                         Go to home
                     </Text>
