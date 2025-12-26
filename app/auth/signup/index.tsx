@@ -1,6 +1,13 @@
-import React, { useState, useRef, useCallback } from 'react'
-import { Text, View, StyleSheet, TouchableOpacity, Keyboard, Pressable } from 'react-native'
-import { Wrapper} from '@/components/typography/Typography';
+import React, { useState, useCallback } from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Keyboard,
+  Pressable,
+} from 'react-native';
+import { Wrapper } from '@/components/typography/Typography';
 import { colors } from '@/lib/colors';
 import EmailInput from '@/components/Input/EmailInput';
 import PasswordInput from '@/components/Input/PasswordInput';
@@ -10,35 +17,16 @@ import { Image } from 'react-native';
 import { router } from 'expo-router';
 import { ROUTES } from '@/lib/routes';
 import { CountStep } from '@/lib/constant';
-import VerifyCode  from './VerifyCode';
 import useDisplay from '@/hooks/useDisplay';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
 import { useDisplayList } from '@/hooks/useDisplayList';
-import { signup } from '@/types/signup';
 import { patientService } from '@/service/patientService';
 import { useMutation } from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
-import Input from '@/components/Input/Input';
 import VerifyEmail from './VerifyCode';
-// import Success from './Success';
+import { Signup } from '@/lib/interface/signup-interface';
 
-
-
-// Improved type definitions
-export interface SignUpForm {
-  email?: string;
-  phone?: string;
-  password: string;
-  confirmPassword: string;
-  firstName: string;
-  lastName: string
-}
-
-type TabType = 'email' | 'phone'
-
-interface FormErrors {
-  [key: string]: string;
-}
+type TabType = 'email' | 'phone_number';
 
 const inputData = {
   email: {
@@ -46,15 +34,15 @@ const inputData = {
     placeholder: 'Enter email',
   },
   phone: {
-    label: 'Phone Number', 
+    label: 'Phone Number',
     placeholder: 'Enter phone number',
   },
   firstName: {
-    label: 'First Name', 
+    label: 'First Name',
     placeholder: 'Gbolly',
   },
   lastName: {
-    label: 'Last Name', 
+    label: 'Last Name',
     placeholder: 'Sckoky',
   },
   password: {
@@ -69,94 +57,97 @@ const inputData = {
     closeIcon: <Feather name="eye-off" size={20} color="black" />,
     openIcon: <FontAwesome5 name="eye" size={20} color="black" />,
   },
-}
+};
 
 const SignUpPage = () => {
-  const [activeTab, setActiveTab] = useState<TabType>('email')
-  const [inputValue, setInputValue] = useState<SignUpForm>({
-    firstName: '',
-    lastName: '',
-    password: '',
-    confirmPassword: ''
-  })
-  const [passwordVisibility, setPasswordVisibility] = useState(false)
-  const [confirmPasswordVisibility, setConfirmPasswordVisibility] = useState(false)
-  const goggleLogo = require('../../../assets/images/google-logo.webp')
-  const { openModal, handleDisplay } = useDisplay()
-  const {currentStep, goToNextStep,} = useDisplayList()
+  const [activeTab, setActiveTab] = useState<TabType>('email');
+  const [inputValue, setInputValue] = useState({
+    // full_name: '',
+    password1: '',
+    password2: '',
+    phone_number: 0,
+    email: '',
+  });
+  const [passwordVisibility, setPasswordVisibility] = useState(false);
+  const [confirmPasswordVisibility, setConfirmPasswordVisibility] =
+    useState(false);
+  const goggleLogo = require('../../../assets/images/google-logo.webp');
+  const { openModal, handleDisplay } = useDisplay();
+  const { currentStep, goToNextStep } = useDisplayList();
 
   const handleChange = useCallback((key: string, value: string) => {
     setInputValue((prev) => ({
       ...prev,
-      [key]: value
-    }))
-   
-  },[])
+      [key]: value,
+    }));
+  }, []);
 
-  const handleToggleVisibility = useCallback((field: 'password' | 'confirmPassword') => {
-    if (field === 'password') {
-      setPasswordVisibility((prev) => !prev)
-    } else {
-      setConfirmPasswordVisibility((prev) => !prev)
-    }
-  }, [])
+  const handleToggleVisibility = useCallback(
+    (field: 'password1' | 'password2') => {
+      if (field === 'password1') {
+        setPasswordVisibility((prev) => !prev);
+      } else {
+        setConfirmPasswordVisibility((prev) => !prev);
+      }
+    },
+    []
+  );
 
   const handleTabSwitch = useCallback((tab: TabType) => {
-    setActiveTab(tab)
-  }, [])
+    setActiveTab(tab);
+  }, []);
 
   const signupMutation = useMutation({
-    mutationFn: (payload: signup) => patientService.signup(payload),
+    mutationFn: (payload: Signup) => patientService.signup(payload),
     onSuccess: (response: any) => {
-      console.log('RESPONSE!!',response)
-      goToNextStep()  
+      console.log('RESPONSE!!', response);
+      goToNextStep();
       Toast.show({
         type: 'success',
         text1: 'Account created successfully!',
-        text2: 'Please verify your account'
-      })
+        text2: 'Please verify your account',
+      });
     },
     onError: (error: any) => {
-      // Handle different error scenarios
-      const errorMessage = error.response?.data?.message 
-        || 'An error occurred during sign up. Please try again.';
-      
+      console.log(error.response); // look into the error response
+      const errorMessage = error.response.data; //Look into the error response
+      // || 'An error occurred during sign up. Please try again.';
+
       Toast.show({
         type: 'error',
-        text1: errorMessage
-      })
-      console.log('ERROR!!!', errorMessage, error)
-    }
-  })
+        text1: errorMessage,
+      });
+    },
+  });
 
   const handleSignUp = async () => {
-    Keyboard.dismiss()
-  
-    const credentials: signup = {
-      email: inputValue[inputKey] || '',
-      password: inputValue.password || '',
-      firstName: inputValue.firstName || '',
-      lastName: inputValue.lastName || '',
-      role: 'user',
-      phoneNumber: "07075408187"
-    }; 
+    Keyboard.dismiss();
 
-    if(inputValue.password !== inputValue.confirmPassword){
+    // Validate passwords match
+    if (inputValue.password1 !== inputValue.password2) {
       Toast.show({
         type: 'error',
-        text1: 'Password and Confirm Password must be same'
-      })
-      return
+        text1: 'Password and Confirm Password must be same',
+      });
+      return;
     }
-    console.log('CREDENTIALS!!!', credentials)
-    console.log('SIGNUPMUTATION!!!', signupMutation)
 
-    signupMutation.mutate(credentials)
+    // Map form state to API payload format
+    const credentials: Signup = {
+      email: activeTab === 'email' ? String(inputValue.email) : '',
+      phone_number:
+        activeTab === 'phone_number' ? Number(inputValue.phone_number) : 0,
+      password1: inputValue.password1,
+      password2: inputValue.password2,
+    };
 
-  }
+    console.log(credentials);
+    await signupMutation.mutate(credentials);
+  };
 
-  const inputKey = activeTab === 'email' ? 'email' : 'phone'
-  const inputConfig = activeTab === 'email' ? inputData.email : inputData.phone
+  const inputKey: keyof Signup =
+    activeTab === 'email' ? 'email' : 'phone_number';
+  const inputConfig = activeTab === 'email' ? inputData.email : inputData.phone;
 
   return (
     <SafeArea>
@@ -164,46 +155,52 @@ const SignUpPage = () => {
         {currentStep === CountStep.ZERO && (
           <View>
             <View style={styles.headerContainer}>
-              <Text style={styles.welcomeTitle}>Create your HealthMate account</Text>
+              <Text style={styles.welcomeTitle}>
+                Create your HealthMate account
+              </Text>
               <Text style={styles.welcomeSubtitle}>
                 Sign up with your phone number or email to begin.
               </Text>
             </View>
-            
+
             {/* Custom Tab Implementation */}
             <View style={styles.tabContainer}>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={[
-                  styles.tabButton, 
-                  activeTab === 'email' && styles.activeTabButton
+                  styles.tabButton,
+                  activeTab === 'email' && styles.activeTabButton,
                 ]}
                 onPress={() => handleTabSwitch('email')}
                 accessibilityRole="tab"
                 accessibilityState={{ selected: activeTab === 'email' }}
                 accessibilityLabel="Email signup option"
               >
-                <Text style={[
-                  styles.tabText,
-                  activeTab === 'email' && styles.activeTabText
-                ]}>
+                <Text
+                  style={[
+                    styles.tabText,
+                    activeTab === 'email' && styles.activeTabText,
+                  ]}
+                >
                   Email
                 </Text>
               </TouchableOpacity>
-              
-              <TouchableOpacity 
+
+              <TouchableOpacity
                 style={[
-                  styles.tabButton, 
-                  activeTab === 'phone' && styles.activeTabButton
+                  styles.tabButton,
+                  activeTab === 'phone_number' && styles.activeTabButton,
                 ]}
-                onPress={() => handleTabSwitch('phone')}
+                onPress={() => handleTabSwitch('phone_number')}
                 accessibilityRole="tab"
-                accessibilityState={{ selected: activeTab === 'phone' }}
+                accessibilityState={{ selected: activeTab === 'phone_number' }}
                 accessibilityLabel="Phone number signup option"
               >
-                <Text style={[
-                  styles.tabText,
-                  activeTab === 'phone' && styles.activeTabText
-                ]}>
+                <Text
+                  style={[
+                    styles.tabText,
+                    activeTab === 'phone_number' && styles.activeTabText,
+                  ]}
+                >
                   Phone Number
                 </Text>
               </TouchableOpacity>
@@ -213,11 +210,10 @@ const SignUpPage = () => {
             <View style={styles.formContainer}>
               <EmailInput
                 {...inputConfig}
-                value={inputValue[inputKey as keyof SignUpForm] || ''}
+                value={inputValue[inputKey]?.toString() || ''}
                 onChangeText={(value) => handleChange(inputKey, value)}
-              //   accessibilityLabel={`Enter your ${activeTab}`}
               />
-              <Input
+              {/* <Input
                 {...inputData.firstName}
                 value={inputValue.firstName || ''}
                 onChangeText={(value) => handleChange('firstName', value)}
@@ -226,37 +222,33 @@ const SignUpPage = () => {
                 {...inputData.lastName}
                 value={inputValue.lastName || ''}
                 onChangeText={(value) => handleChange('lastName', value)}
-              />
-              <View >
-                <PasswordInput 
+              /> */}
+              <View>
+                <PasswordInput
                   {...inputData.password}
-                  value={inputValue.password}
-                  onChangeText={(value) => handleChange('password', value)}
+                  value={inputValue.password1}
+                  onChangeText={(value) => handleChange('password1', value)}
                   secureTextEntry={!passwordVisibility}
-                  onToggleVisibility={() => handleToggleVisibility('password')}
+                  onToggleVisibility={() => handleToggleVisibility('password1')}
                   isPasswordVisible={passwordVisibility}
-                  // accessibilityLabel="Enter your password"
                 />
-                <View >
-                  <PasswordInput 
-                    {...inputData.confirmPassword}
-                    value={inputValue.confirmPassword}
-                    onChangeText={(value) => handleChange('confirmPassword', value)}
-                    secureTextEntry={!confirmPasswordVisibility}
-                    onToggleVisibility={() => handleToggleVisibility('confirmPassword')}
-                    isPasswordVisible={confirmPasswordVisibility}
-                  //   accessibilityLabel="Confirm your password"
-                  />
-                </View>
+                <PasswordInput
+                  {...inputData.confirmPassword}
+                  value={inputValue.password2}
+                  onChangeText={(value) => handleChange('password2', value)}
+                  secureTextEntry={!confirmPasswordVisibility}
+                  onToggleVisibility={() => handleToggleVisibility('password2')}
+                  isPasswordVisible={confirmPasswordVisibility}
+                />
               </View>
             </View>
 
             {/* Sign up Button */}
-            <Pressable 
+            <Pressable
               style={[
                 styles.loginButton,
-                signupMutation.isPending && styles.loginButtonDisabled
-              ]} 
+                signupMutation.isPending && styles.loginButtonDisabled,
+              ]}
               onPress={handleSignUp}
               disabled={signupMutation.isPending}
               accessibilityRole="button"
@@ -270,7 +262,7 @@ const SignUpPage = () => {
             {/* Login Link */}
             <View style={styles.signUpContainer}>
               <Text style={styles.signUpText}>Already have an account? </Text>
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={() => router.push(ROUTES.login)}
                 accessibilityRole="link"
                 accessibilityLabel="Go to login page"
@@ -287,35 +279,35 @@ const SignUpPage = () => {
             </View>
 
             {/* Google Sign In */}
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.googleButton}
               accessibilityRole="button"
               accessibilityLabel="Sign up with Google"
             >
-              <Image source={goggleLogo} alt='Google Logo' style={{ width: 20, height: 20 }} />
+              <Image
+                source={goggleLogo}
+                alt="Google Logo"
+                style={{ width: 20, height: 20 }}
+              />
               <Text style={styles.googleButtonText}> Sign up with Google</Text>
             </TouchableOpacity>
           </View>
         )}
-        
+
         {currentStep === CountStep.ONE && (
-          <VerifyEmail 
-            inputValue={inputValue} 
-            handleChange={handleChange} 
+          <VerifyEmail
+            inputValue={inputValue}
+            handleChange={handleChange}
             handleNextComponent={goToNextStep}
-            // isLoading={signupMutation.isPending}
-            // resendTimer={resendTimer}
             openModal={openModal}
           />
         )}
       </Wrapper>
     </SafeArea>
-  )
-}
+  );
+};
 
-
-
-export default SignUpPage
+export default SignUpPage;
 
 const styles = StyleSheet.create({
   headerContainer: {
@@ -335,7 +327,7 @@ const styles = StyleSheet.create({
     marginTop: 3,
     lineHeight: 24,
   },
-  
+
   // Custom tab styling
   tabContainer: {
     flexDirection: 'row',
@@ -371,11 +363,11 @@ const styles = StyleSheet.create({
     color: '#1f2937',
     fontWeight: '600',
   },
-  
+
   formContainer: {
     marginBottom: 16,
   },
-  
+
   loginButton: {
     backgroundColor: '#ec4899',
     paddingVertical: 16,
@@ -392,7 +384,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontFamily: 'Lato_600SemiBold',
   },
-  
+
   signUpContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -403,15 +395,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#6b7280',
     fontFamily: 'LibreFranklin_400Regular',
-    fontWeight: '500'
+    fontWeight: '500',
   },
   signUpLink: {
     fontSize: 14,
     color: colors.lightRed,
     fontFamily: 'LibreFranklin_400Regular',
-    fontWeight: '500'
+    fontWeight: '500',
   },
-  
+
   dividerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -428,7 +420,7 @@ const styles = StyleSheet.create({
     color: '#9ca3af',
     fontFamily: 'Lato_400Regular',
   },
-  
+
   googleButton: {
     borderWidth: 1,
     borderColor: '#e5e7eb',
@@ -454,4 +446,4 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginLeft: 4,
   },
-})
+});

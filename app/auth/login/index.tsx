@@ -1,5 +1,12 @@
-import React, { useState } from 'react'
-import { Text, View, StyleSheet, TouchableOpacity, Pressable } from 'react-native'
+import React, { useState } from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Pressable,
+  Keyboard,
+} from 'react-native';
 import { Wrapper } from '@/components/typography/Typography';
 import { colors } from '@/lib/colors';
 import EmailInput from '@/components/Input/EmailInput';
@@ -14,11 +21,11 @@ import { useMutation } from '@tanstack/react-query';
 import { patientService } from '@/service/patientService';
 import { login } from '@/types/login';
 import Toast from 'react-native-toast-message';
-import * as SecureStore from 'expo-secure-store';
+// import * as SecureStore from 'expo-secure-store';
+import { storageService } from '@/lib/storage';
 
-
-type LoginType = Record<string, string>
-type TabType = 'email' | 'phone'
+type LoginType = Record<string, string>;
+type TabType = 'email' | 'phone';
 
 const inputData = {
   email: {
@@ -26,7 +33,7 @@ const inputData = {
     placeholder: 'Enter email',
   },
   phone: {
-    label: 'Phone Number', 
+    label: 'Phone Number',
     placeholder: 'Enter phone number',
   },
   password: {
@@ -34,64 +41,64 @@ const inputData = {
     placeholder: 'Enter password',
     closeIcon: <Feather name="eye-off" size={20} color="black" />,
     openIcon: <FontAwesome5 name="eye" size={20} color="black" />,
-  }
-}
+  },
+};
 
 const LoginPage = () => {
-  const [activeTab, setActiveTab] = useState<TabType>('email')
-  const [inputValue, setInputValue] = useState<LoginType>({})
-  const [passwordVisibility, setPasswordVisibility] = useState(false)
-  const [rememberMe, setRememberMe] = useState(false)
-  const goggleLogo = require('../../../assets/images/google-logo.webp')
-  console.log(inputValue)
+  const [activeTab, setActiveTab] = useState<TabType>('email');
+  const [inputValue, setInputValue] = useState<LoginType>({});
+  const [passwordVisibility, setPasswordVisibility] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  const goggleLogo = require('../../../assets/images/google-logo.webp');
+  console.log(inputValue);
   const handleChange = (key: string, value: string) => {
     setInputValue((prev) => ({
       ...prev,
-      [key]: value
-    }))
-  }
-
+      [key]: value,
+    }));
+  };
+  console.log(inputValue);
   const handleToggleVisibility = () => {
-    setPasswordVisibility((prev) => !prev)
-  }
+    setPasswordVisibility((prev) => !prev);
+  };
 
-  async function saveAccessToken(token: string) {
-    await SecureStore.setItemAsync('my_access_token', token);
-  }
+  // async function saveAccessToken(token: string) {
+  //   await SecureStore.setItemAsync('my_access_token', token);
+  // }
 
-  const inputKey = activeTab === 'email' ? 'email' : 'phone'
-  const inputConfig = activeTab === 'email' ? inputData.email : inputData.phone
+  const inputKey = activeTab === 'email' ? 'email' : 'phone';
+  const inputConfig = activeTab === 'email' ? inputData.email : inputData.phone;
 
   const loginMutation = useMutation({
     mutationFn: (payload: login) => patientService.login(payload),
     onSuccess: (response: any) => {
-      saveAccessToken(response.accessToken)
+      console.log(response.data);
+      storageService.setAuthToken(response.data.access);
       Toast.show({
         type: 'success',
-        text1: 'Logged in successfully'
-      })
-      router.push(ROUTES.home)
-      // console.log("YO1526272!!!",response)
-      // console.log("YO!!!",response.accessToken)
+        text1: 'Logged in successfully',
+      });
+      router.push(ROUTES.home);
     },
     onError: (error: any) => {
-      console.log('ERROR!!!!',error.response.data.message)
+      console.log('ERROR!!!!', error);
       Toast.show({
         type: 'error',
-        text1: error.response.data.message
-      })
+        text1: error.response.data.message,
+      });
     },
     retry: 3,
     retryDelay: 1000,
   });
 
   const handleLogin = () => {
-  const credentials: login = {
-    email: inputValue[inputKey] || '',
-    password: inputValue.password || ''
-  }; 
-  loginMutation.mutate(credentials);
-};
+    Keyboard.dismiss();
+    const credentials: login = {
+      email: inputValue[inputKey] || '',
+      password: inputValue.password || '',
+    };
+    loginMutation.mutate(credentials);
+  };
 
   return (
     <SafeArea>
@@ -102,35 +109,39 @@ const LoginPage = () => {
             Log in to access your HealthMate account.
           </Text>
         </View>
-        
+
         {/* Custom Tab Implementation matching the design */}
         <View style={styles.tabContainer}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[
-              styles.tabButton, 
-              activeTab === 'email' && styles.activeTabButton
+              styles.tabButton,
+              activeTab === 'email' && styles.activeTabButton,
             ]}
             onPress={() => setActiveTab('email')}
           >
-            <Text style={[
-              styles.tabText,
-              activeTab === 'email' && styles.activeTabText
-            ]}>
+            <Text
+              style={[
+                styles.tabText,
+                activeTab === 'email' && styles.activeTabText,
+              ]}
+            >
               Email
             </Text>
           </TouchableOpacity>
-          
-          <TouchableOpacity 
+
+          <TouchableOpacity
             style={[
-              styles.tabButton, 
-              activeTab === 'phone' && styles.activeTabButton
+              styles.tabButton,
+              activeTab === 'phone' && styles.activeTabButton,
             ]}
             onPress={() => setActiveTab('phone')}
           >
-            <Text style={[
-              styles.tabText,
-              activeTab === 'phone' && styles.activeTabText
-            ]}>
+            <Text
+              style={[
+                styles.tabText,
+                activeTab === 'phone' && styles.activeTabText,
+              ]}
+            >
               Phone Number
             </Text>
           </TouchableOpacity>
@@ -143,8 +154,8 @@ const LoginPage = () => {
             value={inputValue[inputKey]}
             onChangeText={(value) => handleChange(inputKey, value)}
           />
-          <View style={{marginTop: 7}}>
-            <PasswordInput 
+          <View style={{ marginTop: 7 }}>
+            <PasswordInput
               {...inputData.password}
               value={inputValue.password}
               onChangeText={(value) => handleChange('password', value)}
@@ -154,17 +165,16 @@ const LoginPage = () => {
             />
           </View>
         </View>
-        
+
         {/* Remember Me and Forgot Password Row */}
         <View style={styles.optionsRow}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.rememberMeContainer}
             onPress={() => setRememberMe(!rememberMe)}
           >
-            <View style={[
-              styles.checkbox, 
-              rememberMe && styles.checkedCheckbox
-            ]}>
+            <View
+              style={[styles.checkbox, rememberMe && styles.checkedCheckbox]}
+            >
               {rememberMe && <Text style={styles.checkmark}>✓</Text>}
             </View>
             <Text style={styles.rememberMeText}>Remember me</Text>
@@ -175,14 +185,20 @@ const LoginPage = () => {
         </View>
 
         {/* Login Button */}
-        <Pressable style={styles.loginButton} onPress={handleLogin} disabled={loginMutation.isPending}>
-          <Text style={styles.loginButtonText}>{loginMutation.isPending ? 'Logining....' : 'Login'} </Text>
+        <Pressable
+          style={styles.loginButton}
+          onPress={handleLogin}
+          disabled={loginMutation.isPending}
+        >
+          <Text style={styles.loginButtonText}>
+            {loginMutation.isPending ? 'Logining....' : 'Login'}{' '}
+          </Text>
         </Pressable>
 
         {/* Sign Up Link */}
         <View style={styles.signUpContainer}>
           <Text style={styles.signUpText}>Don't have an account? </Text>
-          <TouchableOpacity onPress={() => router.push(ROUTES.signup)}> 
+          <TouchableOpacity onPress={() => router.push(ROUTES.signup)}>
             <Text style={styles.signUpLink}>Sign Up</Text>
           </TouchableOpacity>
         </View>
@@ -196,13 +212,17 @@ const LoginPage = () => {
 
         {/* Google Sign In */}
         <TouchableOpacity style={styles.googleButton}>
-          <Image source={goggleLogo} alt='Goggle Logo' style={{width: 20,height:20}} />
+          <Image
+            source={goggleLogo}
+            alt="Goggle Logo"
+            style={{ width: 20, height: 20 }}
+          />
           <Text style={styles.googleButtonText}> Sign in with Google</Text>
         </TouchableOpacity>
       </Wrapper>
     </SafeArea>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   headerContainer: {
@@ -222,7 +242,7 @@ const styles = StyleSheet.create({
     marginTop: 3,
     lineHeight: 24,
   },
-  
+
   // Custom tab styling to match design
   tabContainer: {
     flexDirection: 'row',
@@ -258,7 +278,7 @@ const styles = StyleSheet.create({
     color: '#1f2937',
     fontWeight: '600',
   },
-  
+
   formContainer: {
     marginBottom: 16,
   },
@@ -325,13 +345,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#6b7280',
     fontFamily: 'LibreFranklin_400Regular',
-    fontWeight: '500'
+    fontWeight: '500',
   },
   signUpLink: {
     fontSize: 14,
     color: colors.lightRed,
     fontFamily: 'LibreFranklin_400Regular',
-    fontWeight: '500'
+    fontWeight: '500',
   },
   dividerContainer: {
     flexDirection: 'row',
@@ -365,6 +385,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontFamily: 'Inter_600SemiBold',
   },
-})
+});
 
-export default LoginPage
+export default LoginPage;

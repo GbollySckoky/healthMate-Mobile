@@ -85,7 +85,7 @@ export default function RootLayout() {
             <Stack.Screen name="settings" />
             <Stack.Screen name="auth" />
           </Stack>
-          <Toast ref={(ref) => Toast.setRef(ref)} />
+          <Toast ref={(ref) => Toast.setRef(ref)} style={{paddingTop: 10}} />
         </ModalProvider>
       </KeyboardAvoidingView>
     </SafeAreaProvider>
