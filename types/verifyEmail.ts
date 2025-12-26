@@ -1,4 +1,3 @@
 export interface verifyEmail {
-    email: string;
-    otp: string;
+    otp_code: string;
 }
