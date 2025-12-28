@@ -1,7 +1,20 @@
 export const PATIENTS_ENDPOINTS = {
-    LOGIN:'auth/login/',
-    SIGNUP: 'auth/signup/',
+    LOGIN:'patient/login/',
+    SIGNUP: 'patient/signup/',
     USER: '/users/',
     FORGOT_PASSWORD: 'auth/forgot-password/',
-    VERIFY_EMAIL: 'auth/verify-email/'
+    VERIFY_EMAIL: 'auth/verify-email/',
+    CREATE_HEALTH: 'patient/health/create',
+    CREATE_APPOINTMENT: "patient/appointment/create/",
+    CREATE_BLOOD_PRESSURE: 'patient/record/blood-pressure/create',
+    CREATE_WEIGHT: 'patient/record/weight/create',
+    CREATE_SLEEP: 'patient/record/sleep/create',
+    CREATE_MOOD: 'patient/record/mood/create',
+    CREATE_MEDICATION: 'patient/record/medication/create',
+    GET_MEDICATION: 'patient/records/medication',
+    GET_MOOD: 'patient/records/mood',
+    GET_SLEEP: 'patient/records/sleep',
+    GET_WEIGHT: 'patient/records/weight',
+    GET_BLOOD_PRESSURE: "patient/records/blood-pressure",
+    GET_APPOINTMENTS: 'patient/appointments'
 }
