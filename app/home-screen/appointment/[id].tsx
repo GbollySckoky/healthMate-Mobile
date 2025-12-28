@@ -1,6 +1,6 @@
 import React from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import Entypo from '@expo/vector-icons/Entypo';
 import {
   BtnFlex,
@@ -21,61 +21,116 @@ import { ROUTES } from '@/lib/routes';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
 import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
 import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout';
+import { patientService } from '@/service/patientService';
+import { useQuery } from '@tanstack/react-query';
+import { useRoute } from '@react-navigation/native';
+import { GetAppointments } from '@/lib/interface/get-appointments-interface';
 
 const AppointmentDetails = () => {
-  const { id } = useLocalSearchParams();
+  const route = useRoute();
+  const { id } = route.params as { id: number };
   const profile = require('../../../assets/images/Mobile.png');
   const { openModal, handleDisplay } = useDisplay();
-  const data = [
-    {
-      text: 'I am a General Practitioner with over 8years experience. I help patients manage chronic migraines and sleep issues with comprehensive care approaches.',
-      title: 'About',
-    },
-    {
-      text: 'In Progress',
-      title: 'Status',
-    },
-    {
-      text: 'Jun 23 at 09:45',
-      title: 'Date & Time',
-    },
-    {
-      text: 'Video Call Consultation ',
-      title: 'Consultation Type',
-      icon: (
-        <Feather
-          name="video"
-          size={13}
-          color="#717680"
-          style={styles.iconText}
-        />
-      ),
-    },
-    {
-      text: 'I am have been having pains on my lower abdomen for weeks now, i have taken medications prescribed by a Pharmacist but it has gotten worser. when i try to urinate i feel a sharp pain.',
-      title: 'Health Concern',
-    },
-  ];
+  console.log(id);
+  console.log(id);
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['getAppointmentDetails', id],
+    queryFn: () => patientService.getAppointmentDetails(id),
+    enabled: !!id,
+  });
+
+  if (isError) {
+    return (
+      <div style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        {error.message}
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  if (!data || data.length < 0) {
+    return (
+      <div
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontWeight: 500,
+          fontSize: 12,
+        }}
+      >
+        No appointment details
+      </div>
+    );
+  }
+  const appointment = data && data[0];
+
+  const dataArray = appointment
+    ? [
+        {
+          text: appointment.about || 'N/A',
+          title: 'About',
+        },
+        {
+          text: appointment.status || 'N/A',
+          title: 'Status',
+        },
+        {
+          text:
+            `${appointment.appointment_date} at ${appointment.appointment_time}` ||
+            'N/A',
+          title: 'Date & Time',
+        },
+        {
+          text: appointment.consultation_type || 'N/A',
+          title: 'Consultation Type',
+          icon: (
+            <Feather
+              name="video"
+              size={13}
+              color="#717680"
+              // style={styles.iconText}
+            />
+          ),
+        },
+        {
+          text: appointment.health_concerns || 'No health concern provided',
+          title: 'Health Concern',
+        },
+        {
+          text: appointment.approved === true ? "Yes" : 'No',
+          title: 'Approved Appointment',
+        },
+      ]
+    : [];
 
   const options = [
     {
-      name: "View Profile",
+      name: 'View Profile',
       url: '/(profile)',
     },
     {
-      name: "Cancel Booking",
-      url: '/settings'
+      name: 'Cancel Booking',
+      url: '/settings',
     },
     {
-      name: "Chat Doctor",
-      url: '/'
+      name: 'Chat Doctor',
+      url: '/',
     },
     {
-      name: "Report Issue",
-      url: ROUTES.reportIssue 
-    }
+      name: 'Report Issue',
+      url: ROUTES.reportIssue,
+    },
   ];
   console.log(id);
+  console.log(dataArray);
   return (
     <SafeArea>
       <ScreenLayout>
@@ -83,7 +138,9 @@ const AppointmentDetails = () => {
           title="Appointment Details"
           _goBack={() => router.back()}
           _optionFn={() => handleDisplay()}
-          backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+          backIcon={
+            <Entypo name="chevron-small-left" size={24} color="black" />
+          }
           optionIcon={
             <Entypo name="dots-three-vertical" size={15} color="black" />
           }
@@ -103,9 +160,9 @@ const AppointmentDetails = () => {
             </View>
             {/* Card */}
             <Card>
-              {data.map((item, index) => {
+              {dataArray.map((item: any, index: number) => {
                 const { text, title, icon } = item;
-                const isLastItem = index === data.length - 1;
+                const isLastItem = index === dataArray.length - 1;
 
                 return (
                   <View
@@ -118,7 +175,9 @@ const AppointmentDetails = () => {
                     <View style={styles.contentWrapper}>
                       <Text style={styles.CardTitle}>{title}</Text>
                       <Text>
-                        {icon && <Text style={styles.iconText}>{icon}</Text>}
+                        {icon && (
+                          <Text style={{ paddingRight: 10 }}>{icon}</Text>
+                        )}
                         <Text style={styles.CardText}>{text}</Text>
                       </Text>
                     </View>
@@ -135,12 +194,18 @@ const AppointmentDetails = () => {
             </BtnFlex>
           </Wrapper>
         </ScreenOverFlowLayout>
-        <ProfileModal 
+        <ProfileModal
           isOpen={openModal}
           closeModal={handleDisplay}
           options={options}
-          icon={<MaterialIcons name="report-gmailerrorred" size={15} color='#FD6868' />}
-          values='Report Issue'
+          icon={
+            <MaterialIcons
+              name="report-gmailerrorred"
+              size={15}
+              color="#FD6868"
+            />
+          }
+          values="Report Issue"
         />
       </ScreenLayout>
     </SafeArea>
@@ -190,7 +255,7 @@ const styles = StyleSheet.create({
     fontFamily: 'LibreFranklin_400Regular',
   },
   lastItem: {
-    borderBottomWidth: 0, 
+    borderBottomWidth: 0,
   },
   enhancedItemContainer: {
     padding: 4,
