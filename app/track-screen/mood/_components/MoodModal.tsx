@@ -1,22 +1,38 @@
 import React, { useState } from 'react';
 import { MoodData } from '@/lib/data';
-import { View, StyleSheet, Text, Pressable } from 'react-native';
+import { View, StyleSheet, Text, Pressable, Keyboard } from 'react-native';
 import TextAreaInput from '@/components/Input/TextAreaInput';
-import { SubmitButton } from '@/components/typography/Typography';
+import DateInput from '@/components/Input/DateInput';
+import CustomCalendar from '@/components/calendar/CustomCalendar';
+import { useMutation } from '@tanstack/react-query';
+import { patientService } from '@/service/patientService';
+import { CreateMood } from '@/lib/interface/create-mood-interface';
+import { useModal } from '@/context/ModalContext';
+import Toast from 'react-native-toast-message';
 
 type MoodInputType = {
   description?: string;
   key?: Record<string, string | boolean>;
+  date: string;
+  mood: string;
 };
 
-const handleClick = () => {};
+const moodDate = {
+  date: {
+    label: 'Date',
+    placeholder: '10/05/1997',
+  },
+};
 
 const MoodModal = () => {
-  const [inputValue, setInputValue] = useState<MoodInputType>({});
+  const [inputValue, setInputValue] = useState<MoodInputType>({
+    date: new Date().toISOString(),
+    mood: '',
+  });
   const [selectEmoji, setSelectEmoji] = useState('');
-
-  console.log('12345', inputValue);
-
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const { closeModal } = useModal();
+  console.log('SELECT!!', selectEmoji);
   const data = {
     mood: {
       label: "What's making you feel this way?",
@@ -31,16 +47,54 @@ const MoodModal = () => {
     }));
   };
 
-  const handleSelectEmoji = (key: string, emoji: string, value: string) => {
+  const handleSelectEmoji = (value: string) => {
     setSelectEmoji(value); // Store the selected mood value
     // Store the emoji and value wrapped in an object with boolean conversion
     setInputValue((prev) => ({
       ...prev,
-      [key]: {
-        selectedMood: value,
-        selectedEmoji: Boolean(emoji), //coverts a string to a boolean if the stirng is empty is false
-      },
+      // [key]: {
+      mood: value,
+      // selectedEmoji: Boolean(emoji), //coverts a string to a boolean if the stirng is empty is false
+      // },
     }));
+  };
+
+  const handleDateSelect = (day: any) => {
+    handleChange('date', day.dateString);
+    setShowDatePicker(false);
+  };
+
+  const handleCloseCalendar = () => setShowDatePicker(false);
+
+  const createMoodMutation = useMutation({
+    mutationFn: (payload: CreateMood) => patientService.createMood(payload),
+    onSuccess: (response) => {
+      // console.log('LOGG', response.data);
+      Toast.show({
+        type: 'success',
+        text1: response.data.success,
+      });
+      closeModal();
+    },
+    onError: (error: any) => {
+      // console.log('Error:', error.response.data.error);
+      Toast.show({
+        type: 'error',
+        text1: error.response.data.error,
+      });
+    },
+  });
+
+  const handleSubmit = async () => {
+    Keyboard.dismiss();
+
+    const credentials = {
+      mood: inputValue.mood || '',
+      reason: inputValue.description || '',
+      recorded_at: inputValue.date || '',
+    };
+    console.log(credentials);
+    await createMoodMutation.mutate(credentials);
   };
 
   return (
@@ -56,7 +110,7 @@ const MoodModal = () => {
                 styles.gridItem,
                 selectEmoji === value && styles.selectedItem,
               ]}
-              onPress={() => handleSelectEmoji('mood', emoji, value)}
+              onPress={() => handleSelectEmoji(value)}
             >
               <Text style={styles.text}>{emoji}</Text>
               <Text style={{ color: '#717680' }}>{value}</Text>
@@ -64,12 +118,41 @@ const MoodModal = () => {
           );
         })}
       </View>
+
       <TextAreaInput
         {...data.mood}
         value={inputValue.description || ''}
         onChangeText={(value) => handleChange('description', value)}
       />
-      <SubmitButton _fn={handleClick}>Save Mood</SubmitButton>
+      <View style={{ marginTop: 7 }}>
+        {/* Date Input */}
+        <DateInput
+          {...moodDate.date}
+          value={new Date(inputValue.date).toLocaleDateString()}
+          _fn={() => setShowDatePicker(true)}
+        />
+      </View>
+      <CustomCalendar
+        isOpen={showDatePicker}
+        onChangeText={handleDateSelect}
+        onClose={handleCloseCalendar}
+      />
+      <Pressable
+        style={[
+          styles.button,
+          {
+            backgroundColor: createMoodMutation.isPending
+              ? '#ec4899'
+              : '#DD2590',
+          },
+        ]}
+        onPress={handleSubmit}
+        disabled={createMoodMutation.isPending}
+      >
+        <Text style={styles.buttonText}>
+          {createMoodMutation.isPending ? 'Saving...' : 'Save Mood Log'}
+        </Text>
+      </Pressable>
     </View>
   );
 };
@@ -107,5 +190,18 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 38,
     paddingBottom: 6,
+  },
+  button: {
+    backgroundColor: '#DD2590',
+    paddingVertical: 12,
+    borderRadius: 10,
+    marginTop: 25,
+    marginBottom: 30,
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
+    fontWeight: '600',
+    fontSize: 16,
   },
 });
