@@ -12,7 +12,7 @@ import {
 import { router } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, Keyboard } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import { useState } from 'react';
 const { width } = Dimensions.get('window');
@@ -26,6 +26,7 @@ import SafeArea from '@/components/safeAreaView/SafeAreaView';
 
 const Weight = () => {
   const { openModal } = useModal();
+
   const [readings, setReadings] = useState([
     { date: 'Jun 20', systolic: 82, diastolic: 62 },
     { date: 'Jun 21', systolic: 95, diastolic: 75 },
@@ -75,13 +76,16 @@ const Weight = () => {
     },
   };
   const handleClick = () => {};
+
   return (
     <SafeArea>
       <ScreenLayout>
         <NavHeader
           title="Track Your Weight"
           _goBack={() => router.back()}
-          backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+          backIcon={
+            <Entypo name="chevron-small-left" size={24} color="black" />
+          }
           text="Tracking your mood helps you understand your...."
         />
         <ScreenOverFlowLayout>

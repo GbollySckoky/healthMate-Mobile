@@ -6,14 +6,12 @@ import {
   Keyboard,
   Text,
   Pressable,
-  TouchableOpacity,
 } from 'react-native';
 import { colors } from '@/lib/colors';
 import { bloodPressureData } from '@/lib/data';
 import NumberInput from '@/components/Input/NumberInput';
 import DateInput from '@/components/Input/DateInput';
 import CustomCalendar from '@/components/calendar/CustomCalendar';
-import { SubTitle, SubmitButton } from '@/components/typography/Typography';
 import { useMutation } from '@tanstack/react-query';
 import { BloodPressure } from '@/lib/interface/create-blood-pressure.interface';
 import { patientService } from '@/service/patientService';
@@ -77,15 +75,15 @@ const BloodPressureModal = () => {
     mutationFn: (payload: BloodPressure) =>
       patientService.createBloodPressure(payload),
     onSuccess: (response) => {
-      console.log('Saved:', response.data);
+      // console.log('Saved:', response.data);
       Toast.show({
         type: 'success',
         text1: response.data.success,
       });
-      closeModal()
+      closeModal();
     },
     onError: (error: any) => {
-      console.log('Error:', error.response.data.error);
+      // console.log('Error:', error.response.data.error);
       Toast.show({
         type: 'error',
         text1: error.response.data.error,
