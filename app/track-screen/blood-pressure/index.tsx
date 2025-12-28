@@ -12,15 +12,23 @@ import {
 import { router } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
-import { recenntReadings } from '../../../lib/data';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  ActivityIndicator,
+} from 'react-native';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { LineChart } from 'react-native-chart-kit';
 import { useState } from 'react';
 import { Button } from '@/components/button/Button';
 import BloodPressureModal from './BloodPressureModal';
 import { useModal } from '@/context/ModalContext';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
-
+import { useQuery } from '@tanstack/react-query';
+import { patientService } from '@/service/patientService';
+import { GetBloodPressue } from '@/lib/interface/get-blood-pressure-interface';
 
 const { width } = Dimensions.get('window');
 
@@ -75,13 +83,169 @@ const BloodPressure = () => {
     },
   };
 
+  const { data, isError, isLoading, error } = useQuery({
+    queryKey: ['getBloodPressure'],
+    queryFn: () => patientService.getBloodPressure(),
+  });
+  console.log('12345', data);
+  console.log('eijijdf', error);
+
+  const getBloodPressureStatus = (systolic: number, diastolic: number) => {
+    // High Blood Pressure (Hypertension Stage 2)
+    if (systolic >= 140 || diastolic >= 90) {
+      return {
+        status: 'High',
+        backgroundColor: '#FEF3F2',
+        textColor: '#B42318',
+      };
+    }
+
+    // Elevated/Medium (Hypertension Stage 1)
+    if (systolic >= 130 || diastolic >= 80) {
+      return {
+        status: 'Medium',
+        backgroundColor: '#FEF9E6',
+        textColor: '#DC6803',
+      };
+    }
+
+    // Low Blood Pressure (Hypotension)
+    if (systolic < 90 || diastolic < 60) {
+      return {
+        status: 'Low',
+        backgroundColor: '#EFF8FF',
+        textColor: '#175CD3',
+      };
+    }
+
+    // Normal
+    return {
+      status: 'Normal',
+      backgroundColor: '#ECFDF3',
+      textColor: '#027A48',
+    };
+  };
+
+  // Render function for Recent Readings content
+  const renderRecentReadings = () => {
+    if (isLoading) {
+      return (
+        <View style={styles.stateContainer}>
+          <ActivityIndicator size="large" color="#DF0000" />
+          <Text style={styles.stateText}>Loading readings...</Text>
+        </View>
+      );
+    }
+
+    if (isError) {
+      return (
+        <View style={styles.stateContainer}>
+          <Text style={styles.stateText}>Error loading readings</Text>
+          <Text style={styles.errorMessage}>{error?.message}</Text>
+        </View>
+      );
+    }
+
+    if (!data || data.length === 0) {
+      return (
+        <View style={styles.stateContainer}>
+          <AntDesign name="inbox" size={40} color="#717680" />
+          <Text style={styles.stateText}>No blood pressure readings yet</Text>
+          <Text style={styles.stateSubText}>
+            Add your first reading to start tracking
+          </Text>
+        </View>
+      );
+    }
+
+    return data.map((blood: GetBloodPressue, index: number) => {
+      const { diastolic, date_recorded, systolic, time_recorded } = blood;
+      const isLastItem = index === data.length - 1;
+
+      // Get the status information
+      const statusInfo = getBloodPressureStatus(systolic, diastolic);
+
+      return (
+        <View
+          key={index}
+          style={[styles.enhancedItemContainer, isLastItem && styles.lastItem]}
+        >
+          <View style={styles.flex}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+            >
+              <Text
+                style={{
+                  borderColor: '#f2f2f2',
+                  borderWidth: 1,
+                  padding: 6,
+                  borderRadius: 5,
+                }}
+              >
+                <FontAwesome name="stethoscope" size={24} color="#DF0000" />
+              </Text>
+              <View style={{ paddingLeft: 16 }}>
+                <Text
+                  style={{
+                    fontWeight: '500',
+                    fontSize: 14,
+                    color: '#414651',
+                    paddingTop: 2,
+                    fontFamily: 'Lato_400Regular',
+                  }}
+                >
+                  {systolic}/{diastolic} mmHg
+                </Text>
+                <Text
+                  style={{
+                    fontWeight: '400',
+                    fontSize: 12,
+                    color: '#717680',
+                    paddingTop: 2,
+                    fontFamily: 'Lato_400Regular',
+                  }}
+                >
+                  {date_recorded} at {time_recorded}
+                </Text>
+              </View>
+            </View>
+            <Text
+              style={{
+                backgroundColor: statusInfo.backgroundColor,
+                color: statusInfo.textColor,
+                paddingHorizontal: 15,
+                paddingVertical: 7,
+                borderRadius: 30,
+                fontFamily: 'Inter_500Medium',
+              }}
+            >
+              {statusInfo.status}
+            </Text>
+          </View>
+        </View>
+      );
+    });
+  };
+  const latestReading = data?.[0];
+  const status = latestReading
+  ? getBloodPressureStatus(
+      latestReading.systolic,
+      latestReading.diastolic
+    )
+  : null;
+
   return (
     <SafeArea>
       <ScreenLayout>
         <NavHeader
           title="Blood Pressure Tracker"
           _goBack={() => router.back()}
-          backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+          backIcon={
+            <Entypo name="chevron-small-left" size={24} color="black" />
+          }
           text="Track your readings to monitor your heart health"
         />
         <ScreenOverFlowLayout>
@@ -93,10 +257,39 @@ const BloodPressure = () => {
                 color="#DF0000"
                 style={styles.icon}
               />
-              <CardText>Today’s Readings</CardText>
-              <CardAmount>120/80 mmHg</CardAmount>
-              <CardText>Recorded on: Jun 22, 09:45</CardText>
-              <Text style={styles.colorText}>Normal</Text>
+              <CardText>Today's Readings</CardText>
+              {isLoading ? (
+                <ActivityIndicator color="#DF0000" />
+              ) : (
+                <>
+                <CardAmount>
+                      {latestReading
+                        ? `${latestReading.systolic}/${latestReading.diastolic} mmHg`
+                        : '--/-- mmHg'}
+                </CardAmount>
+
+                <CardText>
+                  Recorded on:{' '}
+                  {latestReading
+                    ? `${latestReading.date_recorded}, ${latestReading.time_recorded}`
+                    : 'N/A'}
+                </CardText>
+
+                {status && (
+                  <Text
+                    style={[
+                      styles.colorText,
+                      {
+                        backgroundColor: status.backgroundColor,
+                        color: status.textColor,
+                      },
+                    ]}
+                  >
+                    {status.status}
+                  </Text>
+                )}
+                </>
+              )}
             </DetailsContainer>
             {/* Line Chart */}
             <View style={styles.chartContainer}>
@@ -113,7 +306,6 @@ const BloodPressure = () => {
                 yAxisSuffix=""
                 yAxisInterval={1}
                 fromZero={false}
-                // color={true}
                 segments={6}
               />
 
@@ -133,77 +325,11 @@ const BloodPressure = () => {
                 </View>
               </View>
             </View>
-            {/* Recnnt Readings */}
+            {/* Recent Readings */}
             <View style={{ marginBottom: 40 }}>
               <Card>
                 <SubTitle>Recent Readings</SubTitle>
-                {recenntReadings.map((recent, index) => {
-                  const { icon, bloodRate, date, status, time } = recent;
-                  const isLastItem = index === recenntReadings.length - 1;
-                  return (
-                    <View
-                      key={index}
-                      style={[
-                        styles.enhancedItemContainer,
-                        isLastItem && styles.lastItem,
-                      ]}
-                    >
-                      <View style={styles.flex}>
-                        <View
-                          style={{ flexDirection: 'row', alignItems: 'center' }}
-                        >
-                          <Text
-                            style={{
-                              borderColor: '#f2f2f2',
-                              borderWidth: 1,
-                              padding: 6,
-                              borderRadius: 5,
-                            }}
-                          >
-                            {' '}
-                            {icon}{' '}
-                          </Text>
-                          <View style={{ paddingLeft: 16 }}>
-                            <Text
-                              style={{
-                                fontWeight: '500',
-                                fontSize: 14,
-                                color: '#414651',
-                                paddingTop: 2,
-                                fontFamily: 'Lato_400Regular',
-                              }}
-                            >
-                              {bloodRate}
-                            </Text>
-                            <Text
-                              style={{
-                                fontWeight: '400',
-                                fontSize: 12,
-                                color: '#717680',
-                                paddingTop: 2,
-                                fontFamily: 'Lato_400Regular',
-                              }}
-                            >
-                              {date} at {time}
-                            </Text>
-                          </View>
-                        </View>
-                        <Text
-                          style={{
-                            backgroundColor: `${(status === 'Normal' && '#ECFDF3') || (status === 'High' && '#FEF3F2')}`,
-                            color: `${(status === 'Normal' && '#027A48') || (status === 'High' && '#B42318')}`,
-                            paddingHorizontal: 15,
-                            paddingVertical: 7,
-                            borderRadius: 30,
-                            fontFamily: 'Inter_500Medium',
-                          }}
-                        >
-                          {status}
-                        </Text>
-                      </View>
-                    </View>
-                  );
-                })}
+                {renderRecentReadings()}
               </Card>
             </View>
           </Wrapper>
@@ -214,7 +340,6 @@ const BloodPressure = () => {
               title: 'Add Blood Pressure Reading',
               description: '',
               onClose: () => {},
-              // btnText: 'Save Reading'
             })
           }
         >
@@ -257,10 +382,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 18,
-    // backgroundColor: 'red'
   },
   container: {
-    // flex: 1,
     backgroundColor: '#f5f5f5',
     padding: 20,
     justifyContent: 'center',
@@ -278,11 +401,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#f2f2f2',
   },
-
   chart: {
     marginVertical: 8,
     borderRadius: 8,
-    // backgroundColor: 'red'
   },
   legend: {
     flexDirection: 'row',
@@ -309,5 +430,32 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     fontWeight: '500',
+  },
+  stateContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 40,
+    paddingHorizontal: 20,
+  },
+  stateText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#414651',
+    marginTop: 12,
+    fontFamily: 'Lato_400Regular',
+  },
+  stateSubText: {
+    fontSize: 14,
+    color: '#717680',
+    marginTop: 6,
+    textAlign: 'center',
+    fontFamily: 'Lato_400Regular',
+  },
+  errorMessage: {
+    fontSize: 12,
+    color: '#B42318',
+    marginTop: 8,
+    textAlign: 'center',
+    fontFamily: 'Lato_400Regular',
   },
 });

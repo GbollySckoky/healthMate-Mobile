@@ -39,6 +39,10 @@ export const patientService = {
     const response = await axiosService().get(`patient/appointments/${appointment_id}`)
     return await response.data; 
   },
+  getBloodPressure: async () => {
+    const response = await axiosService().get(PATIENTS_ENDPOINTS.GET_BLOOD_PRESSURE)
+    return await response.data
+  },
   getUser: async () => {
     const response = await axiosService().get(PATIENTS_ENDPOINTS.USER)
     return await response.data
