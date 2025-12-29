@@ -27,36 +27,36 @@ const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
 const ALL_APPOINTMENTS = '/home-screen/all-appointments/';
 const AllApointments = () => {
-  const router = useRouter();
-  const { data, isLoading, error, isError } = useQuery({
-    queryKey: ['getAppointments'],
-    queryFn: () => patientService.getAppointments(),
-  });
+const router = useRouter();
+const { data, isLoading, error, isError } = useQuery({
+  queryKey: ['getAppointments'],
+  queryFn: () => patientService.getAppointments(),
+});
 
-  if (isError) {
-    return (
-      <div style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        {error.message}
-      </div>
-    );
-  }
+if (isError) {
+  return (
+    <div style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      {error.message}
+    </div>
+  );
+}
 
-  if (isLoading) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
+if (isLoading) {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <ActivityIndicator size="large" />
+    </View>
+  );
+}
 
-  if (!data || data.length < 0) {
-    return (
-      <div style={{ flex: 1, alignItems: 'center', justifyContent: 'center', fontWeight: 500,
-      fontSize: 12 }}>
-        No appointment data
-      </div>
-    );
-  }
+if (!data || data.length < 0) {
+  return (
+    <div style={{ flex: 1, alignItems: 'center', justifyContent: 'center', fontWeight: 500,
+    fontSize: 12 }}>
+      No appointment data
+    </div>
+  );
+}
 
   return (
     <SafeArea>
