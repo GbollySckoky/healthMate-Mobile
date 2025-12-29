@@ -3,7 +3,6 @@ import CustomCalendar from '@/components/calendar/CustomCalendar';
 import { Pressable, Text, View, StyleSheet, Keyboard } from 'react-native';
 import { sleepExperienceData, sleepData } from '@/lib/data';
 import DateInput from '@/components/Input/DateInput';
-import { SubmitButton } from '@/components/typography/Typography';
 import Toast from 'react-native-toast-message';
 import { useMutation } from '@tanstack/react-query';
 import { patientService } from '@/service/patientService';

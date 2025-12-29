@@ -1,6 +1,12 @@
 import React from 'react';
 import { BarChart } from 'react-native-chart-kit';
-import { StyleSheet, View, Text, Dimensions } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  ActivityIndicator,
+} from 'react-native';
 import { NavHeader } from '@/components/Header/Header';
 import { router } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
@@ -20,6 +26,11 @@ import { Button } from '@/components/button/Button';
 import SleepModal from './_components/SleepModal';
 import { useModal } from '@/context/ModalContext';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
+import { useQuery } from '@tanstack/react-query';
+import useDate from '@/hooks/useDate';
+import { patientService } from '@/service/patientService';
+import { GetSleep } from '@/lib/interface/get-sleep-interface';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -56,10 +67,154 @@ const chartConfig = {
   },
 };
 
-const handleClick = () => {};
-
 export default function MyBarChart() {
   const { openModal } = useModal();
+
+  const {
+    data: datas,
+    isError,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['getSleep'],
+    queryFn: () => patientService.getSleep(),
+  });
+
+  const { getReadableDate } = useDate();
+
+  const getSleepStatus = (value: string) => {
+    if (value === 'Poor') {
+      return {
+        status: 'High',
+        backgroundColor: '#FEF3F2',
+        textColor: '#B42318',
+      };
+    }
+
+    if (value === 'Average') {
+      return {
+        status: 'Medium',
+        backgroundColor: '#FEF9E6',
+        textColor: '#DC6803',
+      };
+    }
+
+    return {
+      status: 'Excellent',
+      backgroundColor: '#ECFDF3',
+      textColor: '#027A48',
+    };
+  };
+
+  const getMoodEmoji = (value: string) => {
+    if (value === 'Excellent') return '😴';
+    if (value === 'Average') return '😐';
+    if (value === 'Poor') return '😩';
+    return '😴'; // Normal/Happy
+  };
+
+  const latestSleep = datas && datas.length > 0 ? datas[0] : null;
+  const latestSleepStatus = latestSleep
+    ? getSleepStatus(latestSleep.quanlity)
+    : null;
+
+  const renderMoodsReadings = () => {
+    if (isLoading) {
+      return (
+        <View style={styles.stateContainer}>
+          <ActivityIndicator size="large" color="#DF0000" />
+          <Text style={styles.stateText}>Loading mood...</Text>
+        </View>
+      );
+    }
+
+    if (isError) {
+      return (
+        <View style={styles.stateContainer}>
+          <Text style={styles.stateText}>Error loading sleep</Text>
+          <Text style={styles.errorMessage}>{error?.message}</Text>
+        </View>
+      );
+    }
+
+    if (!datas || datas.length === 0) {
+      return (
+        <View style={styles.stateContainer}>
+          <AntDesign name="inbox" size={40} color="#717680" />
+          <Text style={styles.stateText}>No mood readings yet</Text>
+          <Text style={styles.stateSubText}>
+            Add your first sleep to start tracking
+          </Text>
+        </View>
+      );
+    }
+
+    return datas.map((sleep: GetSleep, index: number) => {
+      const { quanlity, hours_slept, sleep_date } = sleep;
+      const isLastItem = index === datas.length - 1;
+      const statusInfo = getSleepStatus(quanlity);
+
+      return (
+        <View
+          key={index}
+          style={[styles.enhancedItemContainer, isLastItem && styles.lastItem]}
+        >
+          <View style={styles.flex}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+            >
+              <Text style={styles.emojiContainer}>
+                {getMoodEmoji(quanlity)}
+              </Text>
+              <View style={{ paddingLeft: 16 }}>
+                <Text
+                  style={{
+                    fontWeight: '500',
+                    fontSize: 14,
+                    color: '#414651',
+                    paddingTop: 2,
+                    fontFamily: 'Lato_400Regular',
+                  }}
+                >
+                  {quanlity}
+                </Text>
+                <Text
+                  style={{
+                    fontWeight: '400',
+                    fontSize: 12,
+                    color: '#717680',
+                    paddingTop: 2,
+                    fontFamily: 'Lato_400Regular',
+                  }}
+                >
+                  {getReadableDate(sleep_date)} at{' '}
+                  {hours_slept == 1
+                    ? `${hours_slept} hour`
+                    : `${hours_slept} hours`}
+                </Text>
+              </View>
+            </View>
+            <Text
+              style={{
+                backgroundColor: statusInfo.backgroundColor,
+                color: statusInfo.textColor,
+                paddingHorizontal: 15,
+                paddingVertical: 7,
+                borderRadius: 30,
+                fontFamily: 'Inter_500Medium',
+              }}
+            >
+              {statusInfo.status}
+            </Text>
+          </View>
+        </View>
+      );
+    });
+  };
+
   return (
     <SafeArea>
       <ScreenLayout>
@@ -69,7 +224,7 @@ export default function MyBarChart() {
           backIcon={
             <Entypo name="chevron-small-left" size={24} color="black" />
           }
-          text="Track your readings to monitor your heart health"
+          text="Track your readings to monitor your sleep health"
         />
         <ScreenOverFlowLayout>
           <Wrapper>
@@ -80,10 +235,19 @@ export default function MyBarChart() {
                 color="#C11574"
                 style={styles.icon}
               />
-              <CardText>Today’s sleep</CardText>
-              <CardAmount>8h 30mins</CardAmount>
-              <CardText>Recorded on: Jun 22, 09:45</CardText>
-              <Text style={styles.colorText}>Excellent</Text>
+              <CardText>Today's sleep</CardText>
+              <CardAmount>
+                {latestSleep ? `${latestSleep.hours_slept} ${latestSleep.hours_slept == 1 ? 'hour' : 'hours'}` : '0 hours'}
+              </CardAmount>
+              <CardText>Recorded on: {latestSleep ? latestSleep.sleep_date : 'N/A'}</CardText>
+              <Text style={{
+                backgroundColor: latestSleepStatus ? latestSleepStatus.backgroundColor : '#F2F2F2',
+                color: latestSleepStatus ? latestSleepStatus.textColor : '#717680',
+                paddingHorizontal: 15,
+                paddingVertical: 7,
+                borderRadius: 30,
+                fontFamily: 'Inter_500Medium',
+              }}>{latestSleepStatus ? latestSleepStatus.status : 'No data'}</Text>
             </DetailsContainer>
             <View style={styles.container}>
               <View style={styles.chartContainer}>
@@ -109,73 +273,7 @@ export default function MyBarChart() {
             <View style={{ marginBottom: 40 }}>
               <Card>
                 <SubTitle>Sleep Log History</SubTitle>
-                {sleepLogHistory.map((sleep, index) => {
-                  const { icon, hour, date, status, time } = sleep;
-                  const isLastItem = index === sleepLogHistory.length - 1;
-                  return (
-                    <View
-                      key={index}
-                      style={[
-                        styles.enhancedItemContainer,
-                        isLastItem && styles.lastItem,
-                      ]}
-                    >
-                      <View style={styles.flex}>
-                        <View
-                          style={{ flexDirection: 'row', alignItems: 'center' }}
-                        >
-                          <Text
-                            style={{
-                              borderColor: '#f2f2f2',
-                              borderWidth: 1,
-                              padding: 6,
-                              borderRadius: 5,
-                            }}
-                          >
-                            {' '}
-                            {icon}{' '}
-                          </Text>
-                          <View style={{ paddingLeft: 16 }}>
-                            <Text
-                              style={{
-                                fontWeight: '500',
-                                fontSize: 14,
-                                color: '#414651',
-                                paddingTop: 2,
-                                fontFamily: 'Lato_400Regular',
-                              }}
-                            >
-                              {hour}
-                            </Text>
-                            <Text
-                              style={{
-                                fontWeight: '400',
-                                fontSize: 12,
-                                color: '#717680',
-                                paddingTop: 2,
-                                fontFamily: 'Lato_400Regular',
-                              }}
-                            >
-                              {date} . {time}
-                            </Text>
-                          </View>
-                        </View>
-                        <Text
-                          style={{
-                            backgroundColor: `${(status === 'Excellent' && '#ECFDF3') || (status === 'Average' && '#FFFAEB') || (status === 'Low' && '#FEF3F2')}`,
-                            color: `${(status === 'Excellent' && '#027A48') || (status === 'Average' && '#B54708') || (status === 'Low' && '#B42318')}`,
-                            paddingHorizontal: 15,
-                            paddingVertical: 7,
-                            borderRadius: 30,
-                            fontFamily: 'Inter_500Medium',
-                          }}
-                        >
-                          {status}
-                        </Text>
-                      </View>
-                    </View>
-                  );
-                })}
+                {renderMoodsReadings()}
               </Card>
             </View>
           </Wrapper>
@@ -222,12 +320,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter_500Medium',
     marginTop: 7,
   },
-  // container: {
-  //   flex: 1,
-  //   backgroundColor: '#f5f5f5',
-  //   padding: 20,
-  //   justifyContent: 'center'
-  // },
+  emojiContainer: {
+    borderColor: '#f2f2f2',
+    borderWidth: 1,
+    padding: 6,
+    borderRadius: 5,
+    fontSize: 24,
+  },
   chartContainer: {
     backgroundColor: 'white',
     borderRadius: 12,
@@ -268,5 +367,32 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 18,
     // backgroundColor: 'red'
+  },
+  stateContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 40,
+    paddingHorizontal: 20,
+  },
+  stateText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#414651',
+    marginTop: 12,
+    fontFamily: 'Lato_400Regular',
+  },
+  stateSubText: {
+    fontSize: 14,
+    color: '#717680',
+    marginTop: 6,
+    textAlign: 'center',
+    fontFamily: 'Lato_400Regular',
+  },
+  errorMessage: {
+    fontSize: 12,
+    color: '#B42318',
+    marginTop: 8,
+    textAlign: 'center',
+    fontFamily: 'Lato_400Regular',
   },
 });
