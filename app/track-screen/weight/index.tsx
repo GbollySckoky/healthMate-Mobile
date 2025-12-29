@@ -12,54 +12,70 @@ import {
 import { router } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { StyleSheet, Text, View, Dimensions, Keyboard } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  ActivityIndicator,
+} from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 const { width } = Dimensions.get('window');
-import { recentWeight } from '../../../lib/data';
 import Feather from '@expo/vector-icons/Feather';
 import { Button } from '@/components/button/Button';
 import WeightModal from './_component/WeightModal';
 import { useModal } from '@/context/ModalContext';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
-
+import { patientService } from '@/service/patientService';
+import { useQuery } from '@tanstack/react-query';
+import { GetWeight } from '@/lib/interface/get-weight-interface';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import useDate from '@/hooks/useDate';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 const Weight = () => {
   const { openModal } = useModal();
+  const { data, isError, isLoading, error } = useQuery({
+    queryKey: ['getWeight'],
+    queryFn: () => patientService.getWeight(),
+  });
+  const { getReadableDate } = useDate();
 
-  const [readings, setReadings] = useState([
-    { date: 'Jun 20', systolic: 82, diastolic: 62 },
-    { date: 'Jun 21', systolic: 95, diastolic: 75 },
-    { date: 'Jun 22', systolic: 118, diastolic: 105 },
-    { date: 'Jun 23', systolic: 118, diastolic: 95 },
-    { date: 'Jun 24', systolic: 140, diastolic: 82 },
-    { date: 'Jun 25', systolic: 140, diastolic: 82 },
-    { date: 'Jun 26', systolic: 140, diastolic: 82 },
-    { date: 'Jun 27', systolic: 140, diastolic: 82 },
-  ]);
+  // Prepare chart data from actual weight data
+  const chartData = useMemo(() => {
+    if (!data || data.length === 0) {
+      return {
+        labels: [],
+        datasets: [{ data: [0] }],
+      };
+    }
 
-  // Prepare chart data
-  const chartData = {
-    labels: readings.map((r) => r.date.split(' ')[1]), // Just day numbers
-    datasets: [
-      {
-        data: readings.map((r) => r.systolic),
-        color: (opacity = 1) => `rgba(239, 68, 68, ${opacity})`, // Red for systolic
-        strokeWidth: 3,
-      },
-      {
-        data: readings.map((r) => r.diastolic),
-        color: (opacity = 1) => `rgba(59, 130, 246, ${opacity})`, // Blue for diastolic
-        strokeWidth: 3,
-      },
-    ],
-  };
+    // Sort by date and take last 7-8 readings for chart
+    const sortedData = [...data]
+      .sort((a, b) => new Date(a.recorded_at).getTime() - new Date(b.recorded_at).getTime())
+      .slice(-8);
+
+    return {
+      labels: sortedData.map((item) => {
+        const date = new Date(item.recorded_at);
+        return `${date.getMonth() + 1}/${date.getDate()}`;
+      }),
+      datasets: [
+        {
+          data: sortedData.map((item) => parseFloat(item.weight)),
+          color: (opacity = 1) => `rgba(193, 21, 116, ${opacity})`,
+          strokeWidth: 3,
+        },
+      ],
+    };
+  }, [data]);
 
   const chartConfig = {
     backgroundColor: '#ffffff',
     backgroundGradientFrom: '#ffffff',
     backgroundGradientTo: '#ffffff',
-    decimalPlaces: 0,
+    decimalPlaces: 1,
     color: (opacity = 1) => `rgba(107, 114, 128, ${opacity})`,
     labelColor: (opacity = 1) => `rgba(107, 114, 128, ${opacity})`,
     style: {
@@ -75,7 +91,102 @@ const Weight = () => {
       strokeWidth: 1,
     },
   };
-  const handleClick = () => {};
+
+  // Get current (most recent) weight
+  const currentWeight = useMemo(() => {
+    if (!data || data.length === 0) return null;
+    const sorted = [...data].sort(
+      (a, b) => new Date(b.recorded_at).getTime() - new Date(a.recorded_at).getTime()
+    );
+    return sorted[0];
+  }, [data]);
+
+  const renderWeightReadings = () => {
+    if (isLoading) {
+      return (
+        <View style={styles.stateContainer}>
+          <ActivityIndicator size="large" color="#DF0000" />
+          <Text style={styles.stateText}>Loading weight...</Text>
+        </View>
+      );
+    }
+
+    if (isError) {
+      return (
+        <View style={styles.stateContainer}>
+          <Text style={styles.stateText}>Error loading weights</Text>
+          <Text style={styles.errorMessage}>{error?.message}</Text>
+        </View>
+      );
+    }
+
+    if (!data || data.length === 0) {
+      return (
+        <View style={styles.stateContainer}>
+          <AntDesign name="inbox" size={40} color="#717680" />
+          <Text style={styles.stateText}>No weight readings yet</Text>
+          <Text style={styles.stateSubText}>
+            Add your first weight to start tracking
+          </Text>
+        </View>
+      );
+    }
+
+    return data.map((recent: GetWeight, index: number) => {
+      const { recorded_at, weight } = recent;
+      const isLastItem = index === data.length - 1;
+      return (
+        <View
+          key={index}
+          style={[
+            styles.enhancedItemContainer,
+            isLastItem && styles.lastItem,
+          ]}
+        >
+          <View style={styles.flex}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text
+                style={{
+                  borderColor: '#f2f2f2',
+                  borderWidth: 1,
+                  padding: 6,
+                  borderRadius: 5,
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="weight-lifter"
+                  size={24}
+                  color="#C11574"
+                />
+              </Text>
+              <View style={{ paddingLeft: 16 }}>
+                <Text
+                  style={{
+                    fontWeight: '500',
+                    fontSize: 14,
+                    fontFamily: 'Lato_400Regular',
+                  }}
+                >
+                  {weight} kg
+                </Text>
+                <Text
+                  style={{
+                    fontWeight: '400',
+                    fontSize: 12,
+                    color: '#717680',
+                    paddingTop: 2,
+                    fontFamily: 'Lato_400Regular',
+                  }}
+                >
+                  {getReadableDate(recorded_at)}
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      );
+    });
+  };
 
   return (
     <SafeArea>
@@ -86,7 +197,7 @@ const Weight = () => {
           backIcon={
             <Entypo name="chevron-small-left" size={24} color="black" />
           }
-          text="Tracking your mood helps you understand your...."
+          text="Tracking your weight helps you monitor your health progress"
         />
         <ScreenOverFlowLayout>
           <Wrapper>
@@ -98,9 +209,16 @@ const Weight = () => {
                 style={styles.icon}
               />
               <CardText>Current Weight</CardText>
-              <CardAmount>65 kg</CardAmount>
-              <CardText>Recorded on: Jun 22, 09:45</CardText>
+              <CardAmount>
+                {currentWeight ? `${currentWeight.weight} kg` : '--'}
+              </CardAmount>
+              <CardText>
+                {currentWeight
+                  ? `Recorded on: ${getReadableDate(currentWeight.recorded_at)}`
+                  : 'No readings yet'}
+              </CardText>
             </DetailsContainer>
+            
             {/* Weight Goal */}
             <Card>
               <View
@@ -148,82 +266,33 @@ const Weight = () => {
                 />
               </View>
             </Card>
+            
             {/* Chart */}
-            <View style={styles.chartContainer}>
-              <SubTitle>Weight Trends</SubTitle>
-              <LineChart
-                data={chartData}
-                width={width - 48} // Adjust for card padding
-                height={220}
-                chartConfig={chartConfig}
-                bezier
-                style={styles.chart}
-                withInnerLines={true}
-                withOuterLines={false}
-                yAxisSuffix=""
-                yAxisInterval={1}
-                fromZero={false}
-                // color={true}
-                segments={6}
-              />
-            </View>
-            {/* Weight */}
+            {data && data.length > 0 && (
+              <View style={styles.chartContainer}>
+                <SubTitle>Weight Trends</SubTitle>
+                <LineChart
+                  data={chartData}
+                  width={width - 48}
+                  height={220}
+                  chartConfig={chartConfig}
+                  bezier
+                  style={styles.chart}
+                  withInnerLines={true}
+                  withOuterLines={false}
+                  yAxisSuffix=" kg"
+                  yAxisInterval={1}
+                  fromZero={false}
+                  segments={6}
+                />
+              </View>
+            )}
+            
+            {/* Weight History */}
             <View style={{ marginBottom: 40 }}>
               <Card>
                 <SubTitle>Weight History</SubTitle>
-                {recentWeight.map((recent, index) => {
-                  const { icon, date, time, weight } = recent;
-                  const isLastItem = index === recentWeight.length - 1;
-                  return (
-                    <View
-                      key={index}
-                      style={[
-                        styles.enhancedItemContainer,
-                        isLastItem && styles.lastItem,
-                      ]}
-                    >
-                      <View style={styles.flex}>
-                        <View
-                          style={{ flexDirection: 'row', alignItems: 'center' }}
-                        >
-                          <Text
-                            style={{
-                              borderColor: '#f2f2f2',
-                              borderWidth: 1,
-                              padding: 6,
-                              borderRadius: 5,
-                            }}
-                          >
-                            {' '}
-                            {icon}{' '}
-                          </Text>
-                          <View style={{ paddingLeft: 16 }}>
-                            <Text
-                              style={{
-                                fontWeight: 500,
-                                fontSize: 14,
-                                fontFamily: 'Lato_400Regular',
-                              }}
-                            >
-                              {weight}
-                            </Text>
-                            <Text
-                              style={{
-                                fontWeight: '400',
-                                fontSize: 12,
-                                color: '#717680',
-                                paddingTop: 2,
-                                fontFamily: 'Lato_400Regular',
-                              }}
-                            >
-                              {date} at {time}
-                            </Text>
-                          </View>
-                        </View>
-                      </View>
-                    </View>
-                  );
-                })}
+                {renderWeightReadings()}
               </Card>
             </View>
           </Wrapper>
@@ -234,7 +303,6 @@ const Weight = () => {
               title: 'Log New Weight',
               description: '',
               onClose: () => {},
-              // btnText: 'Save Reading'
             })
           }
         >
@@ -265,7 +333,7 @@ const styles = StyleSheet.create({
     marginTop: 7,
   },
   chartContainer: {
-    backgroundColor: '#fffff',
+    backgroundColor: '#ffffff',
     marginBottom: 26,
     borderRadius: 12,
     padding: 12,
@@ -290,10 +358,9 @@ const styles = StyleSheet.create({
   chart: {
     marginVertical: 8,
     borderRadius: 8,
-    // backgroundColor: 'red'
   },
   lastItem: {
-    borderBottomWidth: 0, // Remove border from last item
+    borderBottomWidth: 0,
   },
   enhancedItemContainer: {
     paddingTop: 5,
@@ -305,12 +372,38 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 18,
-    // backgroundColor: 'red'
   },
   text: {
-    fontWeight: 400,
+    fontWeight: '400',
     fontSize: 12,
     marginBottom: 4,
+    fontFamily: 'Lato_400Regular',
+  },
+  stateContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 40,
+    paddingHorizontal: 20,
+  },
+  stateText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#414651',
+    marginTop: 12,
+    fontFamily: 'Lato_400Regular',
+  },
+  stateSubText: {
+    fontSize: 14,
+    color: '#717680',
+    marginTop: 6,
+    textAlign: 'center',
+    fontFamily: 'Lato_400Regular',
+  },
+  errorMessage: {
+    fontSize: 12,
+    color: '#B42318',
+    marginTop: 8,
+    textAlign: 'center',
     fontFamily: 'Lato_400Regular',
   },
 });

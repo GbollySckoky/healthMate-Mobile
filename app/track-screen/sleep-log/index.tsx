@@ -21,8 +21,6 @@ import SleepModal from './_components/SleepModal';
 import { useModal } from '@/context/ModalContext';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
 
-
-
 const screenWidth = Dimensions.get('window').width;
 
 const data = {
@@ -66,9 +64,11 @@ export default function MyBarChart() {
     <SafeArea>
       <ScreenLayout>
         <NavHeader
-          title="Blood Pressure Tracker"
+          title="Track Your Sleep"
           _goBack={() => router.back()}
-          backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+          backIcon={
+            <Entypo name="chevron-small-left" size={24} color="black" />
+          }
           text="Track your readings to monitor your heart health"
         />
         <ScreenOverFlowLayout>

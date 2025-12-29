@@ -58,7 +58,6 @@ const WeightModal = () => {
         type: 'error',
         text1: error.response.data,
       });
-      closeModal();
     },
   });
   const handleSubmit = async () => {
@@ -71,7 +70,9 @@ const WeightModal = () => {
     console.log('OMO!!', credentials);
     await createWeightMutation.mutate(credentials);
   };
+
   const disableBtn = !inputValue.weight || !inputValue.date;
+
   return (
     <View>
       <DecimalInput
