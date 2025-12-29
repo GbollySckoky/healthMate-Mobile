@@ -59,6 +59,18 @@ export const patientService = {
   createMedication: async (payload: CreateMedication) => {
     return await axiosService().post(PATIENTS_ENDPOINTS.CREATE_MEDICATION, payload)
   },
+  getMood: async () => {
+    const response = await axiosService().get(PATIENTS_ENDPOINTS.GET_MOOD)
+    return await response.data
+  },
+  getWeight: async () => {
+    const response = await axiosService().get(PATIENTS_ENDPOINTS.GET_WEIGHT)
+    return await response.data
+  },
+  getSleep: async () => {
+    const response = await axiosService().get(PATIENTS_ENDPOINTS.GET_SLEEP)
+    return await response.data
+  },
   getUser: async () => {
     const response = await axiosService().get(PATIENTS_ENDPOINTS.USER)
     return await response.data

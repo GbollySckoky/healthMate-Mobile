@@ -1,33 +1,41 @@
 import React, { useState } from 'react';
 import CustomCalendar from '@/components/calendar/CustomCalendar';
-import { Pressable, Text, View, StyleSheet } from 'react-native';
+import { Pressable, Text, View, StyleSheet, Keyboard } from 'react-native';
 import { sleepExperienceData, sleepData } from '@/lib/data';
 import DateInput from '@/components/Input/DateInput';
 import { SubmitButton } from '@/components/typography/Typography';
+import Toast from 'react-native-toast-message';
+import { useMutation } from '@tanstack/react-query';
+import { patientService } from '@/service/patientService';
+import { CreateSleep } from '@/lib/interface/create-sleep-interface';
+import { useModal } from '@/context/ModalContext';
+import NumberInput from '@/components/Input/NumberInput';
 
-type SleepQuality = {
-  selectedMood: string;
-  selectedEmoji: boolean;
-};
+// type SleepQuality = {
+//   selectedMood: string;
+//   selectedEmoji: boolean;
+// };
 
 type SleepInputType = {
   date?: string;
-  sleep?: SleepQuality;
+  sleep?: string;
+  hours?: string;
 };
 
 const SleepModal = () => {
-  const [inputValue, setInputValue] = useState<SleepInputType>({
+  const [inputValue, setInputValue] = useState({
     date: new Date().toISOString().split('T')[0],
+    sleep: '',
+    hours: '',
   });
   const [selectDatePicker, setSelectDatePicker] = useState(false);
   const [selectEmojiValue, setSelectEmojiValue] = useState('');
+  const { closeModal } = useModal();
+  console.log(inputValue);
 
-  const { date } = sleepData;
+  const { date, sleep } = sleepData;
 
-  const handleChange = (
-    key: keyof SleepInputType,
-    value: string | SleepQuality
-  ) => {
+  const handleChange = (key: string, value: string) => {
     setInputValue((prev) => ({
       ...prev,
       [key]: value,
@@ -45,31 +53,51 @@ const SleepModal = () => {
     setSelectDatePicker(false);
   };
 
-  const handleSelectEmojiValue = (
-    key: keyof SleepInputType,
-    emoji: string,
-    value: string
-  ) => {
+  const handleSelectEmojiValue = (value: string) => {
     setSelectEmojiValue(value);
-    const sleepQuality: SleepQuality = {
-      selectedMood: value,
-      selectedEmoji: Boolean(emoji), // converts a string to a boolean if the string is empty is false
-    };
     setInputValue((prev) => ({
       ...prev,
-      [key]: sleepQuality,
+      sleep: value,
     }));
   };
 
-  const handleClick = () => {
-    // Add your submit logic here
-    console.log('Submitting sleep data:', inputValue);
-  };
 
-  console.log(inputValue);
+  const createSleepMutation = useMutation({
+    mutationFn: (payload: CreateSleep) => patientService.createSleep(payload),
+    onSuccess: (response) => {
+      Toast.show({
+        type: 'success',
+        text1: response.data.success,
+      });
+      closeModal();
+    },
+    onError: (error: any) => {
+      Toast.show({
+        type: 'error',
+        text1: error.response.data,
+      });
+    },
+  });
+
+  const handleSubmit = async () => {
+    Keyboard.dismiss();
+
+    const credentials = {
+      hours_slept: Number(inputValue.hours),
+      sleep_date: inputValue.date,
+      quanlity: inputValue.sleep
+    };
+    
+    await createSleepMutation.mutate(credentials);
+  };
 
   return (
     <View>
+      <NumberInput
+        {...sleep}
+        value={inputValue.hours}
+        onChangeText={(value) => handleChange('hours', value)}
+      />
       <DateInput
         {...date}
         value={
@@ -103,7 +131,7 @@ const SleepModal = () => {
                   styles.gridItem,
                   selectEmojiValue === value && styles.selectedItem,
                 ]}
-                onPress={() => handleSelectEmojiValue('sleep', emoji, value)}
+                onPress={() => handleSelectEmojiValue(value)}
               >
                 <Text style={styles.text}>{emoji}</Text>
                 <Text style={{ color: '#717680' }}>{value}</Text>
@@ -112,7 +140,22 @@ const SleepModal = () => {
           })}
         </View>
       </View>
-      <SubmitButton _fn={handleClick}>Save Sleep Log</SubmitButton>
+        <Pressable
+        style={[
+          styles.button,
+          {
+            backgroundColor: createSleepMutation.isPending
+              ? '#ec4899'
+              : '#DD2590',
+          },
+        ]}
+        onPress={handleSubmit}
+        disabled={createSleepMutation.isPending}
+      >
+        <Text style={styles.buttonText}>
+          {createSleepMutation.isPending ? 'Saving...' : 'Save Sleep Log'}
+        </Text>
+      </Pressable>
     </View>
   );
 };
@@ -150,5 +193,18 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 38,
     paddingBottom: 6,
+  },
+  button: {
+    backgroundColor: '#DD2590',
+    paddingVertical: 12,
+    borderRadius: 10,
+    marginTop: 25,
+    marginBottom: 30,
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
+    fontWeight: '600',
+    fontSize: 16,
   },
 });
