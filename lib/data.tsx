@@ -11,49 +11,6 @@ import Fontisto from '@expo/vector-icons/Fontisto';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-export const healthOverview = [
-  {
-    title: 'Blood Pressure',
-    value: '120/80 mmHg',
-    text: 'Blood Pressure',
-    id: 1,
-    icon: <AntDesign name="heart" size={24} color="#DF0000" />,
-    url: ROUTES.bloodPressure,
-  },
-  {
-    title: 'Mood',
-    value: 'Happy',
-    text: 'Feeling Great',
-    id: 2,
-    icon: <Feather name="smile" size={24} color="#FFC847" />,
-    url: ROUTES.mood,
-  },
-  {
-    title: 'Sleep',
-    value: '7h 30 mins',
-    text: 'Quality: Good',
-    id: 3,
-    icon: <FontAwesome name="moon-o" size={24} color="black" />,
-    url: ROUTES.sleep,
-  },
-  {
-    title: 'Weight',
-    value: '765kg',
-    text: 'Healthy range',
-    id: 4,
-    icon: <FontAwesome name="balance-scale" size={24} color="blue" />,
-    url: ROUTES.weight,
-  },
-  {
-    title: 'Medications',
-    value: '2/3 doses',
-    text: 'Taken today',
-    id: 5,
-    icon: <MaterialCommunityIcons name="pill" size={24} color="#C11574" />,
-    url: ROUTES.medication,
-  },
-];
-
 export const allAppointmentData = [
   {
     id: 'dr-james-uche-june1',

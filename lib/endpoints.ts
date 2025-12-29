@@ -16,5 +16,6 @@ export const PATIENTS_ENDPOINTS = {
     GET_SLEEP: 'patient/records/sleep',
     GET_WEIGHT: 'patient/records/weight',
     GET_BLOOD_PRESSURE: "patient/records/blood-pressure",
-    GET_APPOINTMENTS: 'patient/appointments'
+    GET_APPOINTMENTS: 'patient/appointments',
+    GET_OVERVIEW: 'patient/overview'
 }

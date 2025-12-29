@@ -71,6 +71,10 @@ export const patientService = {
     const response = await axiosService().get(PATIENTS_ENDPOINTS.GET_SLEEP)
     return await response.data
   },
+  getOverview: async () => {
+    const response = await axiosService().get(PATIENTS_ENDPOINTS.GET_OVERVIEW)
+    return await response.data
+  },
   getUser: async () => {
     const response = await axiosService().get(PATIENTS_ENDPOINTS.USER)
     return await response.data
