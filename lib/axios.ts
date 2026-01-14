@@ -1,17 +1,13 @@
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios'
 import { STATUS } from './status';
-// import { ROUTES } from './routes';
+import { ROUTES } from './routes';
 import { storageService } from './storage';
-
-// async function getToken(key: string) {
-//   let result = await SecureStore.getItemAsync(key);
-//   return result;
-// }
+// import { navigate } from './navigationRef';
 
 const axiosService = () => {
   const instance = axios.create({
-    baseURL: 'https://healthteam.onrender.com/api/',
+    baseURL: 'https://healthteamapi.onrender.com/api/',
     headers: {
       "Content-Type": 'application/json'
     }
@@ -40,10 +36,11 @@ const axiosService = () => {
       if (error.response) {
         const status = error.response.status;
         
-        if (status === STATUS.UN_AUTHORIZED) {
+        if (status === STATUS.UN_AUTHORIZED || !storageService.isAuthenticated()) {
           // SecureStore.deleteItemAsync('my_access_token');
           storageService.clearAuthData()
-          // window.location.href = ROUTES.login
+          // navigate(ROUTES.login);
+          // windowlocation.href = ROUTES.login
         }
       }
       return Promise.reject(error);
