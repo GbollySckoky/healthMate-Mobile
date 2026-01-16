@@ -18,24 +18,36 @@ import { useMutation } from '@tanstack/react-query';
 import { patientService } from '@/service/patientService';
 import { CreateAppointmet } from '@/lib/interface/create-appointment-interface';
 import Toast from 'react-native-toast-message';
+import { TimerPickerModal } from 'react-native-timer-picker';
+import { LinearGradient } from 'expo-linear-gradient';
+import { formatTime } from '@/app/utils/formatTime';
+
 
 const date = {
   label: 'Date',
   placeholder: '10/05/1997',
 };
 
+type ShowPickerState = {
+  datePicker: boolean,
+  timePicker: boolean
+}
 const Booking = () => {
   const router = useRouter();
 
   const [inputValue, setInputValue] = useState({
     date: new Date().toISOString().split('T')[0], // YYYY-MM-DD
-    time: '', // ✅ STRING
+    // time: '', /// ✅ STRING
     consultationType: '',
     healthConcern: '',
     about: '',
   });
-
-  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showPicker, setShowPicker] = useState<ShowPickerState>({
+    datePicker: false,
+    timePicker: false,
+  });
+  const [time, setTime] = useState<string>('');
+ 
 
   const handleChange = (key: string, value: string) => {
     setInputValue((prev) => ({
@@ -44,9 +56,16 @@ const Booking = () => {
     }));
   };
 
+  const handleClick = (type: keyof ShowPickerState) => {
+    setShowPicker((prev) => ({
+      ...prev,
+      [type]: !prev[type]
+    }))
+  }
+
   const handleDateSelect = (day: any) => {
     handleChange('date', day.dateString);
-    setShowDatePicker(false);
+    handleClick("datePicker");
   };
 
   // ISO TIME STRINGS
@@ -89,7 +108,7 @@ const Booking = () => {
     const payload: CreateAppointmet = {
       doctor: 'doctor@gmail.com',
       appointment_date: inputValue.date,
-      appointment_time: inputValue.time,
+      appointment_time: time,
       consultation_type: inputValue.consultationType,
       health_concerns: inputValue.healthConcern,
       about: inputValue.about,
@@ -109,17 +128,17 @@ const Booking = () => {
               ? new Date(inputValue.date).toLocaleDateString()
               : ''
           }
-          _fn={() => setShowDatePicker(true)}
+          _fn={() => handleClick("datePicker")}
         />
         <CustomCalendar
-          isOpen={showDatePicker}
+          isOpen={showPicker.datePicker}
           onChangeText={handleDateSelect}
-          onClose={() => setShowDatePicker(false)}
+          onClose={() => handleClick("datePicker")}
         />
       </View>
 
       <SubTitle>Select Time</SubTitle>
-      <View style={styles.timeContainer}>
+      {/* <View style={styles.timeContainer}>
         {timeSlots.map((slot) => (
           <Pressable
             key={slot.value}
@@ -132,7 +151,60 @@ const Booking = () => {
             <Text style={styles.timeText}>{slot.label}</Text>
           </Pressable>
         ))}
-      </View>
+      </View> */}
+
+        {/* Time */}
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={() => handleClick('timePicker')}
+        >
+        <View style={{ alignItems: 'center' }}>
+          {time !== null ? (
+            <Text style={{ color: '#000000', fontSize: 20, marginTop: 10 }}>
+              {time}
+            </Text>
+          ) : null}
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => handleClick('timePicker')}
+          >
+            <View style={{ marginTop: 10 }}>
+              <Text
+                style={{
+                  paddingVertical: 10,
+                  paddingHorizontal: 18,
+                  borderWidth: 1,
+                  borderRadius: 10,
+                  fontSize: 16,
+                  overflow: 'hidden',
+                  borderColor: '#C2C2C2',
+                  color: '#C2C2C2',
+                }}
+              >
+                {'Set your Time 🔔'}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+        </TouchableOpacity>
+        <TimerPickerModal
+          closeOnOverlayPress
+          LinearGradient={LinearGradient}
+          modalProps={{
+            overlayOpacity: 0.2,
+          }}
+          modalTitle="Time"
+          onCancel={() => handleClick('timePicker')}
+          onConfirm={(pickedDuration) => {
+            setTime(formatTime(pickedDuration));
+            handleClick('timePicker');
+          }}
+          setIsVisible={() => setShowPicker(showPicker)}
+          styles={{
+            theme: 'dark',
+          }}
+          visible={showPicker.timePicker}
+        />
 
       <SubTitle>Consultation Types</SubTitle>
       <View style={{ gap: 12, marginVertical: 15 }}>

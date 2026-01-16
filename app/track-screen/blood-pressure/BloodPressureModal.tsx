@@ -6,6 +6,7 @@ import {
   Keyboard,
   Text,
   Pressable,
+  TouchableOpacity,
 } from 'react-native';
 import { colors } from '@/lib/colors';
 import { bloodPressureData } from '@/lib/data';
@@ -17,45 +18,29 @@ import { BloodPressure } from '@/lib/interface/create-blood-pressure.interface';
 import { patientService } from '@/service/patientService';
 import Toast from 'react-native-toast-message';
 import { useModal } from '@/context/ModalContext';
+import { TimerPickerModal } from 'react-native-timer-picker';
+import { LinearGradient } from 'expo-linear-gradient';
+import { formatTime } from '@/app/utils/formatTime';
 
 type BloodPressureInputType = Record<string, string>;
 
-const timeSlots = [
-  { label: '12:00 AM', value: '00:00:00' },
-  { label: '1:00 AM', value: '01:00:00' },
-  { label: '2:00 AM', value: '02:00:00' },
-  { label: '3:00 AM', value: '03:00:00' },
-  { label: '4:00 AM', value: '04:00:00' },
-  { label: '5:00 AM', value: '05:00:00' },
-  { label: '6:00 AM', value: '06:00:00' },
-  { label: '7:00 AM', value: '07:00:00' },
-  { label: '8:00 AM', value: '08:00:00' },
-  { label: '9:00 AM', value: '09:00:00' },
-  { label: '10:00 AM', value: '10:00:00' },
-  { label: '11:00 AM', value: '11:00:00' },
-  { label: '12:00 PM', value: '12:00:00' },
-  { label: '1:00 PM', value: '13:00:00' },
-  { label: '2:00 PM', value: '14:00:00' },
-  { label: '3:00 PM', value: '15:00:00' },
-  { label: '4:00 PM', value: '16:00:00' },
-  { label: '5:00 PM', value: '17:00:00' },
-  { label: '6:00 PM', value: '18:00:00' },
-  { label: '7:00 PM', value: '19:00:00' },
-  { label: '8:00 PM', value: '20:00:00' },
-  { label: '9:00 PM', value: '21:00:00' },
-  { label: '10:00 PM', value: '22:00:00' },
-  { label: '11:00 PM', value: '23:00:00' },
-];
+type ShowPickerState = {
+  datePicker: boolean;
+  timePicker: boolean;
+};
 
 const BloodPressureModal = () => {
   const [inputValue, setInputValue] = useState<BloodPressureInputType>({
     date: new Date().toISOString().split('T')[0], // YYYY-MM-DD
-    time: '00:00:00.000Z', // Default to midnight
     topNumber: '',
     lastNumber: '',
   });
-  console.log('value', inputValue);
-  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [time, setTime] = useState<string>('');
+ 
+  const [showPicker, setShowPicker] = useState<ShowPickerState>({
+    datePicker: false,
+    timePicker: false,
+  });
   const { closeModal } = useModal();
   const handleChange = (key: string, value: string) => {
     setInputValue((prev) => ({
@@ -64,12 +49,17 @@ const BloodPressureModal = () => {
     }));
   };
 
-  const handleDateSelect = (day: any) => {
-    handleChange('date', day.dateString);
-    setShowDatePicker(false);
+  const handleClick = (type: keyof ShowPickerState) => {
+    setShowPicker((prev) => ({
+      ...prev,
+      [type]: !prev[type],
+    }));
   };
 
-  const handleCloseCalendar = () => setShowDatePicker(false);
+  const handleDateSelect = (day: any) => {
+    handleChange('date', day.dateString);
+    handleClick('datePicker');
+  };
 
   const createBloodPressure = useMutation({
     mutationFn: (payload: BloodPressure) =>
@@ -83,10 +73,10 @@ const BloodPressureModal = () => {
       closeModal();
     },
     onError: (error: any) => {
-      // console.log('Error:', error.response.data.error);
+      console.log('Error:', error.response.data);
       Toast.show({
         type: 'error',
-        text1: error.response.data.error,
+        text1: error.response.data.error[0],
       });
     },
   });
@@ -97,7 +87,7 @@ const BloodPressureModal = () => {
       systolic: Number(inputValue.topNumber),
       diastolic: Number(inputValue.lastNumber),
       date_recorded: inputValue.date,
-      time_recorded: inputValue.time,
+      time_recorded: time,
     };
     createBloodPressure.mutate(payload);
   };
@@ -124,41 +114,67 @@ const BloodPressureModal = () => {
         <DateInput
           {...bloodPressureData.date}
           value={new Date(inputValue.date).toLocaleDateString()}
-          _fn={() => setShowDatePicker(true)}
+          _fn={() => handleClick('datePicker')}
         />
-
-        {/* Time Input (shows selected slot) */}
-        <DateInput
-          {...bloodPressureData.time}
-          value={
-            timeSlots.find((slot) => slot.value === inputValue.time)?.value ||
-            ''
-          }
-          _fn={() => {}}
-        />
-
-        {/* <SubTitle>Select Time</SubTitle> */}
-        <View style={styles.timeContainer}>
-          {timeSlots.map((slot) => {
-            const isActive = inputValue.time === slot.value;
-            return (
-              <Pressable
-                key={slot.value}
-                onPress={() => handleChange('time', slot.value)}
-                style={[styles.timeBox, isActive && styles.activeTime]}
-              >
-                <Text style={styles.timeText}>{slot.label}</Text>
-              </Pressable>
-            );
-          })}
-        </View>
 
         <CustomCalendar
-          isOpen={showDatePicker}
+          isOpen={showPicker.datePicker}
           onChangeText={handleDateSelect}
-          onClose={handleCloseCalendar}
+          onClose={() => handleClick('datePicker')}
         />
-
+        {/* Time */}
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={() => handleClick('timePicker')}
+        >
+          <View style={{ alignItems: 'center' }}>
+            {time !== null ? (
+              <Text style={{ color: '#000000', fontSize: 20, marginTop: 10 }}>
+                {time}
+              </Text>
+            ) : null}
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => handleClick('timePicker')}
+            >
+              <View style={{ marginTop: 10 }}>
+                <Text
+                  style={{
+                    paddingVertical: 10,
+                    paddingHorizontal: 18,
+                    borderWidth: 1,
+                    borderRadius: 10,
+                    fontSize: 16,
+                    overflow: 'hidden',
+                    borderColor: '#C2C2C2',
+                    color: '#C2C2C2',
+                  }}
+                >
+                  {'Set your Time 🔔'}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+        <TimerPickerModal
+          closeOnOverlayPress
+          LinearGradient={LinearGradient}
+          modalProps={{
+            overlayOpacity: 0.2,
+          }}
+          modalTitle="Time"
+          onCancel={() => handleClick('timePicker')}
+          onConfirm={(pickedDuration) => {
+            setTime(formatTime(pickedDuration));
+            handleClick('timePicker');
+          }}
+          setIsVisible={() => setShowPicker(showPicker)}
+          styles={{
+            theme: 'dark',
+          }}
+          visible={showPicker.timePicker}
+        />
+        {/* Button */}
         <Pressable
           style={[
             styles.button,

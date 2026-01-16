@@ -30,7 +30,7 @@ const Activities = () => {
     {
       title: 'Blood Pressure',
       value: `${data?.latest_blood_pressure ? `${data?.latest_blood_pressure.systolic}/${data?.latest_blood_pressure.diastolic}mmHg` : 'N/A'} `,
-      text: `${getReadableDate(data?.latest_blood_pressure.date_recorded) || 'N/A'}`,
+      text: `${getReadableDate(data?.latest_blood_pressure?.date_recorded) || 'N/A'}`,
       id: 1,
       icon: <AntDesign name="heart" size={24} color="#DF0000" />,
       url: ROUTES.bloodPressure,
@@ -38,7 +38,7 @@ const Activities = () => {
     {
       title: 'Mood',
       value: `${data?.latest_mood ? data?.latest_mood.mood : 'Happy'} `,
-      text: `${getReadableDate(data?.latest_mood.recorded_at) || 'N/A'}`,
+      text: `${getReadableDate(data?.latest_mood?.recorded_at) || 'N/A'}`,
       id: 2,
       icon: <Feather name="smile" size={24} color="#FFC847" />,
       url: ROUTES.mood,
@@ -46,7 +46,7 @@ const Activities = () => {
     {
       title: 'Sleep',
       value: `${data?.latest_sleep ? data?.latest_sleep.quanlity : 'N/A'}`,
-      text: `${getReadableDate(data?.latest_sleep.sleep_date) || 'N/A'}`,
+      text: `${getReadableDate(data?.latest_sleep?.sleep_date) || 'N/A'}`,
       id: 3,
       icon: <FontAwesome name="moon-o" size={24} color="black" />,
       url: ROUTES.sleep,
@@ -54,7 +54,7 @@ const Activities = () => {
     {
       title: 'Weight',
       value: `${data?.latest_weight ? data?.latest_weight.weight : 'N/A'}`,
-      text: `${getReadableDate(data?.latest_weight.recorded_at)}`,
+      text: `${getReadableDate(data?.latest_weight?.recorded_at)}`,
       id: 4,
       icon: <FontAwesome name="balance-scale" size={24} color="blue" />,
       url: ROUTES.weight,
