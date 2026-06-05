@@ -42,7 +42,7 @@ const MoodModal = () => {
       },
     }));
   };
-
+  console.log('inputValue', inputValue);
   return (
     <View>
       <Text style={styles.title}>Select your Mood</Text>

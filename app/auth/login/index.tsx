@@ -93,11 +93,12 @@ const LoginPage = () => {
 
   const handleLogin = () => {
     Keyboard.dismiss();
-    const credentials: login = {
-      email: inputValue[inputKey] || '',
-      password: inputValue.password || '',
-    };
-    loginMutation.mutate(credentials);
+    // const credentials: login = {
+    //   email: inputValue[inputKey] || '',
+    //   password: inputValue.password || '',
+    // };
+    // loginMutation.mutate(credentials);
+       router.push(ROUTES.home);
   };
 
   return (

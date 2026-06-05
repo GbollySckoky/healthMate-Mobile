@@ -11,7 +11,7 @@ import { storageService } from './storage';
 
 const axiosService = () => {
   const instance = axios.create({
-    baseURL: 'https://healthteam.onrender.com/api/',
+    baseURL: 'https://healthcare-backend-5y5b.onrender.com/api/v1/',
     headers: {
       "Content-Type": 'application/json'
     }

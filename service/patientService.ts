@@ -8,21 +8,21 @@ import { CreateHealth } from "@/lib/interface/create-health-interface";
 
 export const patientService = {
   login: async (payload: login) => {
-    return await axiosService().post(`patient/login/`, payload); 
+    return await axiosService().post(PATIENTS_ENDPOINTS.LOGIN, payload); 
     // this returns the data because interceptor returns response.data
   },
   signup: async (payload: Signup) => {
-    return await axiosService().post(`patient/signup/`, payload); 
+    return await axiosService().post(PATIENTS_ENDPOINTS.SIGNUP, payload); 
   },
   forgotPassword: async (payload: forgotPassword) => {
-    return await axiosService().post(`auth/forgot-password/`, payload); 
+    return await axiosService().post(PATIENTS_ENDPOINTS.FORGOT_PASSWORD, payload); 
   },
   verifyEmail: async (email: string | undefined, payload: verifyEmail ) => {
-    return await axiosService().post(`patient/verify/${email}`, payload); 
+    return await axiosService().post(PATIENTS_ENDPOINTS.VERIFY_EMAIL.replace('{email}', email as string), payload); 
   },
-  createHealth: async (payload: CreateHealth) => {
-    return await axiosService().post(`patient/health/create`, payload); 
-  },
+  // createHealth: async (payload: CreateHealth) => {
+  //   return await axiosService().post(PATIENTS_ENDPOINTS.CREATE_HEALTH, payload); 
+  // },
   getUser: async () => {
     const response = await axiosService().get(PATIENTS_ENDPOINTS.USER)
     return await response.data
