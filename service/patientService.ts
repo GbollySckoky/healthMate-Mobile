@@ -18,7 +18,7 @@ export const patientService = {
     return await axiosService().post(PATIENTS_ENDPOINTS.FORGOT_PASSWORD, payload); 
   },
   verifyEmail: async (email: string | undefined, payload: verifyEmail ) => {
-    return await axiosService().post(PATIENTS_ENDPOINTS.VERIFY_EMAIL.replace('{email}', email as string), payload); 
+    return await axiosService().post(`${PATIENTS_ENDPOINTS.VERIFY_EMAIL}${email}`, payload); 
   },
   // createHealth: async (payload: CreateHealth) => {
   //   return await axiosService().post(PATIENTS_ENDPOINTS.CREATE_HEALTH, payload); 

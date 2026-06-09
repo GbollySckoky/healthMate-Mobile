@@ -3,5 +3,12 @@ export const PATIENTS_ENDPOINTS = {
     SIGNUP: 'auth/user/register/',
     USER: 'users/',
     FORGOT_PASSWORD: 'auth/forgot-password/',
-    VERIFY_EMAIL: 'auth/verify-email/'
+    VERIFY_EMAIL: 'auth/user/verify-code/',
+    MOOD: 'track/mood',
+    BLOOD_PRESSURE: 'track/blood-pressure',
+    SLEEP: 'track/sleep',
+    WEIGHT: 'track/weight',
+    MEDICATION: 'track/medication',
+    BOOK_APPOINTMENT: "appointment/consultation",
+    GET_APPOINTMENT: 'appointment/appointments'
 }

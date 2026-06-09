@@ -105,7 +105,7 @@ const SignUpPage = () => {
       });
     },
     onError: (error: any) => {
-      console.log(error.response); // look into the error response
+      console.log(error); // look into the error response
       const errorMessage = error.response.data; //Look into the error response
       // || 'An error occurred during sign up. Please try again.';
 

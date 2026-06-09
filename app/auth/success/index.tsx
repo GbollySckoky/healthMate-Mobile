@@ -41,7 +41,7 @@ const Success = () => {
               fontSize: 24,
             }}
           >
-            lets set you up in a few steps
+          Set Up Completed. Go to home and start Tracking!
           </Text>
         </View>
 
@@ -55,7 +55,7 @@ const Success = () => {
             justifyContent: 'center',
             alignItems: 'center',
           }}
-          onPress={() => router.push(ROUTES.about)}
+          onPress={() => router.push(ROUTES.home)}
           >
           <Text
             style={{
@@ -66,7 +66,7 @@ const Success = () => {
               paddingVertical: 10,
             }}
           >
-            Next
+           Go To Home
           </Text>
         </TouchableOpacity>
         {/* {currentStep === CountStep.ONE && <Form />} */}
