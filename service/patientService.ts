@@ -5,6 +5,8 @@ import { verifyEmail } from "@/types/verifyEmail";
 import { PATIENTS_ENDPOINTS } from "@/lib/endpoints";
 import { Signup } from "@/lib/interface/signup-interface";
 import { CreateHealth } from "@/lib/interface/create-health-interface";
+import { BloodPressure } from "@/lib/interface/blood-pressure";
+import { Medication } from "@/lib/interface/medication";
 
 export const patientService = {
   login: async (payload: login) => {
@@ -26,5 +28,11 @@ export const patientService = {
   getUser: async () => {
     const response = await axiosService().get(PATIENTS_ENDPOINTS.USER)
     return await response.data
+  },
+  createBloodPressue: async (payload: BloodPressure) => {
+    return await axiosService().post(PATIENTS_ENDPOINTS.BLOOD_PRESSURE, payload)
+  },
+  createMedication: async (payload: Medication) => {
+    return await axiosService().post(PATIENTS_ENDPOINTS.MEDICATION, payload)
   }
 }

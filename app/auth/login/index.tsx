@@ -72,8 +72,8 @@ const LoginPage = () => {
   const loginMutation = useMutation({
     mutationFn: (payload: login) => patientService.login(payload),
     onSuccess: (response: any) => {
-      console.log(response.data);
-      storageService.setAuthToken(response.data.access);
+      console.log("access_token", response.data.access_token);
+      storageService.setAuthToken(response.data.access_token);
       Toast.show({
         type: 'success',
         text1: 'Logged in successfully',

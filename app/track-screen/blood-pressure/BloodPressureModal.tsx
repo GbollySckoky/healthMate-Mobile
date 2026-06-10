@@ -6,6 +6,10 @@ import { useState } from 'react';
 import DateInput from '@/components/Input/DateInput';
 import CustomCalendar from '@/components/calendar/CustomCalendar';
 import { SubmitButton } from '@/components/typography/Typography';
+import { useMutation } from '@tanstack/react-query';
+import { patientService } from '@/service/patientService';
+import { BloodPressure } from '@/lib/interface/blood-pressure';
+import { AxiosError } from 'axios';
 
 type BloodPressureInputType = Record<string, string>;
 
@@ -17,8 +21,8 @@ const BloodPressureModal = () => {
       hour: '2-digit',
       minute: '2-digit',
     }),
-    topNumber: '',
-    lastNumber: '',
+    systolic: '',
+    diastolic: '',
   });
   const [showDatePicker, setShowDatePicker] = useState(false);
   
@@ -45,7 +49,28 @@ const BloodPressureModal = () => {
   const handleCloseCalendar = () => {
     setShowDatePicker(false);
   };
+  const mutation = useMutation({
+    mutationFn: (payload: BloodPressure) => patientService.createBloodPressue(payload),
+    onSuccess: (response) => {
+      console.log(response)
+    },
+    onError:(error: AxiosError) => {
+      console.log("Error!!",error)
+       console.log("STATUS:", error.response?.status);
+  console.log("ERROR DATA:", error.response?.data);
+    }
+  })
 
+  const handleCreatePressure = async () => {
+    const data ={
+      systolic: inputValue.systolic.trim(),
+      diastolic: inputValue.diastolic.trim(),
+      recordedAt: inputValue.date,
+      // time: inputValue.time,
+    }
+    console.log("PAYLOAD:", data);
+    await mutation.mutateAsync(data)
+  }
   return (
       <ScrollView 
         contentContainerStyle={styles.container}
@@ -55,13 +80,13 @@ const BloodPressureModal = () => {
         <View>
           <NumberInput
             {...topNumber}
-            value={inputValue.topNumber || ''} // Safe fallback
-            onChangeText={(value) => handleChange('topNumber', value)}
+            value={inputValue.systolic || ''} // Safe fallback
+            onChangeText={(value) => handleChange('systolic', value)}
           />
           <NumberInput
             {...lastNumber}
-            value={inputValue.lastNumber || ''} // Safe fallback
-            onChangeText={(value) => handleChange('lastNumber', value)}
+            value={inputValue.diastolic || ''} // Safe fallback
+            onChangeText={(value) => handleChange('diastolic', value)}
           />
 
           {/* Date Input - Text field that opens calendar when pressed */}
@@ -73,23 +98,13 @@ const BloodPressureModal = () => {
             _fn={() => setShowDatePicker(true)} // Open calendar directly
           />
 
-          {/* Time Input - Text field for time */}
-          <DateInput
-            {...time}
-            value={inputValue.time}
-            _fn={() => {
-              // You could add separate time picker here
-              setShowDatePicker(true); // For now, opens date picker
-            }}
-          />
-
           <CustomCalendar
             isOpen={showDatePicker}
             onChangeText={handleDateSelect}
             onClose={handleCloseCalendar}
           />
 
-          <SubmitButton _fn={handleClick}>Save Reading</SubmitButton>
+          <SubmitButton _fn={handleCreatePressure}>{mutation.isPending ? "Saving..." : 'Save Reading'}</SubmitButton>
         </View>
       </ScrollView>
   );
