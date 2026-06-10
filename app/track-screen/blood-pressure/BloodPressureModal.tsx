@@ -16,11 +16,11 @@ type BloodPressureInputType = Record<string, string>;
 const BloodPressureModal = () => {
   const { date, time, topNumber, lastNumber } = bloodPressureData;
   const [inputValue, setInputValue] = useState<BloodPressureInputType>({
-    date: new Date().toISOString().split('T')[0], // Initialize with today's date in YYYY-MM-DD format
-    time: new Date().toLocaleTimeString([], {
-      hour: '2-digit',
-      minute: '2-digit',
-    }),
+    date: new Date().toISOString(), // Initialize with today's date in YYYY-MM-DD format
+    // time: new Date().toLocaleTimeString([], {
+    //   hour: '2-digit',
+    //   minute: '2-digit',
+    // }),
     systolic: '',
     diastolic: '',
   });

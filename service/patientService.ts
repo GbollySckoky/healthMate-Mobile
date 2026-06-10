@@ -7,6 +7,9 @@ import { Signup } from "@/lib/interface/signup-interface";
 import { CreateHealth } from "@/lib/interface/create-health-interface";
 import { BloodPressure } from "@/lib/interface/blood-pressure";
 import { Medication } from "@/lib/interface/medication";
+import { Weight } from "@/lib/interface/weight";
+import { Sleep } from "@/lib/interface/sleep";
+import { Mood } from "@/lib/interface/mood";
 
 export const patientService = {
   login: async (payload: login) => {
@@ -34,5 +37,14 @@ export const patientService = {
   },
   createMedication: async (payload: Medication) => {
     return await axiosService().post(PATIENTS_ENDPOINTS.MEDICATION, payload)
-  }
+  },
+  createWeight: async (payload: Weight) => {
+    return await axiosService().post(PATIENTS_ENDPOINTS.WEIGHT, payload)
+  },
+  createMood: async (payload: Mood) => {
+    return await axiosService().post(PATIENTS_ENDPOINTS.MOOD, payload)
+  },
+  createSleep: async (payload: Sleep) => {
+    return await axiosService().post(PATIENTS_ENDPOINTS.SLEEP, payload)
+  },
 }

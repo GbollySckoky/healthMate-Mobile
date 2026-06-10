@@ -5,13 +5,17 @@ import { weightData } from '@/lib/data';
 import CustomCalendar from '@/components/calendar/CustomCalendar';
 import DecimalInput from '@/components/Input/DecimalInput';
 import { SubmitButton } from '@/components/typography/Typography';
+import { useMutation } from '@tanstack/react-query';
+import { patientService } from '@/service/patientService';
+import { AxiosError } from 'axios';
+import { Weight } from '@/lib/interface/weight';
 
 type WeightInputType = Record<string, string>;
 const WeightModal = () => {
   const { date, weight } = weightData;
   const [inputValue, setInputValue] = useState<WeightInputType>({
     weight: '',
-    date: new Date().toISOString().split('T')[0], // Initialize with today's date in YYYY-MM-DD format split date from time
+    date: new Date().toISOString(), // Initialize with today's date in YYYY-MM-DD format split date from time
   });
   console.log('WEIGHT', inputValue);
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -35,7 +39,26 @@ const WeightModal = () => {
     setShowDatePicker(false);
   };
   console.log(handleDateSelect);
-  const handleClick = () => {};
+  const mutation = useMutation({
+        mutationFn: (payload: Weight) => patientService.createWeight(payload),
+        onSuccess: (response) => {
+          console.log(response)
+        },
+        onError:(error: AxiosError) => {
+          console.log("Error!!",error)
+           console.log("STATUS:", error.response?.status);
+      console.log("ERROR DATA:", error.response?.data);
+        }
+      })
+    
+      const handleCreateWeight = async () => {
+        const data ={
+          weight: inputValue.weight.trim(),
+          recordedAt: inputValue.date,
+        }
+        console.log("PAYLOAD:", data);
+        await mutation.mutateAsync(data)
+      }
   return (
     <View>
       <DecimalInput
@@ -59,7 +82,7 @@ const WeightModal = () => {
         //     [inputValue.date]: {selected: true, disableTouchEvent: false, selectedColor: '#C11574'}
         // }}
       />
-      <SubmitButton _fn={handleClick}>Save Weight Log</SubmitButton>
+      <SubmitButton _fn={handleCreateWeight}>{mutation.isPending ? "Saving..." : "Save Weight Log"}</SubmitButton>
     </View>
   );
 };

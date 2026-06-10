@@ -3,18 +3,28 @@ import { MoodData } from '@/lib/data';
 import { View, StyleSheet, Text, Pressable } from 'react-native';
 import TextAreaInput from '@/components/Input/TextAreaInput';
 import { SubmitButton } from '@/components/typography/Typography';
+import { useMutation } from '@tanstack/react-query';
+import { Mood } from '@/lib/interface/mood';
+import { patientService } from '@/service/patientService';
+import { AxiosError } from 'axios';
+import CustomCalendar from '@/components/calendar/CustomCalendar';
+import DateInput from '@/components/Input/DateInput';
 
-type MoodInputType = {
-  description?: string;
-  key?: Record<string, string | boolean>;
-};
-
-const handleClick = () => {};
-
+const date = {
+  label: 'Date',
+  placeholder: '10/05/1997',
+}
 const MoodModal = () => {
-  const [inputValue, setInputValue] = useState<MoodInputType>({});
+  const [inputValue, setInputValue] = useState({
+    description: "",
+    mood:{
+      selectedMood: "",
+      selectedEmoji: false
+    },
+    date: new Date().toISOString(),
+  });
   const [selectEmoji, setSelectEmoji] = useState('');
-
+  const [showDatePicker, setShowDatePicker] = useState(false);
   console.log('12345', inputValue);
 
   const data = {
@@ -42,6 +52,39 @@ const MoodModal = () => {
       },
     }));
   };
+
+  const handleDateSelect = (day: any) => {
+    const selectedDate = day.dateString;
+    handleChange('date', selectedDate);
+    // setSelectDatePicker(new Date(selectedDate))
+    setShowDatePicker(false); // Close calendar after selection
+    console.log('select', selectedDate);
+  };
+
+  const handleCloseCalendar = () => {
+    setShowDatePicker(false);
+  }
+   const mutation = useMutation({
+    mutationFn: (payload: Mood) => patientService.createMood(payload),
+    onSuccess: (response) => {
+      console.log(response)
+    },
+    onError:(error: AxiosError) => {
+      console.log("Error!!",error)
+        console.log("STATUS:", error.response?.status);
+    console.log("ERROR DATA:", error.response?.data);
+    }
+  })
+      
+  const handleCreateMood = async () => {
+    const data ={
+      notes: inputValue.description,
+      mood: inputValue.mood,
+      recordedAt: inputValue.date,
+    }
+    console.log("PAYLOAD:", data);
+    await mutation.mutateAsync(data)
+  }
   console.log('inputValue', inputValue);
   return (
     <View>
@@ -69,7 +112,23 @@ const MoodModal = () => {
         value={inputValue.description || ''}
         onChangeText={(value) => handleChange('description', value)}
       />
-      <SubmitButton _fn={handleClick}>Save Mood</SubmitButton>
+      <DateInput
+        {...date}
+        value={
+          inputValue.date ? new Date(inputValue.date).toLocaleDateString() : ''
+        } // Show formatted date safely
+        _fn={() => setShowDatePicker(true)} // Open calendar directly
+      />
+
+      <CustomCalendar
+        isOpen={showDatePicker}
+        onChangeText={handleDateSelect}
+        onClose={handleCloseCalendar}
+        //     markedDates={{
+        //     [inputValue.date]: {selected: true, disableTouchEvent: false, selectedColor: '#C11574'}
+        // }}
+      />
+      <SubmitButton _fn={handleCreateMood}>Save Mood</SubmitButton>
     </View>
   );
 };

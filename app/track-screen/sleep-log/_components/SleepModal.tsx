@@ -4,20 +4,28 @@ import { Pressable, Text, View, StyleSheet } from 'react-native';
 import { sleepExperienceData, sleepData } from '@/lib/data';
 import DateInput from '@/components/Input/DateInput';
 import { SubmitButton } from '@/components/typography/Typography';
+import { useMutation } from '@tanstack/react-query';
+import { Sleep } from '@/lib/interface/sleep';
+import { AxiosError } from 'axios';
+import { patientService } from '@/service/patientService';
 
-type SleepQuality = {
+interface SleepQuality {
   selectedMood: string;
   selectedEmoji: boolean;
 };
 
-type SleepInputType = {
+interface SleepInputType {
   date?: string;
   sleep?: SleepQuality;
 };
 
 const SleepModal = () => {
-  const [inputValue, setInputValue] = useState<SleepInputType>({
-    date: new Date().toISOString().split('T')[0],
+  const [inputValue, setInputValue] = useState({
+    date: new Date().toISOString(),
+    sleep: {
+      selectedMood: '',
+      selectedEmoji: false,
+    }
   });
   const [selectDatePicker, setSelectDatePicker] = useState(false);
   const [selectEmojiValue, setSelectEmojiValue] = useState('');
@@ -61,12 +69,26 @@ const SleepModal = () => {
     }));
   };
 
-  const handleClick = () => {
-    // Add your submit logic here
-    console.log('Submitting sleep data:', inputValue);
-  };
-
-  console.log(inputValue);
+    const mutation = useMutation({
+        mutationFn: (payload: Sleep) => patientService.createSleep(payload),
+        onSuccess: (response) => {
+          console.log(response)
+        },
+        onError:(error: AxiosError) => {
+          console.log("Error!!",error)
+           console.log("STATUS:", error.response?.status);
+      console.log("ERROR DATA:", error.response?.data);
+        }
+      })
+    
+      const handleCreateSleep = async () => {
+        const data ={
+          sleep: inputValue.sleep || {},
+          recordedAt: inputValue.date,
+        }
+        console.log("PAYLOAD:", data);
+        await mutation.mutateAsync(data)
+      }
 
   return (
     <View>
@@ -112,7 +134,7 @@ const SleepModal = () => {
           })}
         </View>
       </View>
-      <SubmitButton _fn={handleClick}>Save Sleep Log</SubmitButton>
+      <SubmitButton _fn={handleCreateSleep}>Save Sleep Log</SubmitButton>
     </View>
   );
 };
