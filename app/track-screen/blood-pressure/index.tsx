@@ -13,14 +13,15 @@ import { router } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
-import { recenntReadings } from '../../../lib/data';
 import { LineChart } from 'react-native-chart-kit';
 import { useState } from 'react';
 import { Button } from '@/components/button/Button';
 import BloodPressureModal from './BloodPressureModal';
 import { useModal } from '@/context/ModalContext';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
-
+import { useQuery } from '@tanstack/react-query';
+import { patientService } from '@/service/patientService';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 const { width } = Dimensions.get('window');
 
@@ -36,7 +37,11 @@ const BloodPressure = () => {
     { date: 'Jun 26', systolic: 140, diastolic: 82 },
     { date: 'Jun 27', systolic: 140, diastolic: 82 },
   ]);
-
+   const {data, isLoading, isError, error} = useQuery({
+    queryKey: ['bloodPressure'],
+    queryFn: () => patientService.getBloodPressure(),
+  })
+  console.log("DATA!!", data)
   // Prepare chart data
   const chartData = {
     labels: readings.map((r) => r.date.split(' ')[1]), // Just day numbers
@@ -137,12 +142,11 @@ const BloodPressure = () => {
             <View style={{ marginBottom: 40 }}>
               <Card>
                 <SubTitle>Recent Readings</SubTitle>
-                {recenntReadings.map((recent, index) => {
-                  const { icon, bloodRate, date, status, time } = recent;
-                  const isLastItem = index === recenntReadings.length - 1;
+                {data?.data?.map((recent: any,) => {
+                  const isLastItem = recent.id === data.data.length - 1;
                   return (
                     <View
-                      key={index}
+                      key={recent.id}
                       style={[
                         styles.enhancedItemContainer,
                         isLastItem && styles.lastItem,
@@ -160,8 +164,7 @@ const BloodPressure = () => {
                               borderRadius: 5,
                             }}
                           >
-                            {' '}
-                            {icon}{' '}
+                            <FontAwesome name="stethoscope" size={24} color="#DF0000" />
                           </Text>
                           <View style={{ paddingLeft: 16 }}>
                             <Text
@@ -173,7 +176,7 @@ const BloodPressure = () => {
                                 fontFamily: 'Lato_400Regular',
                               }}
                             >
-                              {bloodRate}
+                              {recent.systolic}/{recent.diastolic} mmH
                             </Text>
                             <Text
                               style={{
@@ -184,11 +187,12 @@ const BloodPressure = () => {
                                 fontFamily: 'Lato_400Regular',
                               }}
                             >
-                              {date} at {time}
+                             {new Date(recent.createdAt).toLocaleDateString()} at{' '}
+                              {new Date(recent.createdAt).toLocaleTimeString()}
                             </Text>
                           </View>
                         </View>
-                        <Text
+                        {/* <Text
                           style={{
                             backgroundColor: `${(status === 'Normal' && '#ECFDF3') || (status === 'High' && '#FEF3F2')}`,
                             color: `${(status === 'Normal' && '#027A48') || (status === 'High' && '#B42318')}`,
@@ -199,7 +203,7 @@ const BloodPressure = () => {
                           }}
                         >
                           {status}
-                        </Text>
+                        </Text> */}
                       </View>
                     </View>
                   );

@@ -20,11 +20,18 @@ import { Button } from '@/components/button/Button';
 import MoodModal from './_components/MoodModal';
 import { useModal } from '@/context/ModalContext';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
+import { patientService } from '@/service/patientService';
+import { useQuery } from '@tanstack/react-query';
 
 
 
 const Mood = () => {
   const { openModal } = useModal();
+  const {data, isLoading, isError, error} = useQuery({
+    queryKey: ['mood'],
+    queryFn: () => patientService.getMood(),
+  })
+  console.log("Data", data)
   const [readings, setReadings] = useState([
     { date: 'Jun 20', systolic: 82, diastolic: 62 },
     { date: 'Jun 21', systolic: 95, diastolic: 75 },
@@ -114,12 +121,12 @@ const Mood = () => {
             <View style={{ marginBottom: 40 }}>
               <Card>
                 <SubTitle>Recent Moods</SubTitle>
-                {recentMood.map((recent, index) => {
+                {data?.data?.map((recent: any) => {
                   const { icon, date, time, mood, status } = recent;
-                  const isLastItem = index === recentMood.length - 1;
+                  const isLastItem = recent.id === data?.data?.length - 1;
                   return (
                     <View
-                      key={index}
+                      key={recent.id}
                       style={[
                         styles.enhancedItemContainer,
                         isLastItem && styles.lastItem,
@@ -129,6 +136,7 @@ const Mood = () => {
                         <View
                           style={{ flexDirection: 'row', alignItems: 'center' }}
                         >
+                          {recent.mood.selectedEmoji && (
                           <Text
                             style={{
                               borderColor: '#f2f2f2',
@@ -138,8 +146,10 @@ const Mood = () => {
                             }}
                           >
                             {' '}
-                            {icon}{' '}
+                            {recent.mood.selectedMood === 'Happy' && '🙂' || recent.mood.selectedMood === 'Laughing' && '😂' || recent.mood.selectedMood === 'Angry' && '😡' }{' '}
                           </Text>
+                          )}
+                          
                           <View style={{ paddingLeft: 16 }}>
                             <Text
                               style={{
@@ -148,7 +158,16 @@ const Mood = () => {
                                 fontFamily: 'Lato_400Regular',
                               }}
                             >
-                              {mood}
+                              {recent.mood.selectedMood}
+                            </Text>
+                            <Text
+                              style={{
+                                fontWeight: 500,
+                                fontSize: 14,
+                                fontFamily: 'Lato_400Regular',
+                              }}
+                            >
+                              {recent.notes}
                             </Text>
                             <Text
                               style={{
@@ -159,7 +178,8 @@ const Mood = () => {
                                 fontFamily: 'Lato_400Regular',
                               }}
                             >
-                              {date} at {time}
+                              {new Date(recent.recordedAt).toLocaleDateString()} {" "} at {" "}
+                              {new Date(recent.recordedAt).toLocaleTimeString()}
                             </Text>
                           </View>
                         </View>
