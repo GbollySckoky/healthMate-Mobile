@@ -32,16 +32,7 @@ const Mood = () => {
     queryFn: () => patientService.getMood(),
   })
   console.log("Data", data)
-  if(isLoading){
-      return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
-      )
-  }
-  if (isError) {
-    console.error('Error fetching user:', error)
-  }
+  
   const [readings, setReadings] = useState([
     { date: 'Jun 20', systolic: 82, diastolic: 62 },
     { date: 'Jun 21', systolic: 95, diastolic: 75 },
@@ -90,7 +81,16 @@ const Mood = () => {
       strokeWidth: 1,
     },
   };
-
+  if(isLoading){
+      return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+      )
+  }
+  if (isError) {
+    console.error('Error fetching user:', error)
+  }
   return (
     <SafeArea>
       <ScreenLayout>
