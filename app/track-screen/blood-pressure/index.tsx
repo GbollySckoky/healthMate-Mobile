@@ -42,17 +42,7 @@ const BloodPressure = () => {
     queryFn: () => patientService.getBloodPressure(),
   })
   console.log("DATA!!", data)
-  if(isLoading){
-      return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
-      )
-  }
-
-  if (isError) {
-    console.error('Error fetching user:', error)
-  }
+ 
   // Prepare chart data
   const chartData = {
     labels: readings.map((r) => r.date.split(' ')[1]), // Just day numbers
@@ -90,6 +80,18 @@ const BloodPressure = () => {
       strokeWidth: 1,
     },
   };
+
+   if(isLoading){
+      return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+      )
+  }
+
+  if (isError) {
+    console.error('Error fetching user:', error)
+  }
 
   return (
     <SafeArea>

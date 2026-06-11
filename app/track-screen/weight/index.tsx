@@ -32,16 +32,7 @@ const Weight = () => {
     queryFn: () => patientService.getWeight(),
   })
 
-  if(isLoading){
-      return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
-      )
-  }
-  if (isError) {
-    console.error('Error fetching user:', error)
-  }
+  
   console.log('DATA!!', data)
   const [readings, setReadings] = useState([
     { date: 'Jun 20', systolic: 82, diastolic: 62 },
@@ -91,6 +82,17 @@ const Weight = () => {
       strokeWidth: 1,
     },
   };
+
+  if(isLoading){
+      return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+      )
+  }
+  if (isError) {
+    console.error('Error fetching user:', error)
+  }
 
   return (
     <SafeArea>
@@ -184,7 +186,7 @@ const Weight = () => {
             <View style={{ marginBottom: 40 }}>
               <Card>
                 <SubTitle>Weight History</SubTitle>
-                {data?.data.map((data: any) => {
+                {data?.data?.map((data: any) => {
                   const isLastItem = data.id === data?.data?.length - 1;
                   return (
                     <View
