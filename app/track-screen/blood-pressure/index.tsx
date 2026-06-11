@@ -12,7 +12,7 @@ import {
 import { router } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, ActivityIndicator } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import { useState } from 'react';
 import { Button } from '@/components/button/Button';
@@ -42,6 +42,17 @@ const BloodPressure = () => {
     queryFn: () => patientService.getBloodPressure(),
   })
   console.log("DATA!!", data)
+  if(isLoading){
+      return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+      )
+  }
+
+  if (isError) {
+    console.error('Error fetching user:', error)
+  }
   // Prepare chart data
   const chartData = {
     labels: readings.map((r) => r.date.split(' ')[1]), // Just day numbers

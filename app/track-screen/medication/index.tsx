@@ -12,14 +12,14 @@ import {
 import { router } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { StyleSheet, Text, View } from 'react-native';
-import { medicationDosage } from '../../../lib/data';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';;
 import { Button } from '@/components/button/Button';
 import MedicationModal from './MedicationModal';
 import { useModal } from '@/context/ModalContext';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
 import { useQuery } from '@tanstack/react-query';
 import { patientService } from '@/service/patientService';
+
 
 const Medication = () => {
   const { openModal } = useModal();
@@ -28,6 +28,16 @@ const Medication = () => {
     queryFn: () => patientService.getMedication(),
   })
   console.log(data)
+  if(isLoading){
+    return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <ActivityIndicator size="large" />
+    </View>
+    )
+}
+  if (isError) {
+    console.error('Error fetching user:', error)
+  }
   return (
     <SafeArea>
       <ScreenLayout>
@@ -59,7 +69,7 @@ const Medication = () => {
                   const isLastItem = recent.id === data?.data?.length - 1;
                   return (
                     <View
-                      key={data.id}
+                      key={recent.id}
                       style={[
                         styles.enhancedItemContainer,
                         isLastItem && styles.lastItem,
@@ -77,8 +87,7 @@ const Medication = () => {
                               borderRadius: 5,
                             }}
                           >
-                            {' '}
-                            {icon}{' '}
+                            <MaterialCommunityIcons name="pill" size={24} color="#C11574" />
                           </Text>
                           <View style={{ paddingLeft: 16 }}>
                             <Text

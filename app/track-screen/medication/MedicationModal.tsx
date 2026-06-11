@@ -16,6 +16,8 @@ const date = {
   label: 'Date',
   placeholder: '10/05/1997',
 }
+
+// { label: 'YES', value: true}
 const MedicationModal = () => {
   const [inputValue, setInputValue] = useState<MedicationInputType>({});
   const [showDatePicker, setShowDatePicker] = useState(false);
