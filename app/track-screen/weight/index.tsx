@@ -12,7 +12,7 @@ import {
 import { router } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, ActivityIndicator } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import { useState } from 'react';
 const { width } = Dimensions.get('window');
@@ -31,6 +31,17 @@ const Weight = () => {
     queryKey: ['weight'],
     queryFn: () => patientService.getWeight(),
   })
+
+  if(isLoading){
+      return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+      )
+  }
+  if (isError) {
+    console.error('Error fetching user:', error)
+  }
   console.log('DATA!!', data)
   const [readings, setReadings] = useState([
     { date: 'Jun 20', systolic: 82, diastolic: 62 },

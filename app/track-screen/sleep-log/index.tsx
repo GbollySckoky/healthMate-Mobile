@@ -1,6 +1,6 @@
 import React from 'react';
 import { BarChart } from 'react-native-chart-kit';
-import { StyleSheet, View, Text, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, ActivityIndicator } from 'react-native';
 import { NavHeader } from '@/components/Header/Header';
 import { router } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
@@ -67,6 +67,16 @@ export default function MyBarChart() {
     queryFn: () => patientService.getSleep(),
   })
   console.log('Data', data)
+  if(isLoading){
+      return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+      )
+  }
+  if (isError) {
+    console.error('Error fetching user:', error)
+  }
   return (
     <SafeArea>
       <ScreenLayout>

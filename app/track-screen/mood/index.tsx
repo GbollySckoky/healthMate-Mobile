@@ -11,7 +11,7 @@ import {
 } from '@/components/typography/Typography';
 import { router } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, ActivityIndicator } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import { useState } from 'react';
 const { width } = Dimensions.get('window');
@@ -32,6 +32,16 @@ const Mood = () => {
     queryFn: () => patientService.getMood(),
   })
   console.log("Data", data)
+  if(isLoading){
+      return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+      )
+  }
+  if (isError) {
+    console.error('Error fetching user:', error)
+  }
   const [readings, setReadings] = useState([
     { date: 'Jun 20', systolic: 82, diastolic: 62 },
     { date: 'Jun 21', systolic: 95, diastolic: 75 },
