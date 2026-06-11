@@ -20,12 +20,14 @@ import { Button } from '@/components/button/Button';
 import SleepModal from './_components/SleepModal';
 import { useModal } from '@/context/ModalContext';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
+import { patientService } from '@/service/patientService';
+import { useQuery } from '@tanstack/react-query';
 
 
 
 const screenWidth = Dimensions.get('window').width;
 
-const data = {
+const datas = {
   labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
   datasets: [
     {
@@ -58,15 +60,18 @@ const chartConfig = {
   },
 };
 
-const handleClick = () => {};
-
 export default function MyBarChart() {
   const { openModal } = useModal();
+   const {data, isLoading, isError, error} = useQuery({
+    queryKey: ['sleep'],
+    queryFn: () => patientService.getSleep(),
+  })
+  console.log('Data', data)
   return (
     <SafeArea>
       <ScreenLayout>
         <NavHeader
-          title="Blood Pressure Tracker"
+          title="Sleep Tracker"
           _goBack={() => router.back()}
           backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
           text="Track your readings to monitor your heart health"
@@ -90,7 +95,7 @@ export default function MyBarChart() {
                 <SubTitle>Sleep Trends</SubTitle>
                 <BarChart
                   style={styles.chart}
-                  data={data}
+                  data={datas}
                   width={screenWidth - 45}
                   height={300}
                   yAxisLabel=""
@@ -109,12 +114,12 @@ export default function MyBarChart() {
             <View style={{ marginBottom: 40 }}>
               <Card>
                 <SubTitle>Sleep Log History</SubTitle>
-                {sleepLogHistory.map((sleep, index) => {
+                {data?.data?.map((sleep: any) => {
                   const { icon, hour, date, status, time } = sleep;
-                  const isLastItem = index === sleepLogHistory.length - 1;
+                  const isLastItem = sleep.id === data?.data?.length - 1;
                   return (
                     <View
-                      key={index}
+                      key={sleep.id}
                       style={[
                         styles.enhancedItemContainer,
                         isLastItem && styles.lastItem,
@@ -124,6 +129,7 @@ export default function MyBarChart() {
                         <View
                           style={{ flexDirection: 'row', alignItems: 'center' }}
                         >
+                         {sleep.sleep.selectedEmoji && (
                           <Text
                             style={{
                               borderColor: '#f2f2f2',
@@ -133,8 +139,9 @@ export default function MyBarChart() {
                             }}
                           >
                             {' '}
-                            {icon}{' '}
+                            {sleep.sleep.selectedMood === 'Excellent' && '😴' || sleep.sleep.selectedMood === 'Average' && '😐' || sleep.sleep.selectedMood === 'Poor' && '😩' }{' '}
                           </Text>
+                          )}
                           <View style={{ paddingLeft: 16 }}>
                             <Text
                               style={{
@@ -145,7 +152,7 @@ export default function MyBarChart() {
                                 fontFamily: 'Lato_400Regular',
                               }}
                             >
-                              {hour}
+                              {sleep.sleep.selectedMood}
                             </Text>
                             <Text
                               style={{
@@ -156,7 +163,7 @@ export default function MyBarChart() {
                                 fontFamily: 'Lato_400Regular',
                               }}
                             >
-                              {date} . {time}
+                              {new Date(sleep.recordedAt).toLocaleDateString()} . {new Date(sleep.recordedAt).toLocaleTimeString()}
                             </Text>
                           </View>
                         </View>

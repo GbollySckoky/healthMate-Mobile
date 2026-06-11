@@ -26,7 +26,7 @@ const WeightModal = () => {
       [key]: value,
     }));
   };
-
+  console.log(inputValue)
   const handleDateSelect = (day: any) => {
     const selectedDate = day.dateString;
     handleChange('date', selectedDate);
@@ -53,7 +53,7 @@ const WeightModal = () => {
     
       const handleCreateWeight = async () => {
         const data ={
-          weight: inputValue.weight.trim(),
+          weight: inputValue.weight,
           recordedAt: inputValue.date,
         }
         console.log("PAYLOAD:", data);

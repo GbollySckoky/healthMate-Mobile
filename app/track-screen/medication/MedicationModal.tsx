@@ -52,8 +52,8 @@ const MedicationModal = () => {
   
     const handleCreateMedication = async () => {
       const data ={
-        name: inputValue.systolic.trim(),
-        dosage: inputValue.diastolic.trim(),
+        name: inputValue.name,
+        dosage: inputValue.dosage,
         recordedAt: inputValue.date,
         // time: inputValue.time,
       }

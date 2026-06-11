@@ -128,7 +128,7 @@ const MoodModal = () => {
         //     [inputValue.date]: {selected: true, disableTouchEvent: false, selectedColor: '#C11574'}
         // }}
       />
-      <SubmitButton _fn={handleCreateMood}>Save Mood</SubmitButton>
+      <SubmitButton _fn={handleCreateMood}>{mutation.isPending ? 'Saving...' : 'Save Mood'}</SubmitButton>
     </View>
   );
 };

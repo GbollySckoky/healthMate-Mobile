@@ -10,6 +10,7 @@ import { Medication } from "@/lib/interface/medication";
 import { Weight } from "@/lib/interface/weight";
 import { Sleep } from "@/lib/interface/sleep";
 import { Mood } from "@/lib/interface/mood";
+import { Appointment } from "@/lib/interface/createAppointment";
 
 export const patientService = {
   login: async (payload: login) => {
@@ -35,16 +36,39 @@ export const patientService = {
   createBloodPressue: async (payload: BloodPressure) => {
     return await axiosService().post(PATIENTS_ENDPOINTS.BLOOD_PRESSURE, payload)
   },
+  getBloodPressure: async () => {
+    const response = await axiosService().get(PATIENTS_ENDPOINTS.BLOOD_PRESSURE)
+    return await response.data
+  },
   createMedication: async (payload: Medication) => {
     return await axiosService().post(PATIENTS_ENDPOINTS.MEDICATION, payload)
+  },
+  getMedication: async () => {
+    const response = await axiosService().get(PATIENTS_ENDPOINTS.MEDICATION)
+    return await response.data
   },
   createWeight: async (payload: Weight) => {
     return await axiosService().post(PATIENTS_ENDPOINTS.WEIGHT, payload)
   },
+  getWeight: async () => {
+    const response = await axiosService().get(PATIENTS_ENDPOINTS.WEIGHT)
+    return await response.data
+  },
   createMood: async (payload: Mood) => {
     return await axiosService().post(PATIENTS_ENDPOINTS.MOOD, payload)
+  },
+  getMood: async () => {
+    const response = await axiosService().get(PATIENTS_ENDPOINTS.MOOD)
+    return await response.data
   },
   createSleep: async (payload: Sleep) => {
     return await axiosService().post(PATIENTS_ENDPOINTS.SLEEP, payload)
   },
+  getSleep: async () => {
+    const response = await axiosService().get(PATIENTS_ENDPOINTS.SLEEP)
+    return await response.data
+  },
+  createConsultation: async(payload: Appointment) => {
+    return await axiosService().post(PATIENTS_ENDPOINTS.BOOK_APPOINTMENT, payload)
+  }
 }

@@ -16,16 +16,22 @@ import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import { useState } from 'react';
 const { width } = Dimensions.get('window');
-import { recentWeight } from '../../../lib/data';
 import Feather from '@expo/vector-icons/Feather';
 import { Button } from '@/components/button/Button';
 import WeightModal from './_component/WeightModal';
 import { useModal } from '@/context/ModalContext';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
+import { useQuery } from '@tanstack/react-query';
+import { patientService } from '@/service/patientService';
 
 
 const Weight = () => {
   const { openModal } = useModal();
+  const {data, isLoading, isError, error} = useQuery({
+    queryKey: ['weight'],
+    queryFn: () => patientService.getWeight(),
+  })
+  console.log('DATA!!', data)
   const [readings, setReadings] = useState([
     { date: 'Jun 20', systolic: 82, diastolic: 62 },
     { date: 'Jun 21', systolic: 95, diastolic: 75 },
@@ -74,7 +80,7 @@ const Weight = () => {
       strokeWidth: 1,
     },
   };
-  const handleClick = () => {};
+
   return (
     <SafeArea>
       <ScreenLayout>
@@ -167,12 +173,11 @@ const Weight = () => {
             <View style={{ marginBottom: 40 }}>
               <Card>
                 <SubTitle>Weight History</SubTitle>
-                {recentWeight.map((recent, index) => {
-                  const { icon, date, time, weight } = recent;
-                  const isLastItem = index === recentWeight.length - 1;
+                {data?.data.map((data: any) => {
+                  const isLastItem = data.id === data?.data?.length - 1;
                   return (
                     <View
-                      key={index}
+                      key={data.id}
                       style={[
                         styles.enhancedItemContainer,
                         isLastItem && styles.lastItem,
@@ -190,8 +195,7 @@ const Weight = () => {
                               borderRadius: 5,
                             }}
                           >
-                            {' '}
-                            {icon}{' '}
+                              <FontAwesome name="stethoscope" size={24} color="#DF0000" />
                           </Text>
                           <View style={{ paddingLeft: 16 }}>
                             <Text
@@ -201,7 +205,7 @@ const Weight = () => {
                                 fontFamily: 'Lato_400Regular',
                               }}
                             >
-                              {weight}
+                              {data.weight}
                             </Text>
                             <Text
                               style={{
@@ -212,7 +216,8 @@ const Weight = () => {
                                 fontFamily: 'Lato_400Regular',
                               }}
                             >
-                              {date} at {time}
+                               {new Date(data.createdAt).toLocaleDateString()} at{' '}
+                              {new Date(data.createdAt).toLocaleTimeString()}
                             </Text>
                           </View>
                         </View>

@@ -4,11 +4,11 @@ export const PATIENTS_ENDPOINTS = {
     USER: 'users/',
     FORGOT_PASSWORD: 'auth/forgot-password/',
     VERIFY_EMAIL: 'auth/user/verify-code/',
-    MOOD: 'track/mood',
-    BLOOD_PRESSURE: 'track/blood-pressure',
-    SLEEP: 'track/sleep',
-    WEIGHT: 'track/weight',
-    MEDICATION: 'track/medication',
-    BOOK_APPOINTMENT: "appointment/consultation",
-    GET_APPOINTMENT: 'appointment/appointments'
+    MOOD: 'track/mood/',
+    BLOOD_PRESSURE: 'track/blood-pressure/',
+    SLEEP: 'track/sleep/',
+    WEIGHT: 'track/weight/',
+    MEDICATION: 'track/medication/',
+    BOOK_APPOINTMENT: "appointment/consultation/",
+    GET_APPOINTMENT: 'appointment/appointments/'
 }
