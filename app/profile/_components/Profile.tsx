@@ -52,8 +52,12 @@ const Profile = () => {
     )
   }
 
-  if (isError) {
-    console.error('Error fetching user:', error)
+  if (isError as unknown) {
+    return(
+       <div className="h-full flex items-center justify-center text-sm text-red-500">
+        {(error as Error).message}
+      </div>
+    )
   }
 
   return (

@@ -67,6 +67,7 @@ export default function MyBarChart() {
     queryFn: () => patientService.getSleep(),
   })
   console.log('Data', data)
+
   if(isLoading){
       return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -74,8 +75,13 @@ export default function MyBarChart() {
       </View>
       )
   }
-  if (isError) {
-    console.error('Error fetching user:', error)
+  
+  if (isError as unknown) {
+    return(
+       <div className="h-full flex items-center justify-center text-sm text-red-500">
+        {(error as Error).message}
+      </div>
+    )
   }
   return (
     <SafeArea>

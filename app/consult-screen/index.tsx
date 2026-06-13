@@ -18,7 +18,7 @@ const filtersData = [
   'Pediatrics'
 ]
 const ConsultationPage = () => {
-    const [searchInput, setSearchInput] = useState("")
+  const [searchInput, setSearchInput] = useState("")
   return (
     <ScreenLayout>
     <Nav

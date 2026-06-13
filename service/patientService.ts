@@ -70,5 +70,13 @@ export const patientService = {
   },
   createConsultation: async(payload: Appointment) => {
     return await axiosService().post(PATIENTS_ENDPOINTS.BOOK_APPOINTMENT, payload)
-  }
+  },
+  getDoctors: async (hospitalId: number) => {
+    const response = await axiosService().get(`${PATIENTS_ENDPOINTS.GET_ALL_DOCTORS}${hospitalId}`)
+    return await response.data
+  },
+  getHospitals: async () => {
+    const response = await axiosService().get(`${PATIENTS_ENDPOINTS.GET_ALL_HOSPITALS}`)
+    return await response.data
+  },
 }

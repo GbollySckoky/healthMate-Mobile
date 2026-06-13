@@ -61,6 +61,7 @@ const Booking = () => {
     '5:00pm',
   ];
   const consultationType = ['Video Call', 'Audio Call', 'Physical Appointment'];
+  
   return (
     <View style={{ marginBottom: 50 }}>
       <View style={{ marginBottom: 15 }}>
