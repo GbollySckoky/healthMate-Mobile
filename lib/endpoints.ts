@@ -10,5 +10,7 @@ export const PATIENTS_ENDPOINTS = {
     WEIGHT: 'track/weight/',
     MEDICATION: 'track/medication/',
     BOOK_APPOINTMENT: "appointment/consultation/",
-    GET_APPOINTMENT: 'appointment/appointments/'
+    GET_APPOINTMENT: 'appointment/appointments/',
+    GET_ALL_HOSPITALS: 'hospital/hospitals',
+    GET_ALL_DOCTORS: 'doctor/hospital/'
 }

@@ -5,7 +5,7 @@ import Entypo from '@expo/vector-icons/Entypo';
 import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout';
 import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
 import { Wrapper } from '@/components/typography/Typography';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import SearchInput from '@/components/Input/SearchInput';
 import { colors } from '@/lib/colors';
@@ -17,12 +17,34 @@ import Feather from '@expo/vector-icons/Feather';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import useToggle from '@/hooks/useToggle';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
+import { useQuery } from '@tanstack/react-query';
+import { patientService } from '@/service/patientService';
 
 
 const AllHospitalsPage = () => {
     const router = useRouter()
     const [searchInput, setSearchInput] = useState("")
     const {isToggle, handleToggle} = useToggle()
+    const {data, isLoading, isError, error} = useQuery({
+      queryKey: ['getAllHospitals'],
+      queryFn: () => patientService.getHospitals()
+    }) 
+
+    if(isLoading){
+      return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" />
+        </View>
+        )
+    }
+
+    if (isError as unknown) {
+    return(
+       <div className="h-full flex items-center justify-center text-sm text-red-500">
+        {(error as Error).message}
+      </div>
+    )
+  }
   return (
     <SafeArea>
       <ScreenLayout>
