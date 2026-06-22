@@ -161,7 +161,8 @@ const Mood = () => {
                             }}
                           >
                             {' '}
-                            {recent.mood.selectedMood === 'Happy' && '🙂' || recent.mood.selectedMood === 'Laughing' && '😂' || recent.mood.selectedMood === 'Angry' && '😡' }{' '}
+                            {recent.mood.selectedMood === 'Happy' && '🙂' || recent.mood.selectedMood === 'Laughing' && '😂' || recent.mood.selectedMood === 'Angry' && '😡' || 
+                             recent.mood.selectedMood === 'Sick' && '🤢' || recent.mood.selectedMood === 'Tired' && '🥱' || recent.mood.selectedMood === 'Tired' && '😒'}{' '}
                           </Text>
                           )}
                           

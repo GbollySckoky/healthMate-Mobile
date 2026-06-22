@@ -10,29 +10,19 @@ import { useMutation } from '@tanstack/react-query';
 import { patientService } from '@/service/patientService';
 import { BloodPressure } from '@/lib/interface/blood-pressure';
 import { AxiosError } from 'axios';
+import { useModal } from '@/context/ModalContext';
 
 type BloodPressureInputType = Record<string, string>;
 
 const BloodPressureModal = () => {
-  const { date, time, topNumber, lastNumber } = bloodPressureData;
+  const { date, topNumber, lastNumber } = bloodPressureData;
   const [inputValue, setInputValue] = useState<BloodPressureInputType>({
     date: new Date().toISOString(), // Initialize with today's date in YYYY-MM-DD format
-    // time: new Date().toLocaleTimeString([], {
-    //   hour: '2-digit',
-    //   minute: '2-digit',
-    // }),
     systolic: '',
     diastolic: '',
   });
   const [showDatePicker, setShowDatePicker] = useState(false);
-  
-  const handleClick = () => {
-    // Add your save logic here
-    console.log('Saving blood pressure reading:', inputValue);
-  };
-  
-  console.log('📊 Input Values:', inputValue);
-
+  const { closeModal } = useModal();
   const handleChange = (key: string, value: string) => {
     setInputValue((prev) => ({
       ...prev,
@@ -49,10 +39,12 @@ const BloodPressureModal = () => {
   const handleCloseCalendar = () => {
     setShowDatePicker(false);
   };
+
   const mutation = useMutation({
     mutationFn: (payload: BloodPressure) => patientService.createBloodPressue(payload),
     onSuccess: (response) => {
       console.log(response)
+      closeModal()
     },
     onError:(error: AxiosError) => {
       console.log("Error!!",error)

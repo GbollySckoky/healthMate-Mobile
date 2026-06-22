@@ -13,6 +13,9 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import Feather from '@expo/vector-icons/Feather';
 import useToggles from '@/hooks/useToggles';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
+import { useQuery } from '@tanstack/react-query';
+import { patientService } from '@/service/patientService';
+import { useLocalSearchParams } from 'expo-router';
 
 const ConsultationDetails = () => {
   const router = useRouter()
@@ -20,7 +23,17 @@ const ConsultationDetails = () => {
   const profile = require('../../../assets/images/Ellipse 165.png')
   const {toggle, handleToggle} = useToggles()
 
+ const { id } = useLocalSearchParams();
 
+    console.log(id);
+   const {data, isLoading, isError, error} = useQuery({
+      queryKey: ['getDoctorById', id],
+      queryFn: () => patientService.getDoctorById(Number(id)),
+      enabled: !!id
+    }) 
+    console.log("DATAsss!!", data?.data)
+
+    // const data = data?.
   return (
     <SafeArea>
       <ScreenLayout>
@@ -52,11 +65,11 @@ const ConsultationDetails = () => {
               <View>
                 <View style={styles.flexContainer}>
                   <View>
-                    <SubTitle>Dr James Uche</SubTitle>
+                    <SubTitle>Dr {data?.data?.firstName}{" "} {data?.data?.lastName}</SubTitle>
                     <Text style={styles.specialtyText}>General Practitioner</Text>                      
                     <Text style={styles.hospitalText}>
                     <EvilIcons name="location" size={13} style={{paddingRight:10}} />
-                      Lagos Health Hospital
+                      {data?.data?.hospital.hospitalName || '-'}
                       </Text>
                   </View>
                   <Text style={styles.rating}>⭐ 4.2(38)</Text>

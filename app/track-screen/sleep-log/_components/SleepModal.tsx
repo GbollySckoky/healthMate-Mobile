@@ -8,6 +8,7 @@ import { useMutation } from '@tanstack/react-query';
 import { Sleep } from '@/lib/interface/sleep';
 import { AxiosError } from 'axios';
 import { patientService } from '@/service/patientService';
+import { useModal } from '@/context/ModalContext';
 
 interface SleepQuality {
   selectedMood: string;
@@ -31,7 +32,7 @@ const SleepModal = () => {
   const [selectEmojiValue, setSelectEmojiValue] = useState('');
 
   const { date } = sleepData;
-
+  const { closeModal } = useModal();
   const handleChange = (
     key: keyof SleepInputType,
     value: string | SleepQuality
@@ -69,26 +70,27 @@ const SleepModal = () => {
     }));
   };
 
-    const mutation = useMutation({
-        mutationFn: (payload: Sleep) => patientService.createSleep(payload),
-        onSuccess: (response) => {
-          console.log(response)
-        },
-        onError:(error: AxiosError) => {
-          console.log("Error!!",error)
-           console.log("STATUS:", error.response?.status);
-      console.log("ERROR DATA:", error.response?.data);
-        }
-      })
-    
-      const handleCreateSleep = async () => {
-        const data ={
-          sleep: inputValue.sleep || {},
-          recordedAt: inputValue.date,
-        }
-        console.log("PAYLOAD:", data);
-        await mutation.mutateAsync(data)
-      }
+  const mutation = useMutation({
+    mutationFn: (payload: Sleep) => patientService.createSleep(payload),
+    onSuccess: (response) => {
+      console.log(response)
+      closeModal()
+    },
+    onError:(error: AxiosError) => {
+      console.log("Error!!",error)
+        console.log("STATUS:", error.response?.status);
+  console.log("ERROR DATA:", error.response?.data);
+    }
+  })
+
+  const handleCreateSleep = async () => {
+    const data ={
+      sleep: inputValue.sleep || {},
+      recordedAt: inputValue.date,
+    }
+    console.log("PAYLOAD:", data);
+    await mutation.mutateAsync(data)
+  }
 
   return (
     <View>
@@ -134,7 +136,7 @@ const SleepModal = () => {
           })}
         </View>
       </View>
-      <SubmitButton _fn={handleCreateSleep}>Save Sleep Log</SubmitButton>
+      <SubmitButton _fn={handleCreateSleep}>{mutation.isPending ? "Saving..." : "Save Sleep Log"}</SubmitButton>
     </View>
   );
 };

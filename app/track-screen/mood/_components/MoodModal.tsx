@@ -9,6 +9,7 @@ import { patientService } from '@/service/patientService';
 import { AxiosError } from 'axios';
 import CustomCalendar from '@/components/calendar/CustomCalendar';
 import DateInput from '@/components/Input/DateInput';
+import { useModal } from '@/context/ModalContext';
 
 const date = {
   label: 'Date',
@@ -25,7 +26,7 @@ const MoodModal = () => {
   });
   const [selectEmoji, setSelectEmoji] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
-  console.log('12345', inputValue);
+  const { closeModal } = useModal();
 
   const data = {
     mood: {
@@ -68,6 +69,7 @@ const MoodModal = () => {
     mutationFn: (payload: Mood) => patientService.createMood(payload),
     onSuccess: (response) => {
       console.log(response)
+      closeModal()
     },
     onError:(error: AxiosError) => {
       console.log("Error!!",error)

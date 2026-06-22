@@ -213,7 +213,12 @@ const Weight = () => {
                               borderRadius: 5,
                             }}
                           >
-                              <FontAwesome name="stethoscope" size={24} color="#DF0000" />
+                              <FontAwesome
+                                name="balance-scale"
+                                size={16}
+                                color="#C11574"
+                                style={styles.icon}
+                              />
                           </Text>
                           <View style={{ paddingLeft: 16 }}>
                             <Text

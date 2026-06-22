@@ -3,13 +3,14 @@ import axios from 'axios'
 import { STATUS } from './status';
 // import { ROUTES } from './routes';
 import { storageService } from './storage';
+import { ROUTES } from './routes';
+import { router } from 'expo-router';
 
 // async function getToken(key: string) {
 //   let result = await SecureStore.getItemAsync(key);
 //   return result;
 // }
 
-const axiosService = () => {
   const instance = axios.create({
     baseURL: 'https://healthcare-backend-5y5b.onrender.com/api/v1/',
     headers: {
@@ -43,14 +44,11 @@ const axiosService = () => {
         if (status === STATUS.UN_AUTHORIZED) {
           // SecureStore.deleteItemAsync('my_access_token');
           storageService.clearAuthData()
-          // window.location.href = ROUTES.login
+          router.replace(ROUTES.login);
         }
       }
       return Promise.reject(error);
     }
   );
 
-  return instance;
-}
-
-export default axiosService
+export default instance
