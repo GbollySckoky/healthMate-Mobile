@@ -103,7 +103,9 @@ const BloodPressure = () => {
         <NavHeader
           title="Blood Pressure Tracker"
           _goBack={() => router.back()}
-          backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+          backIcon={
+            <Entypo name="chevron-small-left" size={24} color="black" />
+          }
           text="Track your readings to monitor your heart health"
         />
         <ScreenOverFlowLayout>
@@ -115,10 +117,39 @@ const BloodPressure = () => {
                 color="#DF0000"
                 style={styles.icon}
               />
-              <CardText>Today’s Readings</CardText>
-              <CardAmount>120/80 mmHg</CardAmount>
-              <CardText>Recorded on: Jun 22, 09:45</CardText>
-              <Text style={styles.colorText}>Normal</Text>
+              <CardText>Today's Readings</CardText>
+              {isLoading ? (
+                <ActivityIndicator color="#DF0000" />
+              ) : (
+                <>
+                <CardAmount>
+                      {latestReading
+                        ? `${latestReading.systolic}/${latestReading.diastolic} mmHg`
+                        : '--/-- mmHg'}
+                </CardAmount>
+
+                <CardText>
+                  Recorded on:{' '}
+                  {latestReading
+                    ? `${latestReading.date_recorded}, ${latestReading.time_recorded}`
+                    : 'N/A'}
+                </CardText>
+
+                {status && (
+                  <Text
+                    style={[
+                      styles.colorText,
+                      {
+                        backgroundColor: status.backgroundColor,
+                        color: status.textColor,
+                      },
+                    ]}
+                  >
+                    {status.status}
+                  </Text>
+                )}
+                </>
+              )}
             </DetailsContainer>
             {/* Line Chart */}
             <View style={styles.chartContainer}>
@@ -135,7 +166,6 @@ const BloodPressure = () => {
                 yAxisSuffix=""
                 yAxisInterval={1}
                 fromZero={false}
-                // color={true}
                 segments={6}
               />
 
@@ -155,7 +185,7 @@ const BloodPressure = () => {
                 </View>
               </View>
             </View>
-            {/* Recnnt Readings */}
+            {/* Recent Readings */}
             <View style={{ marginBottom: 40 }}>
               <Card>
                 <SubTitle>Recent Readings</SubTitle>
@@ -235,7 +265,6 @@ const BloodPressure = () => {
               title: 'Add Blood Pressure Reading',
               description: '',
               onClose: () => {},
-              // btnText: 'Save Reading'
             })
           }
         >
@@ -278,10 +307,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 18,
-    // backgroundColor: 'red'
   },
   container: {
-    // flex: 1,
     backgroundColor: '#f5f5f5',
     padding: 20,
     justifyContent: 'center',
@@ -299,11 +326,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#f2f2f2',
   },
-
   chart: {
     marginVertical: 8,
     borderRadius: 8,
-    // backgroundColor: 'red'
   },
   legend: {
     flexDirection: 'row',
@@ -330,5 +355,32 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     fontWeight: '500',
+  },
+  stateContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 40,
+    paddingHorizontal: 20,
+  },
+  stateText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#414651',
+    marginTop: 12,
+    fontFamily: 'Lato_400Regular',
+  },
+  stateSubText: {
+    fontSize: 14,
+    color: '#717680',
+    marginTop: 6,
+    textAlign: 'center',
+    fontFamily: 'Lato_400Regular',
+  },
+  errorMessage: {
+    fontSize: 12,
+    color: '#B42318',
+    marginTop: 8,
+    textAlign: 'center',
+    fontFamily: 'Lato_400Regular',
   },
 });

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import CustomCalendar from '@/components/calendar/CustomCalendar';
-import { Pressable, Text, View, StyleSheet } from 'react-native';
+import { Pressable, Text, View, StyleSheet, Keyboard } from 'react-native';
 import { sleepExperienceData, sleepData } from '@/lib/data';
 import DateInput from '@/components/Input/DateInput';
 import { SubmitButton } from '@/components/typography/Typography';
@@ -17,7 +17,8 @@ interface SleepQuality {
 
 interface SleepInputType {
   date?: string;
-  sleep?: SleepQuality;
+  sleep?: string;
+  hours?: string;
 };
 
 const SleepModal = () => {
@@ -30,6 +31,8 @@ const SleepModal = () => {
   });
   const [selectDatePicker, setSelectDatePicker] = useState(false);
   const [selectEmojiValue, setSelectEmojiValue] = useState('');
+  const { closeModal } = useModal();
+  console.log(inputValue);
 
   const { date } = sleepData;
   const { closeModal } = useModal();
@@ -54,19 +57,11 @@ const SleepModal = () => {
     setSelectDatePicker(false);
   };
 
-  const handleSelectEmojiValue = (
-    key: keyof SleepInputType,
-    emoji: string,
-    value: string
-  ) => {
+  const handleSelectEmojiValue = (value: string) => {
     setSelectEmojiValue(value);
-    const sleepQuality: SleepQuality = {
-      selectedMood: value,
-      selectedEmoji: Boolean(emoji), // converts a string to a boolean if the string is empty is false
-    };
     setInputValue((prev) => ({
       ...prev,
-      [key]: sleepQuality,
+      sleep: value,
     }));
   };
 
@@ -94,6 +89,11 @@ const SleepModal = () => {
 
   return (
     <View>
+      <NumberInput
+        {...sleep}
+        value={inputValue.hours}
+        onChangeText={(value) => handleChange('hours', value)}
+      />
       <DateInput
         {...date}
         value={
@@ -127,7 +127,7 @@ const SleepModal = () => {
                   styles.gridItem,
                   selectEmojiValue === value && styles.selectedItem,
                 ]}
-                onPress={() => handleSelectEmojiValue('sleep', emoji, value)}
+                onPress={() => handleSelectEmojiValue(value)}
               >
                 <Text style={styles.text}>{emoji}</Text>
                 <Text style={{ color: '#717680' }}>{value}</Text>
@@ -174,5 +174,18 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 38,
     paddingBottom: 6,
+  },
+  button: {
+    backgroundColor: '#DD2590',
+    paddingVertical: 12,
+    borderRadius: 10,
+    marginTop: 25,
+    marginBottom: 30,
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
+    fontWeight: '600',
+    fontSize: 16,
   },
 });

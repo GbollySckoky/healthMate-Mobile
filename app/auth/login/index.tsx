@@ -81,10 +81,10 @@ const LoginPage = () => {
       router.push(ROUTES.home);
     },
     onError: (error: any) => {
-      console.log('ERROR!!!!', error);
+      console.log('ERROR!!!!', error.response.data.error[0]);
       Toast.show({
         type: 'error',
-        text1: error.response.data.message,
+        text1: error.response.data.error[0],
       });
     },
     retry: 3,

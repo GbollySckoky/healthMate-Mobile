@@ -15,7 +15,6 @@ import { StyleSheet, Text, View, Dimensions, ActivityIndicator } from 'react-nat
 import { LineChart } from 'react-native-chart-kit';
 import { useState } from 'react';
 const { width } = Dimensions.get('window');
-import { recentMood } from '../../../lib/data';
 import { Button } from '@/components/button/Button';
 import MoodModal from './_components/MoodModal';
 import { useModal } from '@/context/ModalContext';
@@ -44,18 +43,17 @@ const Mood = () => {
     { date: 'Jun 27', systolic: 140, diastolic: 82 },
   ]);
 
-  // Prepare chart data
   const chartData = {
-    labels: readings.map((r) => r.date.split(' ')[1]), // Just day numbers
+    labels: readings.map((r) => r.date.split(' ')[1]),
     datasets: [
       {
         data: readings.map((r) => r.systolic),
-        color: (opacity = 1) => `rgba(239, 68, 68, ${opacity})`, // Red for systolic
+        color: (opacity = 1) => `rgba(239, 68, 68, ${opacity})`,
         strokeWidth: 3,
       },
       {
         data: readings.map((r) => r.diastolic),
-        color: (opacity = 1) => `rgba(59, 130, 246, ${opacity})`, // Blue for diastolic
+        color: (opacity = 1) => `rgba(59, 130, 246, ${opacity})`,
         strokeWidth: 3,
       },
     ],
@@ -102,24 +100,45 @@ const Mood = () => {
         <NavHeader
           title="How Are You Feeling Today?"
           _goBack={() => router.back()}
-          backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+          backIcon={
+            <Entypo name="chevron-small-left" size={24} color="black" />
+          }
           text="Tracking your mood helps you understand your...."
         />
         <ScreenOverFlowLayout>
           <Wrapper>
             <DetailsContainer>
-              <Text style={{ fontSize: 35, marginBottom: 3 }}>🙂</Text>
-              <CardText>Today’s mood</CardText>
-              <CardAmount>Happy</CardAmount>
-              <CardText>Recorded on: Jun 22, 09:45</CardText>
-              <Text style={styles.colorText}>Positive</Text>
+              <Text style={{ fontSize: 35, marginBottom: 3 }}>
+                {latestMood ? getMoodEmoji(latestMood.mood) : '🙂'}
+              </Text>
+              <CardText>Today's mood</CardText>
+              <CardAmount>{latestMood ? latestMood.mood : 'Happy'}</CardAmount>
+              <CardText>
+                {latestMood
+                  ? `Recorded on: ${getReadableDate(latestMood.recorded_at)}`
+                  : 'N/A'}
+              </CardText>
+              {latestMoodStatus && (
+                <Text
+                  style={[
+                    styles.colorText,
+                    {
+                      backgroundColor: latestMoodStatus.backgroundColor,
+                      color: latestMoodStatus.textColor,
+                    },
+                  ]}
+                >
+                  {latestMoodStatus.status}
+                </Text>
+              )}
             </DetailsContainer>
+
             {/* Chart */}
             <View style={styles.chartContainer}>
               <SubTitle>Mood Trends</SubTitle>
               <LineChart
                 data={chartData}
-                width={width - 48} // Adjust for card padding
+                width={width - 48}
                 height={220}
                 chartConfig={chartConfig}
                 bezier
@@ -129,10 +148,10 @@ const Mood = () => {
                 yAxisSuffix=""
                 yAxisInterval={1}
                 fromZero={false}
-                // color={true}
                 segments={6}
               />
             </View>
+
             <View style={{ marginBottom: 40 }}>
               <Card>
                 <SubTitle>Recent Moods</SubTitle>
@@ -229,11 +248,10 @@ const Mood = () => {
               title: 'Log New Mood',
               description: '',
               onClose: () => {},
-              // btnText: 'Save Reading'
             })
           }
         >
-          Log New Weight
+          Log New Mood
         </Button>
       </ScreenLayout>
     </SafeArea>
@@ -276,10 +294,9 @@ const styles = StyleSheet.create({
   chart: {
     marginVertical: 8,
     borderRadius: 8,
-    // backgroundColor: 'red'
   },
   lastItem: {
-    borderBottomWidth: 0, // Remove border from last item
+    borderBottomWidth: 0,
   },
   enhancedItemContainer: {
     paddingTop: 5,
@@ -291,6 +308,39 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 18,
-    // backgroundColor: 'red'
+  },
+  emojiContainer: {
+    borderColor: '#f2f2f2',
+    borderWidth: 1,
+    padding: 6,
+    borderRadius: 5,
+    fontSize: 24,
+  },
+  stateContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 40,
+    paddingHorizontal: 20,
+  },
+  stateText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#414651',
+    marginTop: 12,
+    fontFamily: 'Lato_400Regular',
+  },
+  stateSubText: {
+    fontSize: 14,
+    color: '#717680',
+    marginTop: 6,
+    textAlign: 'center',
+    fontFamily: 'Lato_400Regular',
+  },
+  errorMessage: {
+    fontSize: 12,
+    color: '#B42318',
+    marginTop: 8,
+    textAlign: 'center',
+    fontFamily: 'Lato_400Regular',
   },
 });

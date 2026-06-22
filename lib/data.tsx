@@ -11,50 +11,6 @@ import Fontisto from '@expo/vector-icons/Fontisto';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-
-export const healthOverview = [
-  {
-    title: 'Blood Pressure',
-    value: '120/80 mmHg',
-    text: 'Blood Pressure',
-    id: 1,
-    icon: <AntDesign name="heart" size={24} color="#DF0000" />,
-    url: ROUTES.bloodPressure,
-  },
-  {
-    title: 'Mood',
-    value: 'Happy',
-    text: 'Feeling Great',
-    id: 2,
-    icon: <Feather name="smile" size={24} color="#FFC847" />,
-    url: ROUTES.mood,
-  },
-  {
-    title: 'Sleep',
-    value: '7h 30 mins',
-    text: 'Quality: Good',
-    id: 3,
-    icon: <FontAwesome name="moon-o" size={24} color="black" />,
-    url: ROUTES.sleep,
-  },
-  {
-    title: 'Weight',
-    value: '765kg',
-    text: 'Healthy range',
-    id: 4,
-    icon: <FontAwesome name="balance-scale" size={24} color="blue" />,
-    url: ROUTES.weight,
-  },
-  {
-    title: 'Medications',
-    value: '2/3 doses',
-    text: 'Taken today',
-    id: 5,
-    icon: <MaterialCommunityIcons name="pill" size={24} color="#C11574" />,
-    url: ROUTES.medication,
-  }
-];
-
 export const allAppointmentData = [
   {
     id: 'dr-james-uche-june1',
@@ -214,35 +170,10 @@ export const recentWeight = [
   },
 ];
 
-export const recentMood = [
-  {
-    icon: '🙂',
-    mood: 'Happy',
-    date: 'Jun 22 ',
-    time: '09:45am',
-    status: 'Normal',
-  },
-  {
-    icon: '😂',
-    mood: 'Laughing',
-    date: 'Jun 22 ',
-    time: '10:45am',
-    status: 'Balanced',
-  },
-  {
-    icon: '😡',
-    mood: 'Angry',
-    date: 'Jun 22 ',
-    time: '10:45am',
-    status: 'Low',
-  },
-];
-
-const image1 = require('../assets/images/adhy-savala-zbpgmGe27p8-unsplash (1).jpg')
-const image2 = require('../assets/images/marcelo-leal-6pcGTJDuf6M-unsplash (1).jpg')
-const image3 = require('../assets/images/martha-dominguez-de-gouveia-KF-h9HMxRKg-unsplash (1).jpg')
-const image4 = require('../assets/images/stephen-andrews-GwgFPDXiSIs-unsplash.webp')
-
+const image1 = require('../assets/images/adhy-savala-zbpgmGe27p8-unsplash (1).jpg');
+const image2 = require('../assets/images/marcelo-leal-6pcGTJDuf6M-unsplash (1).jpg');
+const image3 = require('../assets/images/martha-dominguez-de-gouveia-KF-h9HMxRKg-unsplash (1).jpg');
+const image4 = require('../assets/images/stephen-andrews-GwgFPDXiSIs-unsplash.webp');
 
 export const consultationData = [
   {
@@ -252,7 +183,7 @@ export const consultationData = [
     address: '2 Olayinka Atiku St, Ajah, Lagos',
     text: 'Over 50 experienced Doctors',
     rating: '4.2(38)',
-    linkText: 'View Doctors'
+    linkText: 'View Doctors',
   },
   {
     image: image2,
@@ -261,7 +192,7 @@ export const consultationData = [
     address: '2 Olayinka Atiku St, Ajah, Lagos',
     text: 'Over 50 experienced Doctors',
     rating: '4.2(38)',
-    linkText: 'View Doctors'
+    linkText: 'View Doctors',
   },
   {
     image: image3,
@@ -270,7 +201,7 @@ export const consultationData = [
     address: '2 Olayinka Atiku St, Ajah, Lagos',
     text: 'Over 50 experienced Doctors',
     rating: '4.2(38)',
-    linkText: 'View Doctors'
+    linkText: 'View Doctors',
   },
   {
     image: image4,
@@ -279,9 +210,9 @@ export const consultationData = [
     address: '2 Olayinka Atiku St, Ajah, Lagos',
     text: 'Over 50 experienced Doctors',
     rating: '4.2(38)',
-    linkText: 'View Doctors'
+    linkText: 'View Doctors',
   },
-]
+];
 
 export const topRatedData = [
   {
@@ -316,36 +247,36 @@ export const topRatedData = [
     type: 'General Practitioner',
     address: 'Lagos Health Hospital',
   },
-]
+];
 
 export const reportAnIssue = [
   'Appointment / Booking Problem',
   'Payment / Refund Issue',
   'Video Call Issue',
   'Prescription / Medical Record',
-  'Others'
-]
+  'Others',
+];
 
 export const slidesData = [
   {
     id: 1,
     image: require('../assets/images/Vector.png'),
     title: 'Welcome to HealthMate',
-    subTitle: 'Track, Consult, and Stay Healthy.'
+    subTitle: 'Track, Consult, and Stay Healthy.',
   },
   {
     id: 2,
     image: require('../assets/images/Vector1.png'),
     title: 'Health Tracking',
-    subTitle: 'Log your BP, mood, weight, sleep & more.'
+    subTitle: 'Log your BP, mood, weight, sleep & more.',
   },
   {
     id: 1,
     image: require('../assets/images/Vectors.png'),
     title: 'Book Consultations Easily',
-    subTitle: 'Connect with verified doctors in just a tap'
+    subTitle: 'Connect with verified doctors in just a tap',
   },
-]
+];
 
 export const MedicationData = {
   name: {
@@ -362,26 +293,26 @@ export const MedicationData = {
   },
 };
 
-const image = require('../assets/images/Mobile.png')
+const image = require('../assets/images/Mobile.png');
 
 export const messageData = [
-    {
-        name: 'Dr James Uche',
-        profession: 'General Practitioner',
-        msg: 'Looking forward to our session',
-        time:'10:55 AM',
-        count: '2',
-        img: image
-    },
-    {
-        name: 'Dr James Uche',
-        profession: 'Cardiologist',
-        msg: 'Looking forward to our session',
-        time:'10:55 AM',
-        count: '2',
-        img: image
-    },
-]
+  {
+    name: 'Dr James Uche',
+    profession: 'General Practitioner',
+    msg: 'Looking forward to our session',
+    time: '10:55 AM',
+    count: '2',
+    img: image,
+  },
+  {
+    name: 'Dr James Uche',
+    profession: 'Cardiologist',
+    msg: 'Looking forward to our session',
+    time: '10:55 AM',
+    count: '2',
+    img: image,
+  },
+];
 
 export const bloodPressureData = {
   topNumber: {
@@ -455,6 +386,10 @@ export const sleepData = {
     label: 'Date',
     placeholder: '10/05/1997',
   },
+  sleep: {
+    placeholder: '3',
+    label: 'Sleep Hours',
+  },
 };
 
 export const sleepExperienceData = [
@@ -477,30 +412,29 @@ export const sleepExperienceData = [
 
 export const healthData = [
   {
-      title: 'Chronic Condition',
-      value: 'Hypertension',
-      icon: <MaterialIcons name="edit" size={15} color={colors.gray} />,
-      id: 1
+    title: 'Chronic Condition',
+    value: 'Hypertension',
+    icon: <MaterialIcons name="edit" size={15} color={colors.gray} />,
+    id: 1,
   },
   {
-      title: 'Medications',
-      value: 'Amlodipine,5mg,daily',
-      id: 2
+    title: 'Medications',
+    value: 'Amlodipine,5mg,daily',
+    id: 2,
   },
   {
-      title: 'Allergies',
-      value: 'Penicillin',
-      icon: <MaterialIcons name="edit" size={15} color={colors.gray} />,
-      id: 3
+    title: 'Allergies',
+    value: 'Penicillin',
+    icon: <MaterialIcons name="edit" size={15} color={colors.gray} />,
+    id: 3,
   },
   {
-      title: 'Goal Weight',
-      value: '65kg',
-      icon: <MaterialIcons name="edit" size={15} color={colors.gray} />,
-      id: 4
+    title: 'Goal Weight',
+    value: '65kg',
+    icon: <MaterialIcons name="edit" size={15} color={colors.gray} />,
+    id: 4,
   },
-]
-
+];
 
 export const healthOverviews = [
   {
@@ -546,31 +480,21 @@ export const healthOverviews = [
 ];
 
 export const reminderData = {
-  title:{
+  title: {
     placeholder: 'e.g Medication',
     label: 'Title',
   },
-  type:{
-    placeholder:'Medication',
+  type: {
+    placeholder: 'Medication',
     label: 'Type',
-    options:[
-      'Medication',
-      'BP Check',
-      'Sleep',
-      'Weight',
-      'Mood',
-      'Custom'
-    ]
+    options: ['Medication', 'BP Check', 'Sleep', 'Weight', 'Mood', 'Custom'],
   },
-  frequency:{
-    placeholder:'Daily',
+  frequency: {
+    placeholder: 'Daily',
     label: 'Frequency',
-    options:[
-      'Daily',
-      'Weekly',
-    ]
-  }
-}
+    options: ['Daily', 'Weekly'],
+  },
+};
 
 export const settingsData = [
   {
@@ -660,11 +584,7 @@ export const profileData = [
     id: 1,
     icon: <EvilIcons name="user" size={24} color={colors.lightRed} />,
     next: (
-      <Entypo
-        name="chevron-small-right"
-        size={24}
-        color={colors.lightBlack}
-      />
+      <Entypo name="chevron-small-right" size={24} color={colors.lightBlack} />
     ),
   },
   {
@@ -684,7 +604,7 @@ export const profileData = [
     value: 'Jan 20, 1996',
     id: 4,
     icon: <Feather name="calendar" size={20} color={colors.lightRed} />,
-  }
+  },
 ];
 
 export const otherMenuItems = [
@@ -698,7 +618,7 @@ export const otherMenuItems = [
         color={colors.lightRed}
       />
     ),
-    route: '/profile/health-info' as const
+    route: '/profile/health-info' as const,
   },
   {
     title: 'My Reminders',
@@ -710,6 +630,6 @@ export const otherMenuItems = [
         color={colors.lightRed}
       />
     ),
-    route: ROUTES.reminder  // Changed to a more appropriate route
+    route: ROUTES.reminder, // Changed to a more appropriate route
   },
 ];

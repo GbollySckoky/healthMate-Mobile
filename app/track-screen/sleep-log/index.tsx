@@ -89,8 +89,10 @@ export default function MyBarChart() {
         <NavHeader
           title="Sleep Tracker"
           _goBack={() => router.back()}
-          backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
-          text="Track your readings to monitor your heart health"
+          backIcon={
+            <Entypo name="chevron-small-left" size={24} color="black" />
+          }
+          text="Track your readings to monitor your sleep health"
         />
         <ScreenOverFlowLayout>
           <Wrapper>
@@ -101,10 +103,19 @@ export default function MyBarChart() {
                 color="#C11574"
                 style={styles.icon}
               />
-              <CardText>Today’s sleep</CardText>
-              <CardAmount>8h 30mins</CardAmount>
-              <CardText>Recorded on: Jun 22, 09:45</CardText>
-              <Text style={styles.colorText}>Excellent</Text>
+              <CardText>Today's sleep</CardText>
+              <CardAmount>
+                {latestSleep ? `${latestSleep.hours_slept} ${latestSleep.hours_slept == 1 ? 'hour' : 'hours'}` : '0 hours'}
+              </CardAmount>
+              <CardText>Recorded on: {latestSleep ? latestSleep.sleep_date : 'N/A'}</CardText>
+              <Text style={{
+                backgroundColor: latestSleepStatus ? latestSleepStatus.backgroundColor : '#F2F2F2',
+                color: latestSleepStatus ? latestSleepStatus.textColor : '#717680',
+                paddingHorizontal: 15,
+                paddingVertical: 7,
+                borderRadius: 30,
+                fontFamily: 'Inter_500Medium',
+              }}>{latestSleepStatus ? latestSleepStatus.status : 'No data'}</Text>
             </DetailsContainer>
             <View style={styles.container}>
               <View style={styles.chartContainer}>
@@ -245,12 +256,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter_500Medium',
     marginTop: 7,
   },
-  // container: {
-  //   flex: 1,
-  //   backgroundColor: '#f5f5f5',
-  //   padding: 20,
-  //   justifyContent: 'center'
-  // },
+  emojiContainer: {
+    borderColor: '#f2f2f2',
+    borderWidth: 1,
+    padding: 6,
+    borderRadius: 5,
+    fontSize: 24,
+  },
   chartContainer: {
     backgroundColor: 'white',
     borderRadius: 12,
@@ -291,5 +303,32 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 18,
     // backgroundColor: 'red'
+  },
+  stateContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 40,
+    paddingHorizontal: 20,
+  },
+  stateText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#414651',
+    marginTop: 12,
+    fontFamily: 'Lato_400Regular',
+  },
+  stateSubText: {
+    fontSize: 14,
+    color: '#717680',
+    marginTop: 6,
+    textAlign: 'center',
+    fontFamily: 'Lato_400Regular',
+  },
+  errorMessage: {
+    fontSize: 12,
+    color: '#B42318',
+    marginTop: 8,
+    textAlign: 'center',
+    fontFamily: 'Lato_400Regular',
   },
 });
