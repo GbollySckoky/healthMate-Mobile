@@ -4,30 +4,26 @@ import NumberInput from '@/components/Input/NumberInput';
 import { MedicationData } from '@/lib/data';
 import Input from '@/components/Input/Input';
 import { SubmitButton } from '@/components/typography/Typography';
-import { useMutation } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
+import { Medication } from '@/lib/interface/medication';
 import { patientService } from '@/service/patientService';
-import { CreateMedication } from '@/lib/interface/create-medication-interface';
-import Toast from 'react-native-toast-message';
-import { useModal } from '@/context/ModalContext';
-import CustomCalendar from '@/components/calendar/CustomCalendar';
+import { useMutation } from '@tanstack/react-query';
 import DateInput from '@/components/Input/DateInput';
+import CustomCalendar from '@/components/calendar/CustomCalendar';
+import { useModal } from '@/context/ModalContext';
 
 type MedicationInputType = Record<string, string>;
+const date = {
+  label: 'Date',
+  placeholder: '10/05/1997',
+}
 
-const medicationDate = {
-  date: {
-    label: 'Date',
-    placeholder: '10/05/1997',
-  },
-};
+// { label: 'YES', value: true}
 const MedicationModal = () => {
-  const [inputValue, setInputValue] = useState<MedicationInputType>({
-    date: new Date().toISOString().split('T')[0],
-  });
-  console.log(inputValue);
-  const { name, dosage, time } = MedicationData;
-  const { closeModal } = useModal();
+  const [inputValue, setInputValue] = useState<MedicationInputType>({});
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const { closeModal } = useModal();
+  const { name, dosage } = MedicationData;
   const handleChange = (key: string, value: string) => {
     setInputValue((prev) => ({
       ...prev,
@@ -36,43 +32,38 @@ const MedicationModal = () => {
   };
 
   const handleDateSelect = (day: any) => {
-    handleChange('date', day.dateString);
+    const selectedDate = day.dateString; // This will be in YYYY-MM-DD format
+    handleChange('date', selectedDate);
+    setShowDatePicker(false); // Close calendar after selection
+  };
+
+  const handleCloseCalendar = () => {
     setShowDatePicker(false);
   };
 
-  const handleCloseCalendar = () => setShowDatePicker(false);
-
-  const createMedicationMutation = useMutation({
-    mutationFn: (payload: CreateMedication) =>
-      patientService.createMedication(payload),
-    onSuccess: (response) => {
-      console.log('LOGG', response.data);
-      Toast.show({
-        type: 'success',
-        text1: response.data.success,
-      });
-      closeModal();
-    },
-    onError: (error: any) => {
-      console.log('Error:', error.response.data.error);
-      Toast.show({
-        type: 'error',
-        text1: error.response.data.error,
-      });
-    },
-  });
-
-  const handleSubmit = async () => {
-    Keyboard.dismiss();
-
-    const credentials = {
-      medication_name: inputValue.name || '',
-      dosage: inputValue.dosage || '',
-      date_taken: inputValue.date || '',
-    };
-    console.log(credentials);
-    await createMedicationMutation.mutate(credentials);
-  };
+   const mutation = useMutation({
+      mutationFn: (payload: Medication) => patientService.createMedication(payload),
+      onSuccess: (response) => {
+        console.log(response)
+        closeModal()
+      },
+      onError:(error: AxiosError) => {
+        console.log("Error!!",error)
+         console.log("STATUS:", error.response?.status);
+    console.log("ERROR DATA:", error.response?.data);
+      }
+    })
+  
+    const handleCreateMedication = async () => {
+      const data ={
+        name: inputValue.name,
+        dosage: inputValue.dosage,
+        recordedAt: inputValue.date,
+        // time: inputValue.time,
+      }
+      console.log("PAYLOAD:", data);
+      await mutation.mutateAsync(data)
+    }
 
   return (
     <View>
@@ -86,35 +77,20 @@ const MedicationModal = () => {
         value={inputValue.dosage || ''} // Safe fallback
         onChangeText={(value) => handleChange('dosage', value)}
       />
-      {/* Date Input */}
-      <DateInput
-          {...medicationDate.date}
-          value={new Date(inputValue.date).toLocaleDateString()}
-          _fn={() => setShowDatePicker(true)}
+       <DateInput
+          {...date}
+          value={
+            inputValue.date ? new Date(inputValue.date).toLocaleDateString() : ''
+          } // Show formatted date safely
+          _fn={() => setShowDatePicker(true)} // Open calendar directly
         />
-      <CustomCalendar
-        isOpen={showDatePicker}
-        onChangeText={handleDateSelect}
-        onClose={handleCloseCalendar}
-      />
-      <Pressable
-        style={[
-          styles.button,
-          {
-            backgroundColor: createMedicationMutation.isPending
-              ? '#ec4899'
-              : '#DD2590',
-          },
-        ]}
-        onPress={handleSubmit}
-        disabled={createMedicationMutation.isPending}
-      >
-        <Text style={styles.buttonText}>
-          {createMedicationMutation.isPending
-            ? 'Saving...'
-            : 'Save Medication Log'}
-        </Text>
-      </Pressable>
+
+        <CustomCalendar
+          isOpen={showDatePicker}
+          onChangeText={handleDateSelect}
+          onClose={handleCloseCalendar}
+        />
+      <SubmitButton _fn={handleCreateMedication}>{mutation.isPending ? "Saving..." : "Save Medication Log"}</SubmitButton>
     </View>
   );
 };

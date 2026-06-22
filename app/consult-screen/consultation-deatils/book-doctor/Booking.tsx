@@ -1,13 +1,12 @@
 import { SubTitle } from '@/components/typography/Typography';
 import { colors } from '@/lib/colors';
-import React, { useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 import {
   View,
   Text,
   Pressable,
   StyleSheet,
   TouchableOpacity,
-  Keyboard,
 } from 'react-native';
 import DateInput from '@/components/Input/DateInput';
 import CustomCalendar from '@/components/calendar/CustomCalendar';
@@ -16,12 +15,8 @@ import { useRouter } from 'expo-router';
 import { ROUTES } from '@/lib/routes';
 import { useMutation } from '@tanstack/react-query';
 import { patientService } from '@/service/patientService';
-import { CreateAppointmet } from '@/lib/interface/create-appointment-interface';
+import { Appointment } from '@/lib/interface/createAppointment';
 import Toast from 'react-native-toast-message';
-import { TimerPickerModal } from 'react-native-timer-picker';
-import { LinearGradient } from 'expo-linear-gradient';
-import { formatTime } from '@/app/utils/formatTime';
-
 
 const date = {
   label: 'Date',
@@ -34,20 +29,16 @@ type ShowPickerState = {
 }
 const Booking = () => {
   const router = useRouter();
-
   const [inputValue, setInputValue] = useState({
-    date: new Date().toISOString().split('T')[0], // YYYY-MM-DD
-    // time: '', /// ✅ STRING
+    date: new Date().toISOString().split('T')[0], // Initialize with today's date in YYYY-MM-DD format
+    time: '',
     consultationType: '',
     healthConcern: '',
-    about: '',
+    doctorId: '',
+    hospitalId: '',
+    amount: ''
   });
-  const [showPicker, setShowPicker] = useState<ShowPickerState>({
-    datePicker: false,
-    timePicker: false,
-  });
-  const [time, setTime] = useState<string>('');
- 
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const handleChange = (key: string, value: string) => {
     setInputValue((prev) => ({
@@ -56,68 +47,58 @@ const Booking = () => {
     }));
   };
 
-  const handleClick = (type: keyof ShowPickerState) => {
-    setShowPicker((prev) => ({
-      ...prev,
-      [type]: !prev[type]
-    }))
-  }
-
   const handleDateSelect = (day: any) => {
-    handleChange('date', day.dateString);
-    handleClick("datePicker");
+    const selectedDate = day.dateString; // This will be in YYYY-MM-DD format
+    handleChange('date', selectedDate);
+    // setSelectDatePicker(new Date(selectedDate))
+    setShowDatePicker(false); // Close calendar after selection
   };
 
-  // ISO TIME STRINGS
-  const timeSlots = [
-    { label: '10:00:00', value: '10:00:00.000Z' },
-    { label: '11:00:00', value: '11:00:00.000Z' },
-    { label: '12:00:00', value: '12:00:00.000Z' },
-    { label: '13:00:00', value: '13:00:00.000Z' },
-    { label: '14:00:00', value: '14:00:00.000Z' },
-    { label: '15:00:00', value: '15:00:00.000Z' },
-    { label: '16:00:00', value: '16:00:00.000Z' },
-    { label: '17:00:00', value: '17:00:00.000Z' },
+  const handleCloseCalendar = () => {
+    setShowDatePicker(false);
+  };
+  console.log(inputValue);
+  const time = [
+    '10:00am',
+    '11:00am',
+    '12:00pm',
+    '1:00pm',
+    '2:00pm',
+    '3:00pm',
+    '4:00pm',
+    '5:00pm',
   ];
-
-  const consultationType = ['video call', 'audio', 'in-person'];
-
-  const createAppointmentMutation = useMutation({
-    mutationFn: (payload: CreateAppointmet) =>
-      patientService.createAppointment(payload),
+  const consultationType = ['Video Call', 'Audio Call', 'Physical Appointment'];
+  
+  const mutation = useMutation({
+    mutationKey: ['createConsultation'],
+    mutationFn: (payload: Appointment) => patientService.createConsultation(payload),
     onSuccess: (response) => {
-      console.log(response.data);
-      Toast.show({
-        type: 'success',
-        text1: response.data.message,
-      });
-      router.push(ROUTES.consultationPayment);
+      console.log('19292',response)
+      router.push(ROUTES.consultationPayment)
     },
     onError: (error: any) => {
-      console.log('ERROR', error.response.data);
       Toast.show({
-        type: 'error',
-        text1: error.response.data,
-      });
-    },
-  });
+          type: 'error',
+          text1: error.response.data.message
+      })
+      console.log('TEMA',error.response.data.message)
+    }
+  })
 
   const handleSubmit = async () => {
-    Keyboard.dismiss();
-
-    const payload: CreateAppointmet = {
-      doctor: 'doctor@gmail.com',
-      appointment_date: inputValue.date,
-      appointment_time: time,
-      consultation_type: inputValue.consultationType,
-      health_concerns: inputValue.healthConcern,
-      about: inputValue.about,
-    };
-
-    console.log(payload);
-    await createAppointmentMutation.mutate(payload);
-  };
-
+    const data = {
+      date: inputValue.date,
+      time: inputValue.time,
+      consultationType: inputValue.consultationType,
+      healthConcern: inputValue.healthConcern,
+      doctorId: 3,
+      hospitalId: 1,
+      amount: 100000
+    }
+    console.log("submit_daata", data)
+    await mutation.mutate(data)
+  }
   return (
     <View style={{ marginBottom: 50 }}>
       <View style={{ marginBottom: 15 }}>
@@ -127,182 +108,141 @@ const Booking = () => {
             inputValue.date
               ? new Date(inputValue.date).toLocaleDateString()
               : ''
-          }
-          _fn={() => handleClick("datePicker")}
+          } // Show formatted date safely
+          _fn={() => setShowDatePicker(true)} // Open calendar directly
         />
         <CustomCalendar
-          isOpen={showPicker.datePicker}
+          isOpen={showDatePicker}
           onChangeText={handleDateSelect}
-          onClose={() => handleClick("datePicker")}
+          onClose={handleCloseCalendar}
         />
       </View>
 
       <SubTitle>Select Time</SubTitle>
-      {/* <View style={styles.timeContainer}>
-        {timeSlots.map((slot) => (
-          <Pressable
-            key={slot.value}
-            onPress={() => handleChange('time', slot.value)}
-            style={[
-              styles.timeBox,
-              inputValue.time === slot.value && styles.activeTime,
-            ]}
+      <View
+        style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          gap: 12,
+          marginTop: 5,
+          marginBottom: 20,
+        }}
+      >
+        {time.map((timeSlot, index) => (
+          <View
+            key={index}
+            style={{
+              width: '22%',
+              minWidth: 70,
+            }}
           >
-            <Text style={styles.timeText}>{slot.label}</Text>
-          </Pressable>
-        ))}
-      </View> */}
-
-        {/* Time */}
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => handleClick('timePicker')}
-        >
-        <View style={{ alignItems: 'center' }}>
-          {time !== null ? (
-            <Text style={{ color: '#000000', fontSize: 20, marginTop: 10 }}>
-              {time}
-            </Text>
-          ) : null}
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => handleClick('timePicker')}
-          >
-            <View style={{ marginTop: 10 }}>
+            <Pressable onPress={() => handleChange('time', timeSlot)}>
               <Text
                 style={{
-                  paddingVertical: 10,
-                  paddingHorizontal: 18,
+                  padding: 8,
                   borderWidth: 1,
-                  borderRadius: 10,
-                  fontSize: 16,
-                  overflow: 'hidden',
-                  borderColor: '#C2C2C2',
-                  color: '#C2C2C2',
+                  borderRadius: 5,
+                  borderColor:
+                    inputValue.time === timeSlot
+                      ? colors.lightRed
+                      : colors.broderColor,
+                  textAlign: 'center',
+                  fontSize: 12,
+                  backgroundColor:
+                    inputValue.time === timeSlot ? colors.lightPurple : '',
                 }}
               >
-                {'Set your Time 🔔'}
+                {timeSlot}
               </Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-        </TouchableOpacity>
-        <TimerPickerModal
-          closeOnOverlayPress
-          LinearGradient={LinearGradient}
-          modalProps={{
-            overlayOpacity: 0.2,
-          }}
-          modalTitle="Time"
-          onCancel={() => handleClick('timePicker')}
-          onConfirm={(pickedDuration) => {
-            setTime(formatTime(pickedDuration));
-            handleClick('timePicker');
-          }}
-          setIsVisible={() => setShowPicker(showPicker)}
-          styles={{
-            theme: 'dark',
-          }}
-          visible={showPicker.timePicker}
-        />
-
-      <SubTitle>Consultation Types</SubTitle>
-      <View style={{ gap: 12, marginVertical: 15 }}>
-        {consultationType.map((type) => (
-          <Pressable
-            key={type}
-            onPress={() => handleChange('consultationType', type)}
-            style={[
-              styles.consultBox,
-              inputValue.consultationType === type && styles.activeConsult,
-            ]}
-          >
-            <Text style={{ fontSize: 12 }}>{type}</Text>
-          </Pressable>
+            </Pressable>
+          </View>
         ))}
       </View>
-
+      <SubTitle>Consultation Types</SubTitle>
+      <View
+        style={{
+          gap: 12,
+          marginTop: 7,
+          marginBottom: 20,
+        }}
+      >
+        {consultationType.map((consult, index) => (
+          <View key={index}>
+            <Pressable
+              onPress={() => handleChange('consultationType', consult)}
+            >
+              <Text
+                style={{
+                  padding: 10,
+                  borderWidth: 1,
+                  borderRadius: 5,
+                  borderColor:
+                    inputValue.consultationType === consult
+                      ? colors.lightRed
+                      : colors.broderColor,
+                  fontSize: 12,
+                  backgroundColor:
+                    inputValue.consultationType === consult
+                      ? colors.lightPurple
+                      : '',
+                }}
+              >
+                {consult}
+              </Text>
+            </Pressable>
+          </View>
+        ))}
+      </View>
       <TextAreaInput
         value={inputValue.healthConcern}
         onChangeText={(value) => handleChange('healthConcern', value)}
         placeholder="Describe your issue..."
         label="Health Concern"
       />
-
-      <TextAreaInput
-        value={inputValue.about}
-        onChangeText={(value) => handleChange('about', value)}
-        placeholder="Any Note"
-        label="Note"
-      />
-
-      <Pressable
-        style={[
-            styles.button,
-            {
-            backgroundColor: createAppointmentMutation.isPending
-                ? '#ec4899'
-                : '#DD2590',
-            },
-        ]}
-
-        onPress={handleSubmit}
-        disabled={createAppointmentMutation.isPending}
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginTop: 10,
+        }}
       >
-        <Text style={styles.buttonText}>
-          {createAppointmentMutation.isPending
-            ? 'Processing...'
-            : 'Proceed to payment'}
+        <SubTitle>Total</SubTitle>
+        <Text style={[style.buttonTexts, { color: colors.green }]}>
+          ₦10,000
         </Text>
-      </Pressable>
+      </View>
+      <TouchableOpacity
+        style={{
+          backgroundColor: '#DD2590',
+          paddingVertical: 12,
+          borderRadius: 10,
+          marginTop: 25,
+        }}
+        activeOpacity={0.8}
+        onPress={handleSubmit}
+      >
+        <Text
+          style={{
+            color: 'white',
+            textAlign: 'center',
+            fontWeight: '600',
+            fontSize: 16,
+          }}
+        >
+         {mutation.isPending ? "proceeding..." : " Proceed to payment"}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 export default Booking;
 
-const styles = StyleSheet.create({
-  timeContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
-    marginVertical: 15,
-  },
-  timeBox: {
-    width: '22%',
-    padding: 8,
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: colors.broderColor,
-    alignItems: 'center',
-  },
-  activeTime: {
-    borderColor: colors.lightRed,
-    backgroundColor: colors.lightPurple,
-  },
-  timeText: {
-    fontSize: 12,
-  },
-  consultBox: {
-    padding: 10,
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: colors.broderColor,
-  },
-  activeConsult: {
-    borderColor: colors.lightRed,
-    backgroundColor: colors.lightPurple,
-  },
-  button: {
-    backgroundColor: '#DD2590',
-    paddingVertical: 12,
-    borderRadius: 10,
-    marginTop: 25,
-  },
-  buttonText: {
-    color: 'white',
-    textAlign: 'center',
-    fontWeight: '600',
+const style = StyleSheet.create({
+  buttonTexts: {
     fontSize: 16,
+    fontWeight: '600',
+    fontFamily: 'LibreFranklin_600SemiBold',
   },
 });

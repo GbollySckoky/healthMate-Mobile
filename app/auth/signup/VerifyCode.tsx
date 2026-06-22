@@ -121,7 +121,7 @@ const VerifyEmail = ({
     }
 
     const credentials: verifyEmail = {
-      'otp_code': otp, // Changed from otp_code to 'otp-code'
+      'verificationCode': otp, // Changed from otp_code to 'otp-code'
     };
 
     console.log('Verifying with:', credentials);

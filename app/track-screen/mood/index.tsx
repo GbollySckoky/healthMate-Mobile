@@ -11,13 +11,7 @@ import {
 } from '@/components/typography/Typography';
 import { router } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  ActivityIndicator,
-} from 'react-native';
+import { StyleSheet, Text, View, Dimensions, ActivityIndicator } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import { useState } from 'react';
 const { width } = Dimensions.get('window');
@@ -25,21 +19,19 @@ import { Button } from '@/components/button/Button';
 import MoodModal from './_components/MoodModal';
 import { useModal } from '@/context/ModalContext';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
-import { useQuery } from '@tanstack/react-query';
 import { patientService } from '@/service/patientService';
-import { GetMood } from '@/lib/interface/get-mood-interface';
-import AntDesign from '@expo/vector-icons/AntDesign';
-import useDate from '@/hooks/useDate';
+import { useQuery } from '@tanstack/react-query';
+
+
 
 const Mood = () => {
   const { openModal } = useModal();
-  const { data, isError, isLoading, error } = useQuery({
-    queryKey: ['getMood'],
+  const {data, isLoading, isError, error} = useQuery({
+    queryKey: ['mood'],
     queryFn: () => patientService.getMood(),
-  });
-  const { getReadableDate } = useDate();
-
-  // Prepare chart data - you may want to map actual mood data here
+  })
+  console.log("Data", data)
+  
   const [readings, setReadings] = useState([
     { date: 'Jun 20', systolic: 82, diastolic: 62 },
     { date: 'Jun 21', systolic: 95, diastolic: 75 },
@@ -87,145 +79,21 @@ const Mood = () => {
       strokeWidth: 1,
     },
   };
-
-  const getMoodStatus = (value: string) => {
-    if (value === 'Angry') {
-      return {
-        status: 'High',
-        backgroundColor: '#FEF3F2',
-        textColor: '#B42318',
-      };
-    }
-
-    if (value === 'Moody') {
-      return {
-        status: 'Medium',
-        backgroundColor: '#FEF9E6',
-        textColor: '#DC6803',
-      };
-    }
-
-    if (value === 'Sad' || value === 'Sick' || value === 'Tired') {
-      return {
-        status: 'Low',
-        backgroundColor: '#EFF8FF',
-        textColor: '#175CD3',
-      };
-    }
-
-    return {
-      status: 'Normal',
-      backgroundColor: '#ECFDF3',
-      textColor: '#027A48',
-    };
-  };
-
-  const getMoodEmoji = (value: string) => {
-    if (value === 'Angry') return '😡';
-    if (value === 'Moody') return '😒';
-    if (value === 'Sad') return '😢';
-    if (value === 'Sick') return '🤢';
-    if (value === 'Tired') return '🥱';
-    return '🙂'; // Normal/Happy
-  };
-
-  // Get the latest mood for the "Today's mood" section
-  const latestMood = data && data.length > 0 ? data[0] : null;
-  const latestMoodStatus = latestMood ? getMoodStatus(latestMood.mood) : null;
-
-  // Render function for Mood content
-  const renderMoodsReadings = () => {
-    if (isLoading) {
+  if(isLoading){
       return (
-        <View style={styles.stateContainer}>
-          <ActivityIndicator size="large" color="#DF0000" />
-          <Text style={styles.stateText}>Loading mood...</Text>
-        </View>
-      );
-    }
-
-    if (isError) {
-      return (
-        <View style={styles.stateContainer}>
-          <Text style={styles.stateText}>Error loading moods</Text>
-          <Text style={styles.errorMessage}>{error?.message}</Text>
-        </View>
-      );
-    }
-
-    if (!data || data.length === 0) {
-      return (
-        <View style={styles.stateContainer}>
-          <AntDesign name="inbox" size={40} color="#717680" />
-          <Text style={styles.stateText}>No mood readings yet</Text>
-          <Text style={styles.stateSubText}>
-            Add your first mood to start tracking
-          </Text>
-        </View>
-      );
-    }
-
-    return data.map((moods: GetMood, index: number) => {
-      const { mood, recorded_at } = moods;
-      const isLastItem = index === data.length - 1;
-      const statusInfo = getMoodStatus(mood);
-
-      return (
-        <View
-          key={index}
-          style={[styles.enhancedItemContainer, isLastItem && styles.lastItem]}
-        >
-          <View style={styles.flex}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              <Text style={styles.emojiContainer}>{getMoodEmoji(mood)}</Text>
-              <View style={{ paddingLeft: 16 }}>
-                <Text
-                  style={{
-                    fontWeight: '500',
-                    fontSize: 14,
-                    color: '#414651',
-                    paddingTop: 2,
-                    fontFamily: 'Lato_400Regular',
-                  }}
-                >
-                  {mood}
-                </Text>
-                <Text
-                  style={{
-                    fontWeight: '400',
-                    fontSize: 12,
-                    color: '#717680',
-                    paddingTop: 2,
-                    fontFamily: 'Lato_400Regular',
-                  }}
-                >
-                  {getReadableDate(recorded_at)}
-                </Text>
-              </View>
-            </View>
-            <Text
-              style={{
-                backgroundColor: statusInfo.backgroundColor,
-                color: statusInfo.textColor,
-                paddingHorizontal: 15,
-                paddingVertical: 7,
-                borderRadius: 30,
-                fontFamily: 'Inter_500Medium',
-              }}
-            >
-              {statusInfo.status}
-            </Text>
-          </View>
-        </View>
-      );
-    });
-  };
-
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+      )
+  }
+  
+  if (isError as unknown) {
+    return(
+       <div className="h-full flex items-center justify-center text-sm text-red-500">
+        {(error as Error).message}
+      </div>
+    )
+  }
   return (
     <SafeArea>
       <ScreenLayout>
@@ -287,7 +155,89 @@ const Mood = () => {
             <View style={{ marginBottom: 40 }}>
               <Card>
                 <SubTitle>Recent Moods</SubTitle>
-                {renderMoodsReadings()}
+                {data?.data?.map((recent: any) => {
+                  const { icon, date, time, mood, status } = recent;
+                  const isLastItem = recent.id === data?.data?.length - 1;
+                  return (
+                    <View
+                      key={recent.id}
+                      style={[
+                        styles.enhancedItemContainer,
+                        isLastItem && styles.lastItem,
+                      ]}
+                    >
+                      <View style={styles.flex}>
+                        <View
+                          style={{ flexDirection: 'row', alignItems: 'center' }}
+                        >
+                          {recent.mood.selectedEmoji && (
+                          <Text
+                            style={{
+                              borderColor: '#f2f2f2',
+                              borderWidth: 1,
+                              padding: 6,
+                              borderRadius: 5,
+                            }}
+                          >
+                            {' '}
+                            {recent.mood.selectedMood === 'Happy' && '🙂' || recent.mood.selectedMood === 'Laughing' && '😂' || recent.mood.selectedMood === 'Angry' && '😡' || 
+                             recent.mood.selectedMood === 'Sick' && '🤢' || recent.mood.selectedMood === 'Tired' && '🥱' || recent.mood.selectedMood === 'Tired' && '😒'}{' '}
+                          </Text>
+                          )}
+                          
+                          <View style={{ paddingLeft: 16 }}>
+                            <Text
+                              style={{
+                                fontWeight: 500,
+                                fontSize: 14,
+                                fontFamily: 'Lato_400Regular',
+                              }}
+                            >
+                              {recent.mood.selectedMood}
+                            </Text>
+                            <Text
+                              style={{
+                                fontWeight: 500,
+                                fontSize: 14,
+                                fontFamily: 'Lato_400Regular',
+                              }}
+                            >
+                              {recent.notes}
+                            </Text>
+                            <Text
+                              style={{
+                                fontWeight: '400',
+                                fontSize: 12,
+                                color: '#717680',
+                                paddingTop: 2,
+                                fontFamily: 'Lato_400Regular',
+                              }}
+                            >
+                              {new Date(recent.recordedAt).toLocaleDateString()} {" "} at {" "}
+                              {new Date(recent.recordedAt).toLocaleTimeString()}
+                            </Text>
+                          </View>
+                        </View>
+                        <Text
+                          style={{
+                            backgroundColor: `${
+                              (status === 'Normal' && '#ECFDF3') ||
+                              (status === 'Low' && '#FEF3F2') ||
+                              (status === 'Balanced' && '#FFFAEB')
+                            }`,
+                            color: `${(status === 'Normal' && '#027A48') || (status === 'Low' && '#B42318') || (status === 'Balanced' && '#B54708')}`,
+                            paddingHorizontal: 15,
+                            paddingVertical: 7,
+                            borderRadius: 30,
+                            fontFamily: 'Inter_500Medium',
+                          }}
+                        >
+                          {status}
+                        </Text>
+                      </View>
+                    </View>
+                  );
+                })}
               </Card>
             </View>
           </Wrapper>

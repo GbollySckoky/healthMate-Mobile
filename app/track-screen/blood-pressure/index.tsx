@@ -12,14 +12,7 @@ import {
 import { router } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  ActivityIndicator,
-} from 'react-native';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { StyleSheet, Text, View, Dimensions, ActivityIndicator } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import { useState } from 'react';
 import { Button } from '@/components/button/Button';
@@ -28,7 +21,7 @@ import { useModal } from '@/context/ModalContext';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
 import { useQuery } from '@tanstack/react-query';
 import { patientService } from '@/service/patientService';
-import { GetBloodPressue } from '@/lib/interface/get-blood-pressure-interface';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 const { width } = Dimensions.get('window');
 
@@ -44,7 +37,12 @@ const BloodPressure = () => {
     { date: 'Jun 26', systolic: 140, diastolic: 82 },
     { date: 'Jun 27', systolic: 140, diastolic: 82 },
   ]);
-
+   const {data, isLoading, isError, error} = useQuery({
+    queryKey: ['bloodPressure'],
+    queryFn: () => patientService.getBloodPressure(),
+  })
+  console.log("DATA!!", data)
+ 
   // Prepare chart data
   const chartData = {
     labels: readings.map((r) => r.date.split(' ')[1]), // Just day numbers
@@ -83,159 +81,21 @@ const BloodPressure = () => {
     },
   };
 
-  const { data, isError, isLoading, error } = useQuery({
-    queryKey: ['getBloodPressure'],
-    queryFn: () => patientService.getBloodPressure(),
-  });
-  console.log('12345', data);
-  console.log('eijijdf', error);
-
-  const getBloodPressureStatus = (systolic: number, diastolic: number) => {
-    // High Blood Pressure (Hypertension Stage 2)
-    if (systolic >= 140 || diastolic >= 90) {
-      return {
-        status: 'High',
-        backgroundColor: '#FEF3F2',
-        textColor: '#B42318',
-      };
-    }
-
-    // Elevated/Medium (Hypertension Stage 1)
-    if (systolic >= 130 || diastolic >= 80) {
-      return {
-        status: 'Medium',
-        backgroundColor: '#FEF9E6',
-        textColor: '#DC6803',
-      };
-    }
-
-    // Low Blood Pressure (Hypotension)
-    if (systolic < 90 || diastolic < 60) {
-      return {
-        status: 'Low',
-        backgroundColor: '#EFF8FF',
-        textColor: '#175CD3',
-      };
-    }
-
-    // Normal
-    return {
-      status: 'Normal',
-      backgroundColor: '#ECFDF3',
-      textColor: '#027A48',
-    };
-  };
-
-  // Render function for Recent Readings content
-  const renderRecentReadings = () => {
-    if (isLoading) {
+   if(isLoading){
       return (
-        <View style={styles.stateContainer}>
-          <ActivityIndicator size="large" color="#DF0000" />
-          <Text style={styles.stateText}>Loading readings...</Text>
-        </View>
-      );
-    }
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+      )
+  }
 
-    if (isError) {
-      return (
-        <View style={styles.stateContainer}>
-          <Text style={styles.stateText}>Error loading readings</Text>
-          <Text style={styles.errorMessage}>{error?.message}</Text>
-        </View>
-      );
-    }
-
-    if (!data || data.length === 0) {
-      return (
-        <View style={styles.stateContainer}>
-          <AntDesign name="inbox" size={40} color="#717680" />
-          <Text style={styles.stateText}>No blood pressure readings yet</Text>
-          <Text style={styles.stateSubText}>
-            Add your first reading to start tracking
-          </Text>
-        </View>
-      );
-    }
-
-    return data.map((blood: GetBloodPressue, index: number) => {
-      const { diastolic, date_recorded, systolic, time_recorded } = blood;
-      const isLastItem = index === data.length - 1;
-
-      // Get the status information
-      const statusInfo = getBloodPressureStatus(systolic, diastolic);
-
-      return (
-        <View
-          key={index}
-          style={[styles.enhancedItemContainer, isLastItem && styles.lastItem]}
-        >
-          <View style={styles.flex}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              <Text
-                style={{
-                  borderColor: '#f2f2f2',
-                  borderWidth: 1,
-                  padding: 6,
-                  borderRadius: 5,
-                }}
-              >
-                <FontAwesome name="stethoscope" size={24} color="#DF0000" />
-              </Text>
-              <View style={{ paddingLeft: 16 }}>
-                <Text
-                  style={{
-                    fontWeight: '500',
-                    fontSize: 14,
-                    color: '#414651',
-                    paddingTop: 2,
-                    fontFamily: 'Lato_400Regular',
-                  }}
-                >
-                  {systolic}/{diastolic} mmHg
-                </Text>
-                <Text
-                  style={{
-                    fontWeight: '400',
-                    fontSize: 12,
-                    color: '#717680',
-                    paddingTop: 2,
-                    fontFamily: 'Lato_400Regular',
-                  }}
-                >
-                  {date_recorded} at {time_recorded}
-                </Text>
-              </View>
-            </View>
-            <Text
-              style={{
-                backgroundColor: statusInfo.backgroundColor,
-                color: statusInfo.textColor,
-                paddingHorizontal: 15,
-                paddingVertical: 7,
-                borderRadius: 30,
-                fontFamily: 'Inter_500Medium',
-              }}
-            >
-              {statusInfo.status}
-            </Text>
-          </View>
-        </View>
-      );
-    });
-  };
-  const latestReading = data?.[0];
-  const status = latestReading
-  ? getBloodPressureStatus(
-      latestReading.systolic,
-      latestReading.diastolic
+  if (isError as unknown) {
+    return(
+       <div className="h-full flex items-center justify-center text-sm text-red-500">
+        {(error as Error).message}
+      </div>
     )
-  : null;
+  }
 
   return (
     <SafeArea>
@@ -329,7 +189,72 @@ const BloodPressure = () => {
             <View style={{ marginBottom: 40 }}>
               <Card>
                 <SubTitle>Recent Readings</SubTitle>
-                {renderRecentReadings()}
+                {data?.data?.map((recent: any,) => {
+                  const isLastItem = recent.id === data.data.length - 1;
+                  return (
+                    <View
+                      key={recent.id}
+                      style={[
+                        styles.enhancedItemContainer,
+                        isLastItem && styles.lastItem,
+                      ]}
+                    >
+                      <View style={styles.flex}>
+                        <View
+                          style={{ flexDirection: 'row', alignItems: 'center' }}
+                        >
+                          <Text
+                            style={{
+                              borderColor: '#f2f2f2',
+                              borderWidth: 1,
+                              padding: 6,
+                              borderRadius: 5,
+                            }}
+                          >
+                            <FontAwesome name="stethoscope" size={24} color="#DF0000" />
+                          </Text>
+                          <View style={{ paddingLeft: 16 }}>
+                            <Text
+                              style={{
+                                fontWeight: '500',
+                                fontSize: 14,
+                                color: '#414651',
+                                paddingTop: 2,
+                                fontFamily: 'Lato_400Regular',
+                              }}
+                            >
+                              {recent.systolic}/{recent.diastolic} mmH
+                            </Text>
+                            <Text
+                              style={{
+                                fontWeight: '400',
+                                fontSize: 12,
+                                color: '#717680',
+                                paddingTop: 2,
+                                fontFamily: 'Lato_400Regular',
+                              }}
+                            >
+                             {new Date(recent.createdAt).toLocaleDateString()} at{' '}
+                              {new Date(recent.createdAt).toLocaleTimeString()}
+                            </Text>
+                          </View>
+                        </View>
+                        {/* <Text
+                          style={{
+                            backgroundColor: `${(status === 'Normal' && '#ECFDF3') || (status === 'High' && '#FEF3F2')}`,
+                            color: `${(status === 'Normal' && '#027A48') || (status === 'High' && '#B42318')}`,
+                            paddingHorizontal: 15,
+                            paddingVertical: 7,
+                            borderRadius: 30,
+                            fontFamily: 'Inter_500Medium',
+                          }}
+                        >
+                          {status}
+                        </Text> */}
+                      </View>
+                    </View>
+                  );
+                })}
               </Card>
             </View>
           </Wrapper>

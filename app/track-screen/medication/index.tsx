@@ -12,16 +12,38 @@ import {
 import { router } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { StyleSheet, Text, View } from 'react-native';
-import { medicationDosage } from '../../../lib/data';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';;
 import { Button } from '@/components/button/Button';
 import MedicationModal from './MedicationModal';
 import { useModal } from '@/context/ModalContext';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
+import { useQuery } from '@tanstack/react-query';
+import { patientService } from '@/service/patientService';
+
 
 const Medication = () => {
   const { openModal } = useModal();
+  const {data, isLoading, isError, error} = useQuery({
+    queryKey: ['medication'],
+    queryFn: () => patientService.getMedication(),
+  })
+  console.log(data)
 
+  if(isLoading){
+    return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <ActivityIndicator size="large" />
+    </View>
+    )
+  }
+  
+  if (isError as unknown) {
+    return(
+       <div className="h-full flex items-center justify-center text-sm text-red-500">
+        {(error as Error).message}
+      </div>
+    )
+  }
   return (
     <SafeArea>
       <ScreenLayout>
@@ -48,12 +70,12 @@ const Medication = () => {
             <View style={{ marginBottom: 40 }}>
               <Card>
                 <SubTitle>Medication History</SubTitle>
-                {medicationDosage.map((recent, index) => {
+                {data?.data.map((recent: any) => {
                   const { icon, bloodRate, date, status, time } = recent;
-                  const isLastItem = index === medicationDosage.length - 1;
+                  const isLastItem = recent.id === data?.data?.length - 1;
                   return (
                     <View
-                      key={index}
+                      key={recent.id}
                       style={[
                         styles.enhancedItemContainer,
                         isLastItem && styles.lastItem,
@@ -71,8 +93,7 @@ const Medication = () => {
                               borderRadius: 5,
                             }}
                           >
-                            {' '}
-                            {icon}{' '}
+                            <MaterialCommunityIcons name="pill" size={24} color="#C11574" />
                           </Text>
                           <View style={{ paddingLeft: 16 }}>
                             <Text
@@ -84,7 +105,7 @@ const Medication = () => {
                                 fontFamily: 'Lato_400Regular',
                               }}
                             >
-                              {bloodRate}
+                              {recent.name}
                             </Text>
                             <Text
                               style={{
@@ -95,7 +116,8 @@ const Medication = () => {
                                 fontFamily: 'Lato_400Regular',
                               }}
                             >
-                              {date} at {time}
+                              {new Date(recent.recordedAt).toLocaleDateString()} {" "} at
+                              {new Date(recent.recordedAt).toLocaleTimeString()}
                             </Text>
                           </View>
                         </View>
@@ -110,6 +132,18 @@ const Medication = () => {
                           }}
                         >
                           {status}
+                        </Text>
+                        <Text
+                          style={{
+                            backgroundColor: `${(status === 'Taken' && '#ECFDF3') || (status === 'Missed' && '#FEF3F2')}`,
+                            color: `${(status === 'Taken' && '#027A48') || (status === 'Missed' && '#B42318')}`,
+                            paddingHorizontal: 15,
+                            paddingVertical: 7,
+                            borderRadius: 30,
+                            fontFamily: 'Inter_500Medium',
+                          }}
+                        >
+                          {recent.dosage}
                         </Text>
                       </View>
                     </View>

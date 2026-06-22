@@ -5,78 +5,83 @@ import { verifyEmail } from "@/types/verifyEmail";
 import { PATIENTS_ENDPOINTS } from "@/lib/endpoints";
 import { Signup } from "@/lib/interface/signup-interface";
 import { CreateHealth } from "@/lib/interface/create-health-interface";
-import { CreateAppointmet } from "@/lib/interface/create-appointment-interface";
-import { BloodPressure } from "@/lib/interface/create-blood-pressure.interface";
-import { CreateWeight } from "@/lib/interface/create-weight-interface";
-import { CreateMood } from "@/lib/interface/create-mood-interface";
-import { CreateSleep } from "@/lib/interface/create-sleep-interface";
-import { CreateMedication } from "@/lib/interface/create-medication-interface";
+import { BloodPressure } from "@/lib/interface/blood-pressure";
+import { Medication } from "@/lib/interface/medication";
+import { Weight } from "@/lib/interface/weight";
+import { Sleep } from "@/lib/interface/sleep";
+import { Mood } from "@/lib/interface/mood";
+import { Appointment } from "@/lib/interface/createAppointment";
+import instance from "../lib/axios";
 
 export const patientService = {
   login: async (payload: login) => {
-    return await axiosService().post(PATIENTS_ENDPOINTS.LOGIN, payload); 
+    return await instance.post(PATIENTS_ENDPOINTS.LOGIN, payload); 
     // this returns the data because interceptor returns response.data
   },
   signup: async (payload: Signup) => {
-    return await axiosService().post(PATIENTS_ENDPOINTS.SIGNUP, payload); 
+    return await instance.post(PATIENTS_ENDPOINTS.SIGNUP, payload); 
   },
   forgotPassword: async (payload: forgotPassword) => {
-    return await axiosService().post(`auth/forgot-password/`, payload); 
+    return await instance.post(PATIENTS_ENDPOINTS.FORGOT_PASSWORD, payload); 
   },
   verifyEmail: async (email: string | undefined, payload: verifyEmail ) => {
-    return await axiosService().post(`patient/verify/${email}`, payload); 
+    return await instance.post(`${PATIENTS_ENDPOINTS.VERIFY_EMAIL}${email}`, payload); 
   },
-  createHealth: async (payload: CreateHealth) => {
-    return await axiosService().post(`patient/health/create`, payload); 
+  // createHealth: async (payload: CreateHealth) => {
+  //   return await axiosService().post(PATIENTS_ENDPOINTS.CREATE_HEALTH, payload); 
+  // },
+  getUser: async () => {
+    const response = await instance.get(PATIENTS_ENDPOINTS.USER)
+    return await response.data
   },
-  createAppointment: async (payload: CreateAppointmet) => {
-    return await axiosService().post(PATIENTS_ENDPOINTS.CREATE_APPOINTMENT, payload); 
-  },
-  createBloodPressure: async (payload: BloodPressure) => {
-    return await axiosService().post(PATIENTS_ENDPOINTS.CREATE_BLOOD_PRESSURE, payload); 
-  },
-  getAppointments: async () => {
-    const response = await axiosService().get(PATIENTS_ENDPOINTS.GET_APPOINTMENTS)
-    return await response.data; 
-  },
-  getAppointmentDetails: async (appointment_id: number) => {
-    const response = await axiosService().get(`patient/appointments/${appointment_id}`)
-    return await response.data; 
+  createBloodPressue: async (payload: BloodPressure) => {
+    return await instance.post(PATIENTS_ENDPOINTS.BLOOD_PRESSURE, payload)
   },
   getBloodPressure: async () => {
-    const response = await axiosService().get(PATIENTS_ENDPOINTS.GET_BLOOD_PRESSURE)
+    const response = await instance.get(PATIENTS_ENDPOINTS.BLOOD_PRESSURE)
     return await response.data
   },
-  createWeight: async (payload: CreateWeight) => {
-    return await axiosService().post(PATIENTS_ENDPOINTS.CREATE_WEIGHT, payload)
+  createMedication: async (payload: Medication) => {
+    return await instance.post(PATIENTS_ENDPOINTS.MEDICATION, payload)
   },
-  createMood: async (payload: CreateMood) => {
-    return await axiosService().post(PATIENTS_ENDPOINTS.CREATE_MOOD, payload)
-  },
-  createSleep: async (payload: CreateSleep) => {
-    return await axiosService().post(PATIENTS_ENDPOINTS.CREATE_SLEEP, payload)
-  },
-  createMedication: async (payload: CreateMedication) => {
-    return await axiosService().post(PATIENTS_ENDPOINTS.CREATE_MEDICATION, payload)
-  },
-  getMood: async () => {
-    const response = await axiosService().get(PATIENTS_ENDPOINTS.GET_MOOD)
+  getMedication: async () => {
+    const response = await instance.get(PATIENTS_ENDPOINTS.MEDICATION)
     return await response.data
+  },
+  createWeight: async (payload: Weight) => {
+    return await instance.post(PATIENTS_ENDPOINTS.WEIGHT, payload)
   },
   getWeight: async () => {
-    const response = await axiosService().get(PATIENTS_ENDPOINTS.GET_WEIGHT)
+    const response = await instance.get(PATIENTS_ENDPOINTS.WEIGHT)
     return await response.data
+  },
+  createMood: async (payload: Mood) => {
+    return await instance.post(PATIENTS_ENDPOINTS.MOOD, payload)
+  },
+  getMood: async () => {
+    const response = await instance.get(PATIENTS_ENDPOINTS.MOOD)
+    return await response.data
+  },
+  createSleep: async (payload: Sleep) => {
+    return await instance.post(PATIENTS_ENDPOINTS.SLEEP, payload)
   },
   getSleep: async () => {
-    const response = await axiosService().get(PATIENTS_ENDPOINTS.GET_SLEEP)
+    const response = await instance.get(PATIENTS_ENDPOINTS.SLEEP)
     return await response.data
   },
-  getOverview: async () => {
-    const response = await axiosService().get(PATIENTS_ENDPOINTS.GET_OVERVIEW)
+  createConsultation: async(payload: Appointment) => {
+    return await instance.post(PATIENTS_ENDPOINTS.BOOK_APPOINTMENT, payload)
+  },
+  getDoctors: async (hospitalId: number) => {
+    const response = await instance.get(`${PATIENTS_ENDPOINTS.GET_ALL_DOCTORS}${hospitalId}`)
     return await response.data
   },
-  getUser: async () => {
-    const response = await axiosService().get(PATIENTS_ENDPOINTS.USER)
+  getHospitals: async () => {
+    const response = await instance.get(`${PATIENTS_ENDPOINTS.GET_ALL_HOSPITALS}`)
     return await response.data
-  }
+  },
+   getDoctorById: async (doctorId: number) => {
+    const response = await instance.get(`${PATIENTS_ENDPOINTS.GET_DOCTOR}${doctorId}`)
+    return await response.data
+  },
 }

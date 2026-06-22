@@ -12,13 +12,7 @@ import {
 import { router } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  ActivityIndicator,
-} from 'react-native';
+import { StyleSheet, Text, View, Dimensions, ActivityIndicator } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import { useState, useMemo } from 'react';
 const { width } = Dimensions.get('window');
@@ -27,20 +21,29 @@ import { Button } from '@/components/button/Button';
 import WeightModal from './_component/WeightModal';
 import { useModal } from '@/context/ModalContext';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
-import { patientService } from '@/service/patientService';
 import { useQuery } from '@tanstack/react-query';
-import { GetWeight } from '@/lib/interface/get-weight-interface';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import useDate from '@/hooks/useDate';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import { patientService } from '@/service/patientService';
+
 
 const Weight = () => {
   const { openModal } = useModal();
-  const { data, isError, isLoading, error } = useQuery({
-    queryKey: ['getWeight'],
+  const {data, isLoading, isError, error} = useQuery({
+    queryKey: ['weight'],
     queryFn: () => patientService.getWeight(),
-  });
-  const { getReadableDate } = useDate();
+  })
+
+  
+  console.log('DATA!!', data)
+  const [readings, setReadings] = useState([
+    { date: 'Jun 20', systolic: 82, diastolic: 62 },
+    { date: 'Jun 21', systolic: 95, diastolic: 75 },
+    { date: 'Jun 22', systolic: 118, diastolic: 105 },
+    { date: 'Jun 23', systolic: 118, diastolic: 95 },
+    { date: 'Jun 24', systolic: 140, diastolic: 82 },
+    { date: 'Jun 25', systolic: 140, diastolic: 82 },
+    { date: 'Jun 26', systolic: 140, diastolic: 82 },
+    { date: 'Jun 27', systolic: 140, diastolic: 82 },
+  ]);
 
   // Prepare chart data from actual weight data
   const chartData = useMemo(() => {
@@ -92,101 +95,21 @@ const Weight = () => {
     },
   };
 
-  // Get current (most recent) weight
-  const currentWeight = useMemo(() => {
-    if (!data || data.length === 0) return null;
-    const sorted = [...data].sort(
-      (a, b) => new Date(b.recorded_at).getTime() - new Date(a.recorded_at).getTime()
-    );
-    return sorted[0];
-  }, [data]);
-
-  const renderWeightReadings = () => {
-    if (isLoading) {
+  if(isLoading){
       return (
-        <View style={styles.stateContainer}>
-          <ActivityIndicator size="large" color="#DF0000" />
-          <Text style={styles.stateText}>Loading weight...</Text>
-        </View>
-      );
-    }
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+      )
+  }
 
-    if (isError) {
-      return (
-        <View style={styles.stateContainer}>
-          <Text style={styles.stateText}>Error loading weights</Text>
-          <Text style={styles.errorMessage}>{error?.message}</Text>
-        </View>
-      );
-    }
-
-    if (!data || data.length === 0) {
-      return (
-        <View style={styles.stateContainer}>
-          <AntDesign name="inbox" size={40} color="#717680" />
-          <Text style={styles.stateText}>No weight readings yet</Text>
-          <Text style={styles.stateSubText}>
-            Add your first weight to start tracking
-          </Text>
-        </View>
-      );
-    }
-
-    return data.map((recent: GetWeight, index: number) => {
-      const { recorded_at, weight } = recent;
-      const isLastItem = index === data.length - 1;
-      return (
-        <View
-          key={index}
-          style={[
-            styles.enhancedItemContainer,
-            isLastItem && styles.lastItem,
-          ]}
-        >
-          <View style={styles.flex}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text
-                style={{
-                  borderColor: '#f2f2f2',
-                  borderWidth: 1,
-                  padding: 6,
-                  borderRadius: 5,
-                }}
-              >
-                <MaterialCommunityIcons
-                  name="weight-lifter"
-                  size={24}
-                  color="#C11574"
-                />
-              </Text>
-              <View style={{ paddingLeft: 16 }}>
-                <Text
-                  style={{
-                    fontWeight: '500',
-                    fontSize: 14,
-                    fontFamily: 'Lato_400Regular',
-                  }}
-                >
-                  {weight} kg
-                </Text>
-                <Text
-                  style={{
-                    fontWeight: '400',
-                    fontSize: 12,
-                    color: '#717680',
-                    paddingTop: 2,
-                    fontFamily: 'Lato_400Regular',
-                  }}
-                >
-                  {getReadableDate(recorded_at)}
-                </Text>
-              </View>
-            </View>
-          </View>
-        </View>
-      );
-    });
-  };
+  if (isError as unknown) {
+    return(
+       <div className="h-full flex items-center justify-center text-sm text-red-500">
+        {(error as Error).message}
+      </div>
+    )
+  }
 
   return (
     <SafeArea>
@@ -292,7 +215,63 @@ const Weight = () => {
             <View style={{ marginBottom: 40 }}>
               <Card>
                 <SubTitle>Weight History</SubTitle>
-                {renderWeightReadings()}
+                {data?.data?.map((data: any) => {
+                  const isLastItem = data.id === data?.data?.length - 1;
+                  return (
+                    <View
+                      key={data.id}
+                      style={[
+                        styles.enhancedItemContainer,
+                        isLastItem && styles.lastItem,
+                      ]}
+                    >
+                      <View style={styles.flex}>
+                        <View
+                          style={{ flexDirection: 'row', alignItems: 'center' }}
+                        >
+                          <Text
+                            style={{
+                              borderColor: '#f2f2f2',
+                              borderWidth: 1,
+                              padding: 6,
+                              borderRadius: 5,
+                            }}
+                          >
+                              <FontAwesome
+                                name="balance-scale"
+                                size={16}
+                                color="#C11574"
+                                style={styles.icon}
+                              />
+                          </Text>
+                          <View style={{ paddingLeft: 16 }}>
+                            <Text
+                              style={{
+                                fontWeight: 500,
+                                fontSize: 14,
+                                fontFamily: 'Lato_400Regular',
+                              }}
+                            >
+                              {data.weight}
+                            </Text>
+                            <Text
+                              style={{
+                                fontWeight: '400',
+                                fontSize: 12,
+                                color: '#717680',
+                                paddingTop: 2,
+                                fontFamily: 'Lato_400Regular',
+                              }}
+                            >
+                               {new Date(data.createdAt).toLocaleDateString()} at{' '}
+                              {new Date(data.createdAt).toLocaleTimeString()}
+                            </Text>
+                          </View>
+                        </View>
+                      </View>
+                    </View>
+                  );
+                })}
               </Card>
             </View>
           </Wrapper>

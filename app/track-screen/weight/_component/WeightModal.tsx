@@ -7,9 +7,9 @@ import DecimalInput from '@/components/Input/DecimalInput';
 import { SubmitButton } from '@/components/typography/Typography';
 import { useMutation } from '@tanstack/react-query';
 import { patientService } from '@/service/patientService';
-import { CreateWeight } from '@/lib/interface/create-weight-interface';
+import { AxiosError } from 'axios';
+import { Weight } from '@/lib/interface/weight';
 import { useModal } from '@/context/ModalContext';
-import Toast from 'react-native-toast-message';
 
 type WeightInputType = Record<string, string>;
 const WeightModal = () => {
@@ -19,16 +19,15 @@ const WeightModal = () => {
     weight: '',
     date: new Date().toISOString(), // Initialize with today's date in YYYY-MM-DD format split date from time
   });
-  console.log('WEIGHT', inputValue);
   const [showDatePicker, setShowDatePicker] = useState(false);
-
+  const { closeModal } = useModal();
   const handleChange = (key: string, value: string) => {
     setInputValue((prev) => ({
       ...prev,
       [key]: value,
     }));
   };
-
+  console.log(inputValue)
   const handleDateSelect = (day: any) => {
     const selectedDate = day.dateString;
     handleChange('date', selectedDate);
@@ -41,38 +40,27 @@ const WeightModal = () => {
     setShowDatePicker(false);
   };
   console.log(handleDateSelect);
-
-  const createWeightMutation = useMutation({
-    mutationFn: (payload: CreateWeight) => patientService.createWeight(payload),
+  const mutation = useMutation({
+    mutationFn: (payload: Weight) => patientService.createWeight(payload),
     onSuccess: (response) => {
-      console.log(response.data.success);
-      Toast.show({
-        type: 'success',
-        text1: response.data.success,
-      });
-      closeModal();
+      console.log(response)
+      closeModal()
     },
-    onError: (error: any) => {
-      console.log(error.response.data);
-      Toast.show({
-        type: 'error',
-        text1: error.response.data,
-      });
-    },
-  });
-  const handleSubmit = async () => {
-    Keyboard.dismiss();
-
-    const credentials = {
-      weight: Number(inputValue.weight),
-      recorded_at: inputValue.date,
-    };
-    console.log('OMO!!', credentials);
-    await createWeightMutation.mutate(credentials);
-  };
-
-  const disableBtn = !inputValue.weight || !inputValue.date;
-
+    onError:(error: AxiosError) => {
+      console.log("Error!!",error)
+     console.log("STATUS:", error.response?.status);
+    console.log("ERROR DATA:", error.response?.data);
+    }
+  })
+    
+  const handleCreateWeight = async () => {
+    const data ={
+      weight: inputValue.weight,
+      recordedAt: inputValue.date,
+    }
+    console.log("PAYLOAD:", data);
+    await mutation.mutateAsync(data)
+  }
   return (
     <View>
       <DecimalInput
@@ -96,23 +84,7 @@ const WeightModal = () => {
         //     [inputValue.date]: {selected: true, disableTouchEvent: false, selectedColor: '#C11574'}
         // }}
       />
-      <Pressable
-        style={[
-          styles.button,
-          {
-            backgroundColor:
-              createWeightMutation.isPending || disableBtn
-                ? '#ec4899'
-                : '#DD2590',
-          },
-        ]}
-        onPress={handleSubmit}
-        disabled={createWeightMutation.isPending || disableBtn}
-      >
-        <Text style={styles.buttonText}>
-          {createWeightMutation.isPending ? 'Saving...' : 'Save Weight Log'}
-        </Text>
-      </Pressable>
+      <SubmitButton _fn={handleCreateWeight}>{mutation.isPending ? "Saving..." : "Save Weight Log"}</SubmitButton>
     </View>
   );
 };

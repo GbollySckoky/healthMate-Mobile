@@ -1,6 +1,6 @@
 import { Link } from 'expo-router'
 import React from 'react'
-import { View, Text, Image, StyleSheet, Pressable } from 'react-native'
+import { View, Text, Image, StyleSheet, Pressable, ActivityIndicator } from 'react-native'
 import { consultationData } from '@/lib/data'
 import { ScrollViewHorizontal } from '@/components/scrollView/ScrollViewHorizontal'
 import { SubTitle } from '@/components/typography/Typography'
@@ -9,10 +9,33 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import useToggle from '@/hooks/useToggle';
 import Feather from '@expo/vector-icons/Feather';
 import { ROUTES } from '@/lib/routes'
-
+import { useQuery } from '@tanstack/react-query';
+import { patientService } from '@/service/patientService';
 
 const Consultation = () => {
   const {isToggle, handleToggle} = useToggle()
+  const {data, isLoading, isError, error} = useQuery({
+    queryKey: ['getAllHospitals'],
+    queryFn: () => patientService.getHospitals()
+  }) 
+  console.log("DATA!!", data)
+
+  if(isLoading){
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+      )
+  }
+
+  if (isError as unknown) {
+    return(
+       <div className="h-full flex items-center justify-center text-sm text-red-500">
+        {(error as Error).message}
+      </div>
+    )
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -26,10 +49,14 @@ const Consultation = () => {
       </View>
       
       <ScrollViewHorizontal>
-        {consultationData.map((consult) => {
+        {isLoading ? 
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator size="large" />
+          </View>
+        : data?.data.map((consult: any) => {
           const {id, image, hospital, address, text, rating, linkText} = consult;
           return(
-            <View key={id} style={styles.card}>
+            <View key={consult.id} style={styles.card}>
               <View style={styles.imageContainer}>
                 <Image 
                   source={image} 
@@ -38,7 +65,7 @@ const Consultation = () => {
                   resizeMode="cover"
                 />
                 <Pressable style={styles.love} onPress={() => handleToggle(id)}>
-                  {isToggle === id ? <AntDesign name="heart" size={24} color='#FF6760' />  :
+                  {isToggle === consult.id ? <AntDesign name="heart" size={24} color='#FF6760' />  :
                     <Feather name="heart" size={24} color="black" /> 
                     }
                 </Pressable>
@@ -46,16 +73,15 @@ const Consultation = () => {
               <View style={styles.content}>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                   <View style={styles.hospitalInfo}>
-                    <Text style={styles.hospitalName}>{hospital}</Text>
-                    <Text style={styles.address}>{address}</Text>
-                    <Text style={styles.description}>{text}</Text>
+                    <Text style={styles.hospitalName}>{consult.hospitalName || "-"}</Text>
+                    <Text style={styles.address}>{consult.email || "-"}</Text>
+                    <Text style={styles.description}>{"We're here to serve you well!"}</Text>
                   </View>
-                <Text style={styles.rating}>⭐ {rating}</Text>
+                <Text style={styles.rating}>⭐ {"4.5"}</Text>
                 </View>
                 <View style={styles.footer}>
-                 
-                  <Link href={ROUTES.doctorsHospitals} style={styles.linkButton}>
-                    <Text style={styles.linkText}>{linkText}</Text>
+                  <Link href={`/consult-screen/${consult?.id}`} style={styles.linkButton}>
+                    <Text style={styles.linkText}>{"View Doctors"}</Text>
                   </Link>
                 </View>
               </View>

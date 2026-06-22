@@ -3,11 +3,16 @@ import axios from 'axios'
 import { STATUS } from './status';
 import { ROUTES } from './routes';
 import { storageService } from './storage';
-// import { navigate } from './navigationRef';
+import { ROUTES } from './routes';
+import { router } from 'expo-router';
 
-const axiosService = () => {
+// async function getToken(key: string) {
+//   let result = await SecureStore.getItemAsync(key);
+//   return result;
+// }
+
   const instance = axios.create({
-    baseURL: 'https://healthteamapi.onrender.com/api/',
+    baseURL: 'https://healthcare-backend-5y5b.onrender.com/api/v1/',
     headers: {
       "Content-Type": 'application/json'
     }
@@ -39,15 +44,11 @@ const axiosService = () => {
         if (status === STATUS.UN_AUTHORIZED || !storageService.isAuthenticated()) {
           // SecureStore.deleteItemAsync('my_access_token');
           storageService.clearAuthData()
-          // navigate(ROUTES.login);
-          // windowlocation.href = ROUTES.login
+          router.replace(ROUTES.login);
         }
       }
       return Promise.reject(error);
     }
   );
 
-  return instance;
-}
-
-export default axiosService
+export default instance

@@ -3,19 +3,19 @@ import CustomCalendar from '@/components/calendar/CustomCalendar';
 import { Pressable, Text, View, StyleSheet, Keyboard } from 'react-native';
 import { sleepExperienceData, sleepData } from '@/lib/data';
 import DateInput from '@/components/Input/DateInput';
-import Toast from 'react-native-toast-message';
+import { SubmitButton } from '@/components/typography/Typography';
 import { useMutation } from '@tanstack/react-query';
+import { Sleep } from '@/lib/interface/sleep';
+import { AxiosError } from 'axios';
 import { patientService } from '@/service/patientService';
-import { CreateSleep } from '@/lib/interface/create-sleep-interface';
 import { useModal } from '@/context/ModalContext';
-import NumberInput from '@/components/Input/NumberInput';
 
-// type SleepQuality = {
-//   selectedMood: string;
-//   selectedEmoji: boolean;
-// };
+interface SleepQuality {
+  selectedMood: string;
+  selectedEmoji: boolean;
+};
 
-type SleepInputType = {
+interface SleepInputType {
   date?: string;
   sleep?: string;
   hours?: string;
@@ -23,18 +23,23 @@ type SleepInputType = {
 
 const SleepModal = () => {
   const [inputValue, setInputValue] = useState({
-    date: new Date().toISOString().split('T')[0],
-    sleep: '',
-    hours: '',
+    date: new Date().toISOString(),
+    sleep: {
+      selectedMood: '',
+      selectedEmoji: false,
+    }
   });
   const [selectDatePicker, setSelectDatePicker] = useState(false);
   const [selectEmojiValue, setSelectEmojiValue] = useState('');
   const { closeModal } = useModal();
   console.log(inputValue);
 
-  const { date, sleep } = sleepData;
-
-  const handleChange = (key: string, value: string) => {
+  const { date } = sleepData;
+  const { closeModal } = useModal();
+  const handleChange = (
+    key: keyof SleepInputType,
+    value: string | SleepQuality
+  ) => {
     setInputValue((prev) => ({
       ...prev,
       [key]: value,
@@ -60,35 +65,27 @@ const SleepModal = () => {
     }));
   };
 
-
-  const createSleepMutation = useMutation({
-    mutationFn: (payload: CreateSleep) => patientService.createSleep(payload),
+  const mutation = useMutation({
+    mutationFn: (payload: Sleep) => patientService.createSleep(payload),
     onSuccess: (response) => {
-      Toast.show({
-        type: 'success',
-        text1: response.data.success,
-      });
-      closeModal();
+      console.log(response)
+      closeModal()
     },
-    onError: (error: any) => {
-      Toast.show({
-        type: 'error',
-        text1: error.response.data,
-      });
-    },
-  });
+    onError:(error: AxiosError) => {
+      console.log("Error!!",error)
+        console.log("STATUS:", error.response?.status);
+  console.log("ERROR DATA:", error.response?.data);
+    }
+  })
 
-  const handleSubmit = async () => {
-    Keyboard.dismiss();
-
-    const credentials = {
-      hours_slept: Number(inputValue.hours),
-      sleep_date: inputValue.date,
-      quanlity: inputValue.sleep
-    };
-    
-    await createSleepMutation.mutate(credentials);
-  };
+  const handleCreateSleep = async () => {
+    const data ={
+      sleep: inputValue.sleep || {},
+      recordedAt: inputValue.date,
+    }
+    console.log("PAYLOAD:", data);
+    await mutation.mutateAsync(data)
+  }
 
   return (
     <View>
@@ -139,22 +136,7 @@ const SleepModal = () => {
           })}
         </View>
       </View>
-        <Pressable
-        style={[
-          styles.button,
-          {
-            backgroundColor: createSleepMutation.isPending
-              ? '#ec4899'
-              : '#DD2590',
-          },
-        ]}
-        onPress={handleSubmit}
-        disabled={createSleepMutation.isPending}
-      >
-        <Text style={styles.buttonText}>
-          {createSleepMutation.isPending ? 'Saving...' : 'Save Sleep Log'}
-        </Text>
-      </Pressable>
+      <SubmitButton _fn={handleCreateSleep}>{mutation.isPending ? "Saving..." : "Save Sleep Log"}</SubmitButton>
     </View>
   );
 };

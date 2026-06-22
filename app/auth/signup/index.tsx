@@ -25,8 +25,8 @@ import { useMutation } from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
 import VerifyEmail from './VerifyCode';
 import { Signup } from '@/lib/interface/signup-interface';
+import Input from '@/components/Input/Input';
 
-type TabType = 'email' | 'phone_number';
 
 const inputData = {
   email: {
@@ -48,24 +48,23 @@ const inputData = {
   password: {
     label: 'Password',
     placeholder: '*********',
-    closeIcon: <Feather name="eye-off" size={20} color="black" />,
-    openIcon: <FontAwesome5 name="eye" size={20} color="black" />,
+    closeIcon: <Feather name="eye-off" size={16} color="black" />,
+    openIcon: <FontAwesome5 name="eye" size={16} color="black" />,
   },
   confirmPassword: {
     label: 'Confirm Password',
     placeholder: '*********',
-    closeIcon: <Feather name="eye-off" size={20} color="black" />,
-    openIcon: <FontAwesome5 name="eye" size={20} color="black" />,
+    closeIcon: <Feather name="eye-off" size={16} color="black" />,
+    openIcon: <FontAwesome5 name="eye" size={16} color="black" />,
   },
 };
 
 const SignUpPage = () => {
-  const [activeTab, setActiveTab] = useState<TabType>('email');
   const [inputValue, setInputValue] = useState({
-    // full_name: '',
-    password1: '',
-    password2: '',
-    phone_number: 0,
+    firstName: '',
+    lastName: '',
+    password: '',
+    confirmPassword: '',
     email: '',
   });
   const [passwordVisibility, setPasswordVisibility] = useState(false);
@@ -83,8 +82,8 @@ const SignUpPage = () => {
   }, []);
 
   const handleToggleVisibility = useCallback(
-    (field: 'password1' | 'password2') => {
-      if (field === 'password1') {
+    (field: 'password' | 'confirmPassword') => {
+      if (field === 'password') {
         setPasswordVisibility((prev) => !prev);
       } else {
         setConfirmPasswordVisibility((prev) => !prev);
@@ -93,9 +92,6 @@ const SignUpPage = () => {
     []
   );
 
-  const handleTabSwitch = useCallback((tab: TabType) => {
-    setActiveTab(tab);
-  }, []);
 
   const signupMutation = useMutation({
     mutationFn: (payload: Signup) => patientService.signup(payload),
@@ -109,7 +105,7 @@ const SignUpPage = () => {
       });
     },
     onError: (error: any) => {
-      console.log(error.response); // look into the error response
+      console.log(error); // look into the error response
       const errorMessage = error.response.data; //Look into the error response
       // || 'An error occurred during sign up. Please try again.';
 
@@ -124,7 +120,7 @@ const SignUpPage = () => {
     Keyboard.dismiss();
 
     // Validate passwords match
-    if (inputValue.password1 !== inputValue.password2) {
+    if (inputValue.password !== inputValue.confirmPassword) {
       Toast.show({
         type: 'error',
         text1: 'Password and Confirm Password must be same',
@@ -134,20 +130,16 @@ const SignUpPage = () => {
 
     // Map form state to API payload format
     const credentials: Signup = {
-      email: activeTab === 'email' ? String(inputValue.email) : '',
-      phone_number:
-        activeTab === 'phone_number' ? Number(inputValue.phone_number) : 0,
-      password1: inputValue.password1,
-      password2: inputValue.password2,
+      email: inputValue.email,
+      password: inputValue.password,
+      confirmPassword: inputValue.confirmPassword,
+      firstName: inputValue.firstName,
+      lastName: inputValue.lastName,
     };
 
     console.log(credentials);
     await signupMutation.mutate(credentials);
   };
-
-  const inputKey: keyof Signup =
-    activeTab === 'email' ? 'email' : 'phone_number';
-  const inputConfig = activeTab === 'email' ? inputData.email : inputData.phone;
 
   return (
     <SafeArea>
@@ -163,57 +155,10 @@ const SignUpPage = () => {
               </Text>
             </View>
 
-            {/* Custom Tab Implementation */}
-            <View style={styles.tabContainer}>
-              <TouchableOpacity
-                style={[
-                  styles.tabButton,
-                  activeTab === 'email' && styles.activeTabButton,
-                ]}
-                onPress={() => handleTabSwitch('email')}
-                accessibilityRole="tab"
-                accessibilityState={{ selected: activeTab === 'email' }}
-                accessibilityLabel="Email signup option"
-              >
-                <Text
-                  style={[
-                    styles.tabText,
-                    activeTab === 'email' && styles.activeTabText,
-                  ]}
-                >
-                  Email
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[
-                  styles.tabButton,
-                  activeTab === 'phone_number' && styles.activeTabButton,
-                ]}
-                onPress={() => handleTabSwitch('phone_number')}
-                accessibilityRole="tab"
-                accessibilityState={{ selected: activeTab === 'phone_number' }}
-                accessibilityLabel="Phone number signup option"
-              >
-                <Text
-                  style={[
-                    styles.tabText,
-                    activeTab === 'phone_number' && styles.activeTabText,
-                  ]}
-                >
-                  Phone Number
-                </Text>
-              </TouchableOpacity>
-            </View>
 
             {/* Form Content */}
             <View style={styles.formContainer}>
-              <EmailInput
-                {...inputConfig}
-                value={inputValue[inputKey]?.toString() || ''}
-                onChangeText={(value) => handleChange(inputKey, value)}
-              />
-              {/* <Input
+               <Input
                 {...inputData.firstName}
                 value={inputValue.firstName || ''}
                 onChangeText={(value) => handleChange('firstName', value)}
@@ -222,22 +167,29 @@ const SignUpPage = () => {
                 {...inputData.lastName}
                 value={inputValue.lastName || ''}
                 onChangeText={(value) => handleChange('lastName', value)}
-              /> */}
+              />
+              <EmailInput
+                label={inputData.email.label}
+                placeholder={inputData.email.placeholder}
+                value={inputValue.email}
+                onChangeText={(value) => handleChange('email', value)}
+              />
+             
               <View>
                 <PasswordInput
                   {...inputData.password}
-                  value={inputValue.password1}
-                  onChangeText={(value) => handleChange('password1', value)}
+                  value={inputValue.password}
+                  onChangeText={(value) => handleChange('password', value)}
                   secureTextEntry={!passwordVisibility}
-                  onToggleVisibility={() => handleToggleVisibility('password1')}
+                  onToggleVisibility={() => handleToggleVisibility('password')}
                   isPasswordVisible={passwordVisibility}
                 />
                 <PasswordInput
                   {...inputData.confirmPassword}
-                  value={inputValue.password2}
-                  onChangeText={(value) => handleChange('password2', value)}
+                  value={inputValue.confirmPassword}
+                  onChangeText={(value) => handleChange('confirmPassword', value)}
                   secureTextEntry={!confirmPasswordVisibility}
-                  onToggleVisibility={() => handleToggleVisibility('password2')}
+                  onToggleVisibility={() => handleToggleVisibility('confirmPassword')}
                   isPasswordVisible={confirmPasswordVisibility}
                 />
               </View>

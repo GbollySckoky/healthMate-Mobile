@@ -13,14 +13,12 @@ import { bloodPressureData } from '@/lib/data';
 import NumberInput from '@/components/Input/NumberInput';
 import DateInput from '@/components/Input/DateInput';
 import CustomCalendar from '@/components/calendar/CustomCalendar';
+import { SubmitButton } from '@/components/typography/Typography';
 import { useMutation } from '@tanstack/react-query';
-import { BloodPressure } from '@/lib/interface/create-blood-pressure.interface';
 import { patientService } from '@/service/patientService';
-import Toast from 'react-native-toast-message';
+import { BloodPressure } from '@/lib/interface/blood-pressure';
+import { AxiosError } from 'axios';
 import { useModal } from '@/context/ModalContext';
-import { TimerPickerModal } from 'react-native-timer-picker';
-import { LinearGradient } from 'expo-linear-gradient';
-import { formatTime } from '@/app/utils/formatTime';
 
 type BloodPressureInputType = Record<string, string>;
 
@@ -30,17 +28,13 @@ type ShowPickerState = {
 };
 
 const BloodPressureModal = () => {
+  const { date, topNumber, lastNumber } = bloodPressureData;
   const [inputValue, setInputValue] = useState<BloodPressureInputType>({
-    date: new Date().toISOString().split('T')[0], // YYYY-MM-DD
-    topNumber: '',
-    lastNumber: '',
+    date: new Date().toISOString(), // Initialize with today's date in YYYY-MM-DD format
+    systolic: '',
+    diastolic: '',
   });
-  const [time, setTime] = useState<string>('');
- 
-  const [showPicker, setShowPicker] = useState<ShowPickerState>({
-    datePicker: false,
-    timePicker: false,
-  });
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const { closeModal } = useModal();
   const handleChange = (key: string, value: string) => {
     setInputValue((prev) => ({
@@ -61,25 +55,46 @@ const BloodPressureModal = () => {
     handleClick('datePicker');
   };
 
-  const createBloodPressure = useMutation({
-    mutationFn: (payload: BloodPressure) =>
-      patientService.createBloodPressure(payload),
+  const mutation = useMutation({
+    mutationFn: (payload: BloodPressure) => patientService.createBloodPressue(payload),
     onSuccess: (response) => {
-      // console.log('Saved:', response.data);
-      Toast.show({
-        type: 'success',
-        text1: response.data.success,
-      });
-      closeModal();
+      console.log(response)
+      closeModal()
     },
-    onError: (error: any) => {
-      console.log('Error:', error.response.data);
-      Toast.show({
-        type: 'error',
-        text1: error.response.data.error[0],
-      });
-    },
-  });
+    onError:(error: AxiosError) => {
+      console.log("Error!!",error)
+       console.log("STATUS:", error.response?.status);
+  console.log("ERROR DATA:", error.response?.data);
+    }
+  })
+
+  const handleCreatePressure = async () => {
+    const data ={
+      systolic: inputValue.systolic.trim(),
+      diastolic: inputValue.diastolic.trim(),
+      recordedAt: inputValue.date,
+      // time: inputValue.time,
+    }
+    console.log("PAYLOAD:", data);
+    await mutation.mutateAsync(data)
+  }
+  return (
+      <ScrollView 
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View>
+          <NumberInput
+            {...topNumber}
+            value={inputValue.systolic || ''} // Safe fallback
+            onChangeText={(value) => handleChange('systolic', value)}
+          />
+          <NumberInput
+            {...lastNumber}
+            value={inputValue.diastolic || ''} // Safe fallback
+            onChangeText={(value) => handleChange('diastolic', value)}
+          />
 
   const handleSubmit = () => {
     Keyboard.dismiss();
@@ -92,107 +107,15 @@ const BloodPressureModal = () => {
     createBloodPressure.mutate(payload);
   };
 
-  return (
-    <ScrollView
-      contentContainerStyle={styles.container}
-      keyboardShouldPersistTaps="handled"
-      showsVerticalScrollIndicator={false}
-    >
-      <View>
-        <NumberInput
-          {...bloodPressureData.topNumber}
-          value={inputValue.topNumber}
-          onChangeText={(value) => handleChange('topNumber', value)}
-        />
-        <NumberInput
-          {...bloodPressureData.lastNumber}
-          value={inputValue.lastNumber}
-          onChangeText={(value) => handleChange('lastNumber', value)}
-        />
+          <CustomCalendar
+            isOpen={showDatePicker}
+            onChangeText={handleDateSelect}
+            onClose={handleCloseCalendar}
+          />
 
-        {/* Date Input */}
-        <DateInput
-          {...bloodPressureData.date}
-          value={new Date(inputValue.date).toLocaleDateString()}
-          _fn={() => handleClick('datePicker')}
-        />
-
-        <CustomCalendar
-          isOpen={showPicker.datePicker}
-          onChangeText={handleDateSelect}
-          onClose={() => handleClick('datePicker')}
-        />
-        {/* Time */}
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => handleClick('timePicker')}
-        >
-          <View style={{ alignItems: 'center' }}>
-            {time !== null ? (
-              <Text style={{ color: '#000000', fontSize: 20, marginTop: 10 }}>
-                {time}
-              </Text>
-            ) : null}
-            <TouchableOpacity
-              activeOpacity={0.7}
-              onPress={() => handleClick('timePicker')}
-            >
-              <View style={{ marginTop: 10 }}>
-                <Text
-                  style={{
-                    paddingVertical: 10,
-                    paddingHorizontal: 18,
-                    borderWidth: 1,
-                    borderRadius: 10,
-                    fontSize: 16,
-                    overflow: 'hidden',
-                    borderColor: '#C2C2C2',
-                    color: '#C2C2C2',
-                  }}
-                >
-                  {'Set your Time 🔔'}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-        <TimerPickerModal
-          closeOnOverlayPress
-          LinearGradient={LinearGradient}
-          modalProps={{
-            overlayOpacity: 0.2,
-          }}
-          modalTitle="Time"
-          onCancel={() => handleClick('timePicker')}
-          onConfirm={(pickedDuration) => {
-            setTime(formatTime(pickedDuration));
-            handleClick('timePicker');
-          }}
-          setIsVisible={() => setShowPicker(showPicker)}
-          styles={{
-            theme: 'dark',
-          }}
-          visible={showPicker.timePicker}
-        />
-        {/* Button */}
-        <Pressable
-          style={[
-            styles.button,
-            {
-              backgroundColor: createBloodPressure.isPending
-                ? '#ec4899'
-                : '#DD2590',
-            },
-          ]}
-          onPress={handleSubmit}
-          disabled={createBloodPressure.isPending}
-        >
-          <Text style={styles.buttonText}>
-            {createBloodPressure.isPending ? 'Saving...' : 'Save Pressure'}
-          </Text>
-        </Pressable>
-      </View>
-    </ScrollView>
+          <SubmitButton _fn={handleCreatePressure}>{mutation.isPending ? "Saving..." : 'Save Reading'}</SubmitButton>
+        </View>
+      </ScrollView>
   );
 };
 
