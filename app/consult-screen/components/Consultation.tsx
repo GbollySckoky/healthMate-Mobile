@@ -49,7 +49,11 @@ const Consultation = () => {
       </View>
       
       <ScrollViewHorizontal>
-        {data?.map((consult: any) => {
+        {isLoading ? 
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator size="large" />
+          </View>
+        : data?.data.map((consult: any) => {
           const {id, image, hospital, address, text, rating, linkText} = consult;
           return(
             <View key={consult.id} style={styles.card}>
@@ -69,14 +73,13 @@ const Consultation = () => {
               <View style={styles.content}>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                   <View style={styles.hospitalInfo}>
-                    <Text style={styles.hospitalName}>{consult.firstName || "-"}{" "}{consult.lastName || "-"}</Text>
-                    <Text style={styles.address}>{"19,Oyekankeye street Ikeja Lagos"}</Text>
+                    <Text style={styles.hospitalName}>{consult.hospitalName || "-"}</Text>
+                    <Text style={styles.address}>{consult.email || "-"}</Text>
                     <Text style={styles.description}>{"We're here to serve you well!"}</Text>
                   </View>
                 <Text style={styles.rating}>⭐ {"4.5"}</Text>
                 </View>
                 <View style={styles.footer}>
-                 
                   <Link href={`/consult-screen/${consult?.id}`} style={styles.linkButton}>
                     <Text style={styles.linkText}>{"View Doctors"}</Text>
                   </Link>

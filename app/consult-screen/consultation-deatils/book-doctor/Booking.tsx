@@ -1,6 +1,6 @@
 import { SubTitle } from '@/components/typography/Typography';
 import { colors } from '@/lib/colors';
-import React, { useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 import {
   View,
   Text,
@@ -13,12 +13,20 @@ import CustomCalendar from '@/components/calendar/CustomCalendar';
 import TextAreaInput from '@/components/Input/TextAreaInput';
 import { useRouter } from 'expo-router';
 import { ROUTES } from '@/lib/routes';
+import { useMutation } from '@tanstack/react-query';
+import { patientService } from '@/service/patientService';
+import { Appointment } from '@/lib/interface/createAppointment';
+import Toast from 'react-native-toast-message';
 
 const date = {
   label: 'Date',
   placeholder: '10/05/1997',
 };
 
+type ShowPickerState = {
+  datePicker: boolean,
+  timePicker: boolean
+}
 const Booking = () => {
   const router = useRouter();
   const [inputValue, setInputValue] = useState({
@@ -62,6 +70,35 @@ const Booking = () => {
   ];
   const consultationType = ['Video Call', 'Audio Call', 'Physical Appointment'];
   
+  const mutation = useMutation({
+    mutationKey: ['createConsultation'],
+    mutationFn: (payload: Appointment) => patientService.createConsultation(payload),
+    onSuccess: (response) => {
+      console.log('19292',response)
+      router.push(ROUTES.consultationPayment)
+    },
+    onError: (error: any) => {
+      Toast.show({
+          type: 'error',
+          text1: error.response.data.message
+      })
+      console.log('TEMA',error.response.data.message)
+    }
+  })
+
+  const handleSubmit = async () => {
+    const data = {
+      date: inputValue.date,
+      time: inputValue.time,
+      consultationType: inputValue.consultationType,
+      healthConcern: inputValue.healthConcern,
+      doctorId: 3,
+      hospitalId: 1,
+      amount: 100000
+    }
+    console.log("submit_daata", data)
+    await mutation.mutate(data)
+  }
   return (
     <View style={{ marginBottom: 50 }}>
       <View style={{ marginBottom: 15 }}>
@@ -183,7 +220,7 @@ const Booking = () => {
           marginTop: 25,
         }}
         activeOpacity={0.8}
-        onPress={() => router.push(ROUTES.consultationPayment)}
+        onPress={handleSubmit}
       >
         <Text
           style={{
@@ -193,7 +230,7 @@ const Booking = () => {
             fontSize: 16,
           }}
         >
-          Proceed to payment
+         {mutation.isPending ? "proceeding..." : " Proceed to payment"}
         </Text>
       </TouchableOpacity>
     </View>

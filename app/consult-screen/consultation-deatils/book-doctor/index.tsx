@@ -18,11 +18,13 @@ import SafeArea from '@/components/safeAreaView/SafeAreaView';
 const BookDoctor = () => {
   const router = useRouter()
   const profile = require('../../../../assets/images/Ellipse 165.png')
+
+  
   return (
     <SafeArea>
       <ScreenLayout>
         <NavHeader
-          title="Doctor's Profile"
+          title="Book Doctor"
           _goBack={() => router.back()}
           backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
         />

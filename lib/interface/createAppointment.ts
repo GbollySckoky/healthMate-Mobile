@@ -1,9 +1,9 @@
-export interface Appointment{
-    amount: string;
-    hospitalId: string
-    doctorId: number;
-    healthConcern: string
-    consultationType: string
-    time: string
-    date: string
+export interface Appointment {
+  date: string
+  time: string
+  consultationType: string
+  healthConcern: string
+  doctorId: number
+  hospitalId: number
+  amount: number
 }

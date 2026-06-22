@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { TextInput, View, StyleSheet, Text } from 'react-native';
 import { colors } from '@/lib/colors';
 
-
 interface NumberInputType {
   label: string;
   value: string;

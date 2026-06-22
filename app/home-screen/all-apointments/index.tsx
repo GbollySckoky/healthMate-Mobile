@@ -1,6 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { allAppointmentData } from '../../../lib/data';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import {
   SmallText,
   SubTitle,
@@ -9,17 +14,50 @@ import {
 import Feather from '@expo/vector-icons/Feather';
 import { Image } from 'expo-image';
 import { NavHeader } from '@/components/Header/Header';
-import { router } from 'expo-router';
+import { useRouter } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
 import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
 import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
-
+import { useQuery } from '@tanstack/react-query';
+import { patientService } from '@/service/patientService';
+import { GetAppointments } from '@/lib/interface/get-appointments-interface';
 
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
-
+const ALL_APPOINTMENTS = '/home-screen/all-appointments/';
 const AllApointments = () => {
+const router = useRouter();
+const { data, isLoading, error, isError } = useQuery({
+  queryKey: ['getAppointments'],
+  queryFn: () => patientService.getAppointments(),
+});
+
+if (isError) {
+  return (
+    <div style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      {error.message}
+    </div>
+  );
+}
+
+if (isLoading) {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <ActivityIndicator size="large" />
+    </View>
+  );
+}
+
+if (!data || data.length < 0) {
+  return (
+    <div style={{ flex: 1, alignItems: 'center', justifyContent: 'center', fontWeight: 500,
+    fontSize: 12 }}>
+      No appointment data
+    </div>
+  );
+}
+
   return (
     <SafeArea>
       <ScreenLayout>
@@ -27,77 +65,122 @@ const AllApointments = () => {
           title="All Appointments"
           _goBack={() => router.back()}
           _optionFn={() => router.back()}
-          backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+          backIcon={
+            <Entypo name="chevron-small-left" size={24} color="black" />
+          }
         />
         <ScreenOverFlowLayout>
           <Wrapper>
-            <View style={{marginBottom:30}}>
-              {allAppointmentData.map((all) => {
-                const { id, doctorName, date, time, status, type } = all;
-                return (
-                  <View key={id} style={style.Card}>
-                    <View style={style.Flex}>
-                      <View style={{ width: 50 }}>
-                        <Image
-                          style={style.image}
-                          source={{
-                            uri: 'https://picsum.photos/seed/696/3000/2000',
-                          }}
-                          placeholder={{ blurhash }}
-                          contentFit="cover"
-                          transition={1000}
-                        />
-                      </View>
-                      <View style={style.Flexs}>
-                        <View style={{ marginLeft: 5 }}>
-                          <SubTitle>{doctorName}</SubTitle>
-                          <View style={[style.flex, { marginTop: 5 }]}>
-                            <View style={{ marginRight: 3 }}>
-                              <Feather name="clock" size={13} color="#717680" />
-                            </View>
-                            <SmallText>
-                              {' '}
-                              {time} | {date}{' '}
-                            </SmallText>
+            <View style={{ marginBottom: 30 }}>
+              {data &&
+                data.map((all: GetAppointments) => {
+                  const {
+                    id,
+                    doctor,
+                    appointment_date,
+                    appointment_time,
+                    status,
+                    consultation_type,
+                    health_concerns,
+                    approved,
+                  } = all;
+                  console.log('HEY', id);
+                  return (
+                    <TouchableOpacity
+                      key={id}
+                      onPress={() =>
+                        router.push(`/home-screen/appointment/${id}`)
+                      }
+                      activeOpacity={0.7}
+                    >
+                      <View style={style.Card}>
+                        <View style={style.Flex}>
+                          <View style={{ width: 50 }}>
+                            <Image
+                              style={style.image}
+                              source={{
+                                uri: 'https://picsum.photos/seed/696/3000/2000',
+                              }}
+                              placeholder={{ blurhash }}
+                              contentFit="cover"
+                              transition={1000}
+                            />
                           </View>
-                          <View style={[style.flex, { marginTop: 5 }]}>
-                            <View style={{ marginRight: 3 }}>
-                              <Feather name="video" size={13} color="#717680" />
+                          <View style={style.Flexs}>
+                            <View style={{ marginLeft: 5 }}>
+                              <SubTitle>{doctor}</SubTitle>
+                              <View style={[style.flex, { marginTop: 5 }]}>
+                                <View style={{ marginRight: 3 }}>
+                                  <Feather
+                                    name="clock"
+                                    size={13}
+                                    color="#717680"
+                                  />
+                                </View>
+                                <SmallText>
+                                  {' '}
+                                  {appointment_time} | {appointment_date}{' '}
+                                </SmallText>
+                              </View>
+                              <View
+                                style={[
+                                  style.flex,
+                                  { marginTop: 5, marginBottom: 5 },
+                                ]}
+                              >
+                                <View style={{ marginRight: 3 }}>
+                                  <Feather
+                                    name="video"
+                                    size={13}
+                                    color="#717680"
+                                  />
+                                </View>
+                                <SmallText> {consultation_type}</SmallText>
+                                <SmallText>
+                                  {' '}
+                                  Approved: {approved === true ? 'Yes' : 'No'}
+                                </SmallText>
+                              </View>
+                              <SmallText>
+                                Health Concern: {health_concerns}
+                              </SmallText>
                             </View>
-                            <SmallText> {type}</SmallText>
+                            <Text
+                              style={{
+                                color: '#5924DC',
+                                backgroundColor: '#F4F3FF',
+                                borderRadius: 10,
+                                padding: 10,
+                                fontWeight: 500,
+                                fontSize: 12,
+                                height: 35,
+                                fontFamily: 'Inter_500Medium',
+                              }}
+                            >
+                              {status}
+                            </Text>
                           </View>
                         </View>
-                        <Text
-                          style={{
-                            color: '#5924DC',
-                            backgroundColor: '#F4F3FF',
-                            borderRadius: 10,
-                            padding: 10,
-                            fontWeight: 500,
-                            fontSize: 12,
-                            height: 35,
-                            fontFamily: 'Inter_500Medium',
-                          }}
-                        >
-                          {status}
-                        </Text>
+                        <View style={style.ButtonRow}>
+                          <TouchableOpacity style={style.rescheduleBtn}>
+                            <Text
+                              style={[style.buttonText, { color: '#252B37' }]}
+                            >
+                              Reschedule
+                            </Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity style={style.joinBtn}>
+                            <Text
+                              style={[style.buttonText, { color: '#F2F2F2' }]}
+                            >
+                              Join Call
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
                       </View>
-                    </View>
-                    <View style={style.ButtonRow}>
-                      <TouchableOpacity style={style.rescheduleBtn}>
-                        <Text style={[style.buttonText, { color: '#252B37' }]}>
-                          Reschedule
-                        </Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity style={style.joinBtn}>
-                        <Text style={[style.buttonText, { color: '#F2F2F2' }]}>
-                          Join Call
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                );
-              })}
+                    </TouchableOpacity>
+                  );
+                })}
             </View>
           </Wrapper>
         </ScreenOverFlowLayout>

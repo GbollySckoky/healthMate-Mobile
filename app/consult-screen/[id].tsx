@@ -82,14 +82,14 @@ const ConsultationId = () => {
                                       />
                                   </View>
                                   <View style={style.Flexs}>
-                                      <View style={{ marginLeft: 5 }}>
+                                      <View style={{ marginLeft: 10 }}>
                                           <SubTitle>{doctor.firstName || "-"}{" "}{doctor.lastName || "-"}</SubTitle>
-                                          {/* <Text style={style.Text}>{doctor.email || "-"}</Text>  */}
+                                          <Text style={style.smallText}>{doctor.email || "-"}</Text> 
                                           <Text style={style.Text}>{"Consultationtype"}</Text>                      
-                                          <Text style={style.smallText}>
+                                          {/* <Text style={style.smallText}>
                                             <EvilIcons name="location" size={13} style={{paddingRight:10}} />
                                             {"address"}
-                                          </Text>
+                                          </Text> */}
                                       </View>
                                       <Text style={style.rating}>⭐ 4.2(38)</Text>
                                   </View>
@@ -100,7 +100,7 @@ const ConsultationId = () => {
                                   </Text>
                               <TouchableOpacity 
                                 style={style.joinBtn}
-                                onPress={() => router.push(`/consult-screen/consultation-deatils/${id}`)}>
+                                onPress={() => router.push(`/consult-screen/consultation-deatils/${doctor.id}`)}>
                                   <Text style={[style.buttonText, { color: '#F2F2F2' }]}>
                                   View Profile
                                   </Text>

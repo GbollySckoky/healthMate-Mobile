@@ -1,8 +1,16 @@
-import React from 'react';
-import { View, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Keyboard,
+  Text,
+  Pressable,
+  TouchableOpacity,
+} from 'react-native';
+import { colors } from '@/lib/colors';
 import { bloodPressureData } from '@/lib/data';
 import NumberInput from '@/components/Input/NumberInput';
-import { useState } from 'react';
 import DateInput from '@/components/Input/DateInput';
 import CustomCalendar from '@/components/calendar/CustomCalendar';
 import { SubmitButton } from '@/components/typography/Typography';
@@ -10,29 +18,24 @@ import { useMutation } from '@tanstack/react-query';
 import { patientService } from '@/service/patientService';
 import { BloodPressure } from '@/lib/interface/blood-pressure';
 import { AxiosError } from 'axios';
+import { useModal } from '@/context/ModalContext';
 
 type BloodPressureInputType = Record<string, string>;
 
+type ShowPickerState = {
+  datePicker: boolean;
+  timePicker: boolean;
+};
+
 const BloodPressureModal = () => {
-  const { date, time, topNumber, lastNumber } = bloodPressureData;
+  const { date, topNumber, lastNumber } = bloodPressureData;
   const [inputValue, setInputValue] = useState<BloodPressureInputType>({
     date: new Date().toISOString(), // Initialize with today's date in YYYY-MM-DD format
-    // time: new Date().toLocaleTimeString([], {
-    //   hour: '2-digit',
-    //   minute: '2-digit',
-    // }),
     systolic: '',
     diastolic: '',
   });
   const [showDatePicker, setShowDatePicker] = useState(false);
-  
-  const handleClick = () => {
-    // Add your save logic here
-    console.log('Saving blood pressure reading:', inputValue);
-  };
-  
-  console.log('📊 Input Values:', inputValue);
-
+  const { closeModal } = useModal();
   const handleChange = (key: string, value: string) => {
     setInputValue((prev) => ({
       ...prev,
@@ -40,19 +43,23 @@ const BloodPressureModal = () => {
     }));
   };
 
-  const handleDateSelect = (day: any) => {
-    const selectedDate = day.dateString; // This will be in YYYY-MM-DD format
-    handleChange('date', selectedDate);
-    setShowDatePicker(false); // Close calendar after selection
+  const handleClick = (type: keyof ShowPickerState) => {
+    setShowPicker((prev) => ({
+      ...prev,
+      [type]: !prev[type],
+    }));
   };
 
-  const handleCloseCalendar = () => {
-    setShowDatePicker(false);
+  const handleDateSelect = (day: any) => {
+    handleChange('date', day.dateString);
+    handleClick('datePicker');
   };
+
   const mutation = useMutation({
     mutationFn: (payload: BloodPressure) => patientService.createBloodPressue(payload),
     onSuccess: (response) => {
       console.log(response)
+      closeModal()
     },
     onError:(error: AxiosError) => {
       console.log("Error!!",error)
@@ -89,14 +96,16 @@ const BloodPressureModal = () => {
             onChangeText={(value) => handleChange('diastolic', value)}
           />
 
-          {/* Date Input - Text field that opens calendar when pressed */}
-          <DateInput
-            {...date}
-            value={
-              inputValue.date ? new Date(inputValue.date).toLocaleDateString() : ''
-            } // Show formatted date safely
-            _fn={() => setShowDatePicker(true)} // Open calendar directly
-          />
+  const handleSubmit = () => {
+    Keyboard.dismiss();
+    const payload: BloodPressure = {
+      systolic: Number(inputValue.topNumber),
+      diastolic: Number(inputValue.lastNumber),
+      date_recorded: inputValue.date,
+      time_recorded: time,
+    };
+    createBloodPressure.mutate(payload);
+  };
 
           <CustomCalendar
             isOpen={showDatePicker}
@@ -113,28 +122,44 @@ const BloodPressureModal = () => {
 export default BloodPressureModal;
 
 const styles = StyleSheet.create({
-  keyboardAvoidingView: {
-    flex: 1,
-  },
   container: {
     gap: 16,
     padding: 16,
     flexGrow: 1,
   },
-  listStyle: {
-    padding: 16,
-    gap: 16,
+  timeContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop: 4,
+    // gap: 12,
+    // marginVertical: 15,
   },
-  textInput: {
-    width: 'auto',
-    flexGrow: 1,
-    flexShrink: 1,
-    height: 45,
-    borderWidth: 1,
-    borderRadius: 8,
-    borderColor: '#d8d8d8',
-    backgroundColor: '#fff',
+  timeBox: {
+    // width: '22%',
     padding: 8,
-    marginBottom: 8,
+    margin: 5,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: colors.broderColor,
+    alignItems: 'center',
+  },
+  activeTime: {
+    borderColor: colors.lightRed,
+    backgroundColor: colors.lightPurple,
+  },
+  timeText: {
+    fontSize: 12,
+  },
+  button: {
+    backgroundColor: '#DD2590',
+    paddingVertical: 12,
+    borderRadius: 10,
+    marginTop: 25,
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
+    fontWeight: '600',
+    fontSize: 16,
   },
 });

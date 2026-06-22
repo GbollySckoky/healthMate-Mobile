@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Keyboard, Pressable, StyleSheet } from 'react-native';
 import NumberInput from '@/components/Input/NumberInput';
 import { MedicationData } from '@/lib/data';
 import Input from '@/components/Input/Input';
@@ -10,6 +10,7 @@ import { patientService } from '@/service/patientService';
 import { useMutation } from '@tanstack/react-query';
 import DateInput from '@/components/Input/DateInput';
 import CustomCalendar from '@/components/calendar/CustomCalendar';
+import { useModal } from '@/context/ModalContext';
 
 type MedicationInputType = Record<string, string>;
 const date = {
@@ -21,8 +22,8 @@ const date = {
 const MedicationModal = () => {
   const [inputValue, setInputValue] = useState<MedicationInputType>({});
   const [showDatePicker, setShowDatePicker] = useState(false);
-  console.log(inputValue);
-  const { name, dosage, time } = MedicationData;
+  const { closeModal } = useModal();
+  const { name, dosage } = MedicationData;
   const handleChange = (key: string, value: string) => {
     setInputValue((prev) => ({
       ...prev,
@@ -44,6 +45,7 @@ const MedicationModal = () => {
       mutationFn: (payload: Medication) => patientService.createMedication(payload),
       onSuccess: (response) => {
         console.log(response)
+        closeModal()
       },
       onError:(error: AxiosError) => {
         console.log("Error!!",error)
@@ -94,3 +96,18 @@ const MedicationModal = () => {
 };
 
 export default MedicationModal;
+
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: '#DD2590',
+    paddingVertical: 12,
+    borderRadius: 10,
+    marginTop: 25,
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
+    fontWeight: '600',
+    fontSize: 16,
+  },
+});
