@@ -12,6 +12,6 @@ export const PATIENTS_ENDPOINTS = {
     BOOK_APPOINTMENT: "appointment/consultation/",
     GET_APPOINTMENT: 'appointment/appointments/',
     GET_ALL_HOSPITALS: 'hospital/hospitals',
-    GET_ALL_DOCTORS: 'doctor/hospital/',
-    GET_DOCTOR: 'doctor/'
+    GET_ALL_DOCTORS: 'hospital/',
+    GET_DOCTOR: 'hospital/doctor/'
 }
