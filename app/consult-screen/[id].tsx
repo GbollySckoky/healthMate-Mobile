@@ -31,7 +31,7 @@ const ConsultationId = () => {
       queryFn: () => patientService.getDoctors(Number(id)),
       enabled: !!id
     }) 
-    console.log("DATA!!", data?.data)
+    console.log("Doctots!!", data)
 
     if(isLoading){
         return (
@@ -43,9 +43,9 @@ const ConsultationId = () => {
 
     if (isError as unknown) {
     return(
-       <div className="h-full flex items-center justify-center text-sm text-red-500">
+       <Text className="h-full flex items-center justify-center text-sm text-red-500">
         {(error as Error).message}
-      </div>
+      </Text>
     )
   }
   
@@ -83,9 +83,9 @@ const ConsultationId = () => {
                                   </View>
                                   <View style={style.Flexs}>
                                       <View style={{ marginLeft: 10 }}>
-                                          <SubTitle>{doctor.firstName || "-"}{" "}{doctor.lastName || "-"}</SubTitle>
-                                          <Text style={style.smallText}>{doctor.email || "-"}</Text> 
-                                          <Text style={style.Text}>{"Consultationtype"}</Text>                      
+                                          <SubTitle>{doctor.firstName || "-"}{" "}{doctor.lastName || "N/A"}</SubTitle>
+                                          <Text style={style.smallText}>{doctor.email || "N/A"}</Text> 
+                                          <Text style={style.Text}>{doctor.profile?.specialization || "N/A"}</Text>                      
                                           {/* <Text style={style.smallText}>
                                             <EvilIcons name="location" size={13} style={{paddingRight:10}} />
                                             {"address"}
@@ -96,7 +96,7 @@ const ConsultationId = () => {
                               </View>
                               <View style={style.ButtonRow}>
                                   <Text style={[style.buttonTexts, { color: colors.green }]}>
-                                  ₦10,000
+                                  ₦ {doctor.profile?.consultationFee || 0}
                                   </Text>
                               <TouchableOpacity 
                                 style={style.joinBtn}

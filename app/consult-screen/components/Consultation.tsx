@@ -18,7 +18,7 @@ const Consultation = () => {
     queryKey: ['getAllHospitals'],
     queryFn: () => patientService.getHospitals()
   }) 
-  console.log("DATA!!", data)
+  console.log("All_Hospaital!!", data)
 
   if(isLoading){
     return (
@@ -30,9 +30,9 @@ const Consultation = () => {
 
   if (isError as unknown) {
     return(
-       <div className="h-full flex items-center justify-center text-sm text-red-500">
+       <Text className="h-full flex items-center justify-center text-sm text-red-500">
         {(error as Error).message}
-      </div>
+      </Text>
     )
   }
 
