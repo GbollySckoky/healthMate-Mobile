@@ -73,7 +73,7 @@ export const patientService = {
     return await instance.post(PATIENTS_ENDPOINTS.BOOK_APPOINTMENT, payload)
   },
   getDoctors: async (hospitalId: number) => {
-    const response = await instance.get(`${PATIENTS_ENDPOINTS.GET_ALL_DOCTORS}${hospitalId}`)
+    const response = await instance.get(`${PATIENTS_ENDPOINTS.GET_ALL_DOCTORS}${hospitalId}/doctors`)
     return await response.data
   },
   getHospitals: async () => {

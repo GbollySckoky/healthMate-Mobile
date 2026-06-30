@@ -40,9 +40,9 @@ const AllHospitalsPage = () => {
 
     if (isError as unknown) {
     return(
-       <div className="h-full flex items-center justify-center text-sm text-red-500">
+       <Text className="h-full flex items-center justify-center text-sm text-red-500">
         {(error as Error).message}
-      </div>
+      </Text>
     )
   }
   return (

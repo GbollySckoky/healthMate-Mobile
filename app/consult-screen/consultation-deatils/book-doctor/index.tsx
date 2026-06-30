@@ -1,25 +1,21 @@
-import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
-import {
-  SubTitle,
-} from '@/components/typography/Typography';
-import { Image } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, Image } from 'react-native';
+import { SubTitle, Wrapper } from '@/components/typography/Typography';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
 import { colors } from '@/lib/colors';
 import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout';
 import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
-import { NavHeader } from '@/components/Header/Header'
-import { useRouter } from 'expo-router';
-import { Wrapper } from '@/components/typography/Typography';
+import { NavHeader } from '@/components/Header/Header';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
 import Booking from './Booking';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
 
 const BookDoctor = () => {
-  const router = useRouter()
-  const profile = require('../../../../assets/images/Ellipse 165.png')
+  const router = useRouter();
+  const params = useLocalSearchParams();
 
-  
+  const profile = require('../../../../assets/images/Ellipse 165.png');
   return (
     <SafeArea>
       <ScreenLayout>
@@ -28,85 +24,91 @@ const BookDoctor = () => {
           _goBack={() => router.back()}
           backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
         />
+
         <ScreenOverFlowLayout>
           <Wrapper>
-              <View style={style.Card}>
-                <View style={style.Flex}>
-                    <View style={{ width: 50 }}>
-                        <Image
-                        style={style.image}
-                        source={profile}
-                        />
-                    </View>
-                    <View style={style.Flexs}>
-                        <View style={{ marginLeft: 5 }}>
-                            <SubTitle>Dr James Uche</SubTitle>
-                            <Text style={style.Text}>General Practitioner</Text>                      
-                            <Text style={style.smallText}>
-                              <EvilIcons name="location" size={13} style={{paddingRight:10}} />
-                              Lagos Health Hospital
-                            </Text>
-                        </View>
-                        <Text style={style.rating}>⭐ 4.2(38)</Text>
-                    </View>
+            <View style={styles.card}>
+              <View style={styles.row}>
+                <Image style={styles.image} source={profile} />
+
+                <View style={styles.infoRow}>
+                  <View style={{ flex: 1 }}>
+                    <SubTitle>
+                      Dr {params.firstName || '-'} {params.lastName || ''}
+                    </SubTitle>
+
+                    <Text style={styles.specialtyText}>
+                      {params.specialization || 'General Practitioner'}
+                    </Text>
+
+                    <Text style={styles.smallText}>
+                      <EvilIcons name="location" size={13} />{' '}
+                      {params.hospitalName || '-'}
+                    </Text>
+                  </View>
+
+                  <Text style={styles.rating}>⭐ 4.2(38)</Text>
                 </View>
               </View>
-              <Booking />
-            </Wrapper>
-          </ScreenOverFlowLayout>
+            </View>
+
+            <Booking/>
+          </Wrapper>
+        </ScreenOverFlowLayout>
       </ScreenLayout>
     </SafeArea>
-  )
-}
+  );
+};
 
-export default BookDoctor
+export default BookDoctor;
 
-const style = StyleSheet.create({
-  Card: {
+const styles = StyleSheet.create({
+  card: {
     padding: 15,
     borderColor: '#F2F2F2',
     borderWidth: 1,
     borderRadius: 10,
     backgroundColor: '#fff',
-    marginBottom: 20
+    marginBottom: 20,
   },
-Flex: {
+
+  row: {
     flexDirection: 'row',
-    alignContent: 'center',
-    marginTop: 5,
-    marginBottom: 2,
+    alignItems: 'center',
   },
+
   image: {
     width: 50,
     height: 50,
     backgroundColor: '#0553',
     borderRadius: 100,
+    marginRight: 10,
   },
-  Flexs: {
+
+  infoRow: {
     flexDirection: 'row',
     flex: 1,
     justifyContent: 'space-between',
-  //   alignContent: 'center',
+    gap: 8,
   },
+
   smallText: {
-    fontFamily: 'Libre-Franklin',
+    fontFamily: 'LibreFranklin_400Regular',
     fontSize: 12,
     color: colors.gray,
-    fontStyle: 'normal',
-    fontWeight: 400,
-    paddingTop: 4
-},
-Text: {
-    fontFamily: 'Libre-Franklin',
+    paddingTop: 4,
+  },
+
+  specialtyText: {
+    fontFamily: 'LibreFranklin_400Regular',
     fontSize: 12,
     color: colors.purple,
-    fontStyle: 'normal',
-    fontWeight: 400,
-    paddingTop: 4
-},
-rating: {
+    paddingTop: 4,
+  },
+
+  rating: {
     fontSize: 12,
     color: colors.gray,
     fontWeight: '400',
-},
-})
+  },
+});

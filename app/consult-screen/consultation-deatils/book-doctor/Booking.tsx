@@ -88,7 +88,7 @@ const Booking = () => {
       time: inputValue.time,
       consultationType: inputValue.consultationType,
       healthConcern: inputValue.healthConcern,
-      doctorId: 3,
+      doctorId: 2,
       hospitalId: 1,
       amount: 100000
     }
@@ -226,7 +226,7 @@ const Booking = () => {
             fontSize: 16,
           }}
         >
-         {mutation.isPending ? "proceeding..." : " Proceed to payment"}
+         {mutation.isPending ? "processing.." : " Proceed to payment"}
         </Text>
       </TouchableOpacity>
     </View>
