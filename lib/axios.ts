@@ -3,7 +3,6 @@ import axios from 'axios'
 import { STATUS } from './status';
 import { ROUTES } from './routes';
 import { storageService } from './storage';
-import { ROUTES } from './routes';
 import { router } from 'expo-router';
 
 // async function getToken(key: string) {
