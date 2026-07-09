@@ -1,5 +1,5 @@
 import React from 'react';
-import HomePage from '../home-screen/index';
+import HomePage from '@/features/home';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
 
 const Home = () => {
@@ -12,5 +12,4 @@ const Home = () => {
 };
 
 export default Home;
-
 

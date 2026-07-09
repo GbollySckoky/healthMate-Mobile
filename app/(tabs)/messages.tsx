@@ -1,5 +1,5 @@
 import React from 'react';
-import MessagePage from '../messages-screen/index';
+import MessagePage from '@/features/messages';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
 
 

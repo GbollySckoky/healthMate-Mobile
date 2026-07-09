@@ -19,12 +19,12 @@ export const Button = ({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-      
+    ...StyleSheet.absoluteFillObject,
+    pointerEvents: 'box-none',
   },
   fixedButton: {
     position: 'absolute',
-    bottom: 30, // distance from botto
+    bottom: 24,
     right: 20,
     backgroundColor: '#DD2590',
     paddingVertical: 15,
@@ -32,9 +32,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
-    //   justifyContent: 'c',
     width: 200,
-    marginBottom: 29,
   },
   btnText: {
     color: 'white',

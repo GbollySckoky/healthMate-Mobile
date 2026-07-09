@@ -15,6 +15,7 @@
     "@expo-google-fonts/lato": "^0.4.0",
     "@expo-google-fonts/libre-franklin": "^0.4.1",
     "@expo/vector-icons": "^15.0.2",
+    "@gorhom/bottom-sheet": "^5.2.14",
     "@hugeicons/react": "^1.0.5",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-community/datetimepicker": "8.4.4",
