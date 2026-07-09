@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View } from 'react-native';
+import { Keyboard, Pressable, StyleSheet, Text, View } from 'react-native';
 import DateInput from '@/components/Input/DateInput';
 import { weightData } from '@/lib/data';
 import CustomCalendar from '@/components/calendar/CustomCalendar';
@@ -14,6 +14,7 @@ import { useModal } from '@/context/ModalContext';
 type WeightInputType = Record<string, string>;
 const WeightModal = () => {
   const { date, weight } = weightData;
+  const { closeModal } = useModal();
   const [inputValue, setInputValue] = useState<WeightInputType>({
     weight: '',
     date: new Date().toISOString(), // Initialize with today's date in YYYY-MM-DD format split date from time
@@ -64,7 +65,7 @@ const WeightModal = () => {
     <View>
       <DecimalInput
         {...weight}
-        value={inputValue.weight || ''} // Safe fallback
+        value={inputValue.weight} // Safe fallback
         onChangeText={(value) => handleChange('weight', value)}
       />
       <DateInput
@@ -89,3 +90,18 @@ const WeightModal = () => {
 };
 
 export default WeightModal;
+
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: '#DD2590',
+    paddingVertical: 12,
+    borderRadius: 10,
+    marginTop: 25,
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
+    fontWeight: '600',
+    fontSize: 16,
+  },
+});

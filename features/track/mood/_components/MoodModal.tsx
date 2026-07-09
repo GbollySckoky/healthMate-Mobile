@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MoodData } from '@/lib/data';
-import { View, StyleSheet, Text, Pressable } from 'react-native';
+import { View, StyleSheet, Text, Pressable, Keyboard } from 'react-native';
 import TextAreaInput from '@/components/Input/TextAreaInput';
 import { SubmitButton } from '@/components/typography/Typography';
 import { useMutation } from '@tanstack/react-query';
@@ -42,15 +42,15 @@ const MoodModal = () => {
     }));
   };
 
-  const handleSelectEmoji = (key: string, emoji: string, value: string) => {
+  const handleSelectEmoji = (value: string) => {
     setSelectEmoji(value); // Store the selected mood value
     // Store the emoji and value wrapped in an object with boolean conversion
     setInputValue((prev) => ({
       ...prev,
-      [key]: {
-        selectedMood: value,
-        selectedEmoji: Boolean(emoji), //coverts a string to a boolean if the stirng is empty is false
-      },
+      // [key]: {
+      mood: value,
+      // selectedEmoji: Boolean(emoji), //coverts a string to a boolean if the stirng is empty is false
+      // },
     }));
   };
 
@@ -101,7 +101,7 @@ const MoodModal = () => {
                 styles.gridItem,
                 selectEmoji === value && styles.selectedItem,
               ]}
-              onPress={() => handleSelectEmoji('mood', emoji, value)}
+              onPress={() => handleSelectEmoji(value)}
             >
               <Text style={styles.text}>{emoji}</Text>
               <Text style={{ color: '#717680' }}>{value}</Text>
@@ -109,6 +109,7 @@ const MoodModal = () => {
           );
         })}
       </View>
+
       <TextAreaInput
         {...data.mood}
         value={inputValue.description || ''}
@@ -168,5 +169,18 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 38,
     paddingBottom: 6,
+  },
+  button: {
+    backgroundColor: '#DD2590',
+    paddingVertical: 12,
+    borderRadius: 10,
+    marginTop: 25,
+    marginBottom: 30,
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
+    fontWeight: '600',
+    fontSize: 16,
   },
 });

@@ -1,125 +1,364 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { bloodPressureData } from '@/lib/data';
-import NumberInput from '@/components/Input/NumberInput';
+import { NavHeader } from '@/components/Header/Header';
+import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout';
+import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
+import {
+  Card,
+  CardAmount,
+  CardText,
+  DetailsContainer,
+  SubTitle,
+} from '@/components/typography/Typography';
+import { router } from 'expo-router';
+import Entypo from '@expo/vector-icons/Entypo';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ActivityIndicator,
+  useWindowDimensions,
+} from 'react-native';
+import { LineChart } from 'react-native-chart-kit';
 import { useState } from 'react';
-import DateInput from '@/components/Input/DateInput';
-import CustomCalendar from '@/components/calendar/CustomCalendar';
-import { SubmitButton } from '@/components/typography/Typography';
-import { useMutation } from '@tanstack/react-query';
-import { patientService } from '@/service/patientService';
-import { BloodPressure } from '@/lib/interface/blood-pressure';
-import { AxiosError } from 'axios';
+import { Button } from '@/components/button/Button';
+import BloodPressureModal from './BloodPressureModal';
 import { useModal } from '@/context/ModalContext';
+import SafeArea from '@/components/safeAreaView/SafeAreaView';
+import { useQuery } from '@tanstack/react-query';
+import { patientService } from '@/service/patientService';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
-type BloodPressureInputType = Record<string, string>;
-
-const BloodPressureModal = () => {
-  const { date, topNumber, lastNumber } = bloodPressureData;
-  const [inputValue, setInputValue] = useState<BloodPressureInputType>({
-    date: new Date().toISOString(), // Initialize with today's date in YYYY-MM-DD format
-    systolic: '',
-    diastolic: '',
-  });
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const { closeModal } = useModal();
-  const handleChange = (key: string, value: string) => {
-    setInputValue((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
-  };
-
-  const handleDateSelect = (day: any) => {
-    const selectedDate = day.dateString; // This will be in YYYY-MM-DD format
-    handleChange('date', selectedDate);
-    setShowDatePicker(false); // Close calendar after selection
-  };
-
-  const handleCloseCalendar = () => {
-    setShowDatePicker(false);
-  };
-
-  const mutation = useMutation({
-    mutationFn: (payload: BloodPressure) => patientService.createBloodPressue(payload),
-    onSuccess: (response) => {
-      console.log(response)
-      closeModal()
-    },
-    onError:(error: AxiosError) => {
-      console.log("Error!!",error)
-       console.log("STATUS:", error.response?.status);
-  console.log("ERROR DATA:", error.response?.data);
-    }
+const BloodPressure = () => {
+  const { openModal } = useModal();
+  const { width: screenWidth } = useWindowDimensions();
+  const contentWidth = screenWidth * 0.92;
+  const chartWidth = Math.max(contentWidth - 24, 1);
+  const chartHeight = Math.max(190, Math.min(screenWidth * 0.55, 240));
+  const [readings, setReadings] = useState([
+    { date: 'Jun 20', systolic: 82, diastolic: 62 },
+    { date: 'Jun 21', systolic: 95, diastolic: 75 },
+    { date: 'Jun 22', systolic: 118, diastolic: 105 },
+    { date: 'Jun 23', systolic: 118, diastolic: 95 },
+    { date: 'Jun 24', systolic: 140, diastolic: 82 },
+    { date: 'Jun 25', systolic: 140, diastolic: 82 },
+    { date: 'Jun 26', systolic: 140, diastolic: 82 },
+    { date: 'Jun 27', systolic: 140, diastolic: 82 },
+  ]);
+   const {data, isLoading, isError, error} = useQuery({
+    queryKey: ['bloodPressure'],
+    queryFn: () => patientService.getBloodPressure(),
   })
+  console.log("DATA!!", data)
+ 
+  // Prepare chart data
+  const chartData = {
+    labels: readings.map((r) => r.date.split(' ')[1]), // Just day numbers
+    datasets: [
+      {
+        data: readings.map((r) => r.systolic),
+        color: (opacity = 1) => `rgba(239, 68, 68, ${opacity})`, // Red for systolic
+        strokeWidth: 3,
+      },
+      {
+        data: readings.map((r) => r.diastolic),
+        color: (opacity = 1) => `rgba(59, 130, 246, ${opacity})`, // Blue for diastolic
+        strokeWidth: 3,
+      },
+    ],
+  };
 
-  const handleCreatePressure = async () => {
-    const data ={
-      systolic: inputValue.systolic.trim(),
-      diastolic: inputValue.diastolic.trim(),
-      recordedAt: inputValue.date,
-      // time: inputValue.time,
-    }
-    console.log("PAYLOAD:", data);
-    await mutation.mutateAsync(data)
+  const chartConfig = {
+    backgroundColor: '#ffffff',
+    backgroundGradientFrom: '#ffffff',
+    backgroundGradientTo: '#ffffff',
+    decimalPlaces: 0,
+    color: (opacity = 1) => `rgba(107, 114, 128, ${opacity})`,
+    labelColor: (opacity = 1) => `rgba(107, 114, 128, ${opacity})`,
+    style: {
+      borderRadius: 16,
+    },
+    propsForDots: {
+      r: '4',
+      strokeWidth: '0',
+    },
+    propsForBackgroundLines: {
+      strokeDasharray: '5,5',
+      stroke: `rgba(229, 231, 235, 1)`,
+      strokeWidth: 1,
+    },
+  };
+
+   if(isLoading){
+      return (
+      <SafeArea>
+        <View style={styles.stateContainer}>
+        <ActivityIndicator size="large" />
+        </View>
+      </SafeArea>
+      )
   }
+
+  if (isError as unknown) {
+    return(
+      <SafeArea>
+        <View style={styles.stateContainer}>
+          <Text style={styles.errorText}>{(error as Error).message}</Text>
+        </View>
+      </SafeArea>
+    )
+  }
+
   return (
-    <View style={styles.container}>
-      <NumberInput
-        {...topNumber}
-        value={inputValue.systolic || ''} // Safe fallback
-        onChangeText={(value) => handleChange('systolic', value)}
-      />
-      <NumberInput
-        {...lastNumber}
-        value={inputValue.diastolic || ''} // Safe fallback
-        onChangeText={(value) => handleChange('diastolic', value)}
-      />
+    <SafeArea>
+      <ScreenLayout>
+        <NavHeader
+          title="Blood Pressure Tracker"
+          _goBack={() => router.back()}
+          backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+          text="Track your readings to monitor your heart health"
+        />
+        <ScreenOverFlowLayout>
+          <View style={styles.contentWrapper}>
+            <DetailsContainer>
+              <AntDesign
+                name="heart"
+                size={24}
+                color="#DF0000"
+                style={styles.icon}
+              />
+              <CardText>Today’s Readings</CardText>
+              <CardAmount>120/80 mmHg</CardAmount>
+              <CardText>Recorded on: Jun 22, 09:45</CardText>
+              <Text style={styles.colorText}>Normal</Text>
+            </DetailsContainer>
+            {/* Line Chart */}
+            <View style={styles.chartContainer}>
+              <SubTitle>BP Trends</SubTitle>
+              <LineChart
+                data={chartData}
+                width={chartWidth}
+                height={chartHeight}
+                chartConfig={chartConfig}
+                bezier
+                style={styles.chart}
+                withInnerLines={true}
+                withOuterLines={false}
+                yAxisSuffix=""
+                yAxisInterval={1}
+                fromZero={false}
+                // color={true}
+                segments={6}
+              />
 
-      {/* Date Input - Text field that opens calendar when pressed */}
-      <DateInput
-        {...date}
-        value={
-          inputValue.date ? new Date(inputValue.date).toLocaleDateString() : ''
-        } // Show formatted date safely
-        _fn={() => setShowDatePicker(true)} // Open calendar directly
-      />
-
-      <CustomCalendar
-        isOpen={showDatePicker}
-        onChangeText={handleDateSelect}
-        onClose={handleCloseCalendar}
-      />
-
-      <SubmitButton _fn={handleCreatePressure}>{mutation.isPending ? "Saving..." : 'Save Reading'}</SubmitButton>
-    </View>
+              {/* Legend */}
+              <View style={styles.legend}>
+                <View style={styles.legendItem}>
+                  <View
+                    style={[styles.legendDot, { backgroundColor: '#EF4444' }]}
+                  />
+                  <Text style={styles.legendText}>Systolic</Text>
+                </View>
+                <View style={styles.legendItem}>
+                  <View
+                    style={[styles.legendDot, { backgroundColor: '#3B82F6' }]}
+                  />
+                  <Text style={styles.legendText}>Diastolic</Text>
+                </View>
+              </View>
+            </View>
+            {/* Recnnt Readings */}
+            <View style={{ marginBottom: 40 }}>
+              <Card>
+                <SubTitle>Recent Readings</SubTitle>
+                {data?.data?.map((recent: any,) => {
+                  const isLastItem = recent.id === data.data.length - 1;
+                  return (
+                    <View
+                      key={recent.id}
+                      style={[
+                        styles.enhancedItemContainer,
+                        isLastItem && styles.lastItem,
+                      ]}
+                    >
+                      <View style={styles.flex}>
+                        <View
+                          style={{ flexDirection: 'row', alignItems: 'center' }}
+                        >
+                          <Text
+                            style={{
+                              borderColor: '#f2f2f2',
+                              borderWidth: 1,
+                              padding: 6,
+                              borderRadius: 5,
+                            }}
+                          >
+                            <FontAwesome name="stethoscope" size={24} color="#DF0000" />
+                          </Text>
+                          <View style={{ paddingLeft: 16 }}>
+                            <Text
+                              style={{
+                                fontWeight: '500',
+                                fontSize: 14,
+                                color: '#414651',
+                                paddingTop: 2,
+                                fontFamily: 'Lato_400Regular',
+                              }}
+                            >
+                              {recent.systolic}/{recent.diastolic} mmH
+                            </Text>
+                            <Text
+                              style={{
+                                fontWeight: '400',
+                                fontSize: 12,
+                                color: '#717680',
+                                paddingTop: 2,
+                                fontFamily: 'Lato_400Regular',
+                              }}
+                            >
+                             {new Date(recent.createdAt).toLocaleDateString()} at{' '}
+                              {new Date(recent.createdAt).toLocaleTimeString()}
+                            </Text>
+                          </View>
+                        </View>
+                        {/* <Text
+                          style={{
+                            backgroundColor: `${(status === 'Normal' && '#ECFDF3') || (status === 'High' && '#FEF3F2')}`,
+                            color: `${(status === 'Normal' && '#027A48') || (status === 'High' && '#B42318')}`,
+                            paddingHorizontal: 15,
+                            paddingVertical: 7,
+                            borderRadius: 30,
+                            fontFamily: 'Inter_500Medium',
+                          }}
+                        >
+                          {status}
+                        </Text> */}
+                      </View>
+                    </View>
+                  );
+                })}
+              </Card>
+            </View>
+          </View>
+        </ScreenOverFlowLayout>
+        <Button
+          _fn={() =>
+            openModal(<BloodPressureModal />, {
+              title: 'Add Blood Pressure Reading',
+              description: '',
+              onClose: () => {},
+              // btnText: 'Save Reading'
+            })
+          }
+        >
+          Add New Reading
+        </Button>
+      </ScreenLayout>
+    </SafeArea>
   );
 };
 
-export default BloodPressureModal;
+export default BloodPressure;
 
 const styles = StyleSheet.create({
-  keyboardAvoidingView: {
+  stateContainer: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#ffffff',
+    paddingHorizontal: 20,
+  },
+  errorText: {
+    color: '#EF4444',
+    fontFamily: 'Inter_400Regular',
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  contentWrapper: {
+    alignSelf: 'center',
+    width: '92%',
+    paddingTop: 10,
+    paddingBottom: 110,
+  },
+  icon: {
+    backgroundColor: '#FDF2FA',
+    paddingHorizontal: 15,
+    paddingVertical: 13,
+    borderRadius: 100,
+    marginBottom: 10,
+  },
+  colorText: {
+    color: '#027A48',
+    backgroundColor: '#ECFDF3',
+    borderRadius: 50,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    fontFamily: 'Inter_500Medium',
+    marginTop: 7,
+  },
+  lastItem: {
+    borderBottomWidth: 0, // Remove border from last item
+  },
+  enhancedItemContainer: {
+    paddingTop: 5,
+    borderColor: '#F2F2F2',
+    borderBottomWidth: 1,
+  },
+  flex: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 18,
+    // backgroundColor: 'red'
   },
   container: {
-    gap: 16,
-    padding: 16,
+    // flex: 1,
+    backgroundColor: '#f5f5f5',
+    padding: 20,
+    justifyContent: 'center',
   },
-  listStyle: {
-    padding: 16,
-    gap: 16,
-  },
-  textInput: {
-    width: 'auto',
-    flexGrow: 1,
-    flexShrink: 1,
-    height: 45,
+  chartContainer: {
+    backgroundColor: '#ffffff',
+    marginBottom: 26,
+    borderRadius: 12,
+    padding: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
     borderWidth: 1,
+    borderColor: '#f2f2f2',
+  },
+
+  chart: {
+    marginVertical: 8,
     borderRadius: 8,
-    borderColor: '#d8d8d8',
-    backgroundColor: '#fff',
-    padding: 8,
-    marginBottom: 8,
+    // backgroundColor: 'red'
+  },
+  legend: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 15,
+    gap: 30,
+  },
+  legendItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  legendDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    marginRight: 8,
+  },
+  legendColor: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+  },
+  legendText: {
+    fontSize: 14,
+    color: '#666',
+    fontWeight: '500',
   },
 });

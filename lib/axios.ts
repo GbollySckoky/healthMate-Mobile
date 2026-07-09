@@ -1,9 +1,8 @@
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios'
 import { STATUS } from './status';
-// import { ROUTES } from './routes';
-import { storageService } from './storage';
 import { ROUTES } from './routes';
+import { storageService } from './storage';
 import { router } from 'expo-router';
 
 // async function getToken(key: string) {
@@ -41,7 +40,7 @@ import { router } from 'expo-router';
       if (error.response) {
         const status = error.response.status;
         
-        if (status === STATUS.UN_AUTHORIZED) {
+        if (status === STATUS.UN_AUTHORIZED || !storageService.isAuthenticated()) {
           // SecureStore.deleteItemAsync('my_access_token');
           storageService.clearAuthData()
           router.replace(ROUTES.login);

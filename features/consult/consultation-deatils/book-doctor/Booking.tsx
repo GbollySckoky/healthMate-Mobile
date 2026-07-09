@@ -23,6 +23,10 @@ const date = {
   placeholder: '10/05/1997',
 };
 
+type ShowPickerState = {
+  datePicker: boolean,
+  timePicker: boolean
+}
 const Booking = () => {
   const router = useRouter();
   const [inputValue, setInputValue] = useState({
