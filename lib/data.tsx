@@ -436,48 +436,48 @@ export const healthData = [
   },
 ];
 
-export const healthOverviews = [
-  {
-    title: 'Blood Pressure',
-    value: '120/80 mmHg',
-    text: 'Blood Pressure',
-    id: 1,
-    icon: <AntDesign name="heart" size={18} color="#DF0000" />,
-    url: ROUTES.bloodPressure,
-  },
-  {
-    title: 'Mood',
-    value: 'Happy',
-    text: 'Feeling Great',
-    id: 2,
-    icon: <Feather name="smile" size={18} color="#FFC847" />,
-    url: ROUTES.mood,
-  },
-  {
-    title: 'Sleep',
-    value: '7h 30 mins',
-    text: 'Quality: Good',
-    id: 3,
-    icon: <FontAwesome name="moon-o" size={24} color="black" />,
-    url: ROUTES.sleep,
-  },
-  {
-    title: 'Weight',
-    value: '765kg',
-    text: 'Healthy range',
-    id: 4,
-    icon: <FontAwesome name="balance-scale" size={18} color="blue" />,
-    url: ROUTES.weight,
-  },
-  {
-    title: 'Medications',
-    value: '2/3 doses',
-    text: 'Taken today',
-    id: 5,
-    icon: <MaterialCommunityIcons name="pill" size={18} color="#C11574" />,
-    url: ROUTES.medication
-  },
-];
+// export const healthOverviews = [
+//   {
+//     title: 'Blood Pressure',
+//     value: '120/80 mmHg',
+//     text: 'Blood Pressure',
+//     id: 1,
+//     icon: <AntDesign name="heart" size={18} color="#DF0000" />,
+//     url: ROUTES.bloodPressure,
+//   },
+//   {
+//     title: 'Mood',
+//     value: 'Happy',
+//     text: 'Feeling Great',
+//     id: 2,
+//     icon: <Feather name="smile" size={18} color="#FFC847" />,
+//     url: ROUTES.mood,
+//   },
+//   {
+//     title: 'Sleep',
+//     value: '7h 30 mins',
+//     text: 'Quality: Good',
+//     id: 3,
+//     icon: <FontAwesome name="moon-o" size={24} color="black" />,
+//     url: ROUTES.sleep,
+//   },
+//   {
+//     title: 'Weight',
+//     value: '765kg',
+//     text: 'Healthy range',
+//     id: 4,
+//     icon: <FontAwesome name="balance-scale" size={18} color="blue" />,
+//     url: ROUTES.weight,
+//   },
+//   {
+//     title: 'Medications',
+//     value: '2/3 doses',
+//     text: 'Taken today',
+//     id: 5,
+//     icon: <MaterialCommunityIcons name="pill" size={18} color="#C11574" />,
+//     url: ROUTES.medication
+//   },
+// ];
 
 export const reminderData = {
   title: {

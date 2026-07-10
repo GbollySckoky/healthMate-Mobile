@@ -39,8 +39,8 @@ const Profile = () => {
 
   const {openModal, handleDisplay} = useDisplay()
   const { data, isLoading, error, isError } = useQuery({
-    queryKey: ['getUser'],
-    queryFn: () => patientService.getUser()
+    queryKey: ['getPatient'],
+    queryFn: () => patientService.getPatient()
   })
   console.log('12345',data)
 
