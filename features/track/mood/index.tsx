@@ -15,7 +15,7 @@ import { StyleSheet, Text, View, Dimensions, ActivityIndicator } from 'react-nat
 import { LineChart } from 'react-native-chart-kit';
 import { useState } from 'react';
 const { width } = Dimensions.get('window');
-import { recentMood } from '@/lib/data';
+// import { recentMood } from '@/lib/data';
 import { Button } from '@/components/button/Button';
 import MoodModal from './_components/MoodModal';
 import { useModal } from '@/context/ModalContext';
@@ -23,7 +23,51 @@ import SafeArea from '@/components/safeAreaView/SafeAreaView';
 import { patientService } from '@/service/patientService';
 import { useQuery } from '@tanstack/react-query';
 
+type MoodValue = {
+  selectedMood?: string;
+  selectedEmoji?: boolean;
+};
 
+type MoodReading = {
+  id: number | string;
+  mood?: MoodValue;
+  notes?: string;
+  recordedAt?: string;
+  createdAt?: string;
+  status?: string;
+};
+
+const formatReadingDate = (date?: string) => {
+  if (!date) return 'No date recorded';
+
+  const readingDate = new Date(date);
+  if (Number.isNaN(readingDate.getTime())) return 'No date recorded';
+
+  return `${readingDate.toLocaleDateString()} at ${readingDate.toLocaleTimeString()}`;
+};
+
+const getMoodEmoji = (mood?: string) => {
+  switch (mood) {
+    case 'Happy':
+      return '🙂';
+    case 'Laughing':
+      return '😂';
+    case 'Angry':
+      return '😡';
+    case 'Sick':
+      return '🤢';
+    case 'Tired':
+      return '🥱';
+    default:
+      return '🙂';
+  }
+};
+
+const getMoodStatus = (mood?: string) => {
+  if (mood === 'Happy' || mood === 'Laughing') return 'Positive';
+  if (mood === 'Angry' || mood === 'Sick' || mood === 'Tired') return 'Low';
+  return 'Logged';
+};
 
 const Mood = () => {
   const { openModal } = useModal();
@@ -32,6 +76,10 @@ const Mood = () => {
     queryFn: () => patientService.getMood(),
   })
   console.log("Data", data)
+  const moodReadings: MoodReading[] = data?.data ?? [];
+  const latestMood = moodReadings[0];
+  const latestMoodName = latestMood?.mood?.selectedMood;
+  const latestMoodStatus = latestMood?.status ?? getMoodStatus(latestMoodName);
   
   const [readings, setReadings] = useState([
     { date: 'Jun 20', systolic: 82, diastolic: 62 },
@@ -108,11 +156,16 @@ const Mood = () => {
         <ScreenOverFlowLayout>
           <Wrapper>
             <DetailsContainer>
-              <Text style={{ fontSize: 35, marginBottom: 3 }}>🙂</Text>
+              <Text style={{ fontSize: 35, marginBottom: 3 }}>
+                {getMoodEmoji(latestMoodName)}
+              </Text>
               <CardText>Today’s mood</CardText>
-              <CardAmount>Happy</CardAmount>
-              <CardText>Recorded on: Jun 22, 09:45</CardText>
-              <Text style={styles.colorText}>Positive</Text>
+              <CardAmount>{latestMoodName ?? 'No mood logged'}</CardAmount>
+              <CardText>
+                Recorded on:{' '}
+                {formatReadingDate(latestMood?.recordedAt ?? latestMood?.createdAt)}
+              </CardText>
+              <Text style={styles.colorText}>{latestMoodStatus}</Text>
             </DetailsContainer>
             {/* Chart */}
             <View style={styles.chartContainer}>
@@ -136,9 +189,10 @@ const Mood = () => {
             <View style={{ marginBottom: 40 }}>
               <Card>
                 <SubTitle>Recent Moods</SubTitle>
-                {data?.data?.map((recent: any) => {
-                  const { icon, date, time, mood, status } = recent;
-                  const isLastItem = recent.id === data?.data?.length - 1;
+                {moodReadings.map((recent, index) => {
+                  const moodName = recent.mood?.selectedMood;
+                  const status = recent.status ?? getMoodStatus(moodName);
+                  const isLastItem = index === moodReadings.length - 1;
                   return (
                     <View
                       key={recent.id}
@@ -151,7 +205,7 @@ const Mood = () => {
                         <View
                           style={{ flexDirection: 'row', alignItems: 'center' }}
                         >
-                          {recent.mood.selectedEmoji && (
+                          {recent.mood?.selectedEmoji && (
                           <Text
                             style={{
                               borderColor: '#f2f2f2',
@@ -161,8 +215,7 @@ const Mood = () => {
                             }}
                           >
                             {' '}
-                            {recent.mood.selectedMood === 'Happy' && '🙂' || recent.mood.selectedMood === 'Laughing' && '😂' || recent.mood.selectedMood === 'Angry' && '😡' || 
-                             recent.mood.selectedMood === 'Sick' && '🤢' || recent.mood.selectedMood === 'Tired' && '🥱' || recent.mood.selectedMood === 'Tired' && '😒'}{' '}
+                            {getMoodEmoji(moodName)}{' '}
                           </Text>
                           )}
                           
@@ -174,7 +227,7 @@ const Mood = () => {
                                 fontFamily: 'Lato_400Regular',
                               }}
                             >
-                              {recent.mood.selectedMood}
+                              {moodName ?? 'No mood'}
                             </Text>
                             <Text
                               style={{
@@ -183,7 +236,7 @@ const Mood = () => {
                                 fontFamily: 'Lato_400Regular',
                               }}
                             >
-                              {recent.notes}
+                              {recent.notes ?? 'No notes'}
                             </Text>
                             <Text
                               style={{
@@ -194,19 +247,19 @@ const Mood = () => {
                                 fontFamily: 'Lato_400Regular',
                               }}
                             >
-                              {new Date(recent.recordedAt).toLocaleDateString()} {" "} at {" "}
-                              {new Date(recent.recordedAt).toLocaleTimeString()}
+                              {formatReadingDate(recent.recordedAt ?? recent.createdAt)}
                             </Text>
                           </View>
                         </View>
                         <Text
                           style={{
                             backgroundColor: `${
-                              (status === 'Normal' && '#ECFDF3') ||
+                              (status === 'Positive' && '#ECFDF3') ||
                               (status === 'Low' && '#FEF3F2') ||
-                              (status === 'Balanced' && '#FFFAEB')
+                              (status === 'Balanced' && '#FFFAEB') ||
+                              (status === 'Logged' && '#F4F3FF')
                             }`,
-                            color: `${(status === 'Normal' && '#027A48') || (status === 'Low' && '#B42318') || (status === 'Balanced' && '#B54708')}`,
+                            color: `${(status === 'Positive' && '#027A48') || (status === 'Low' && '#B42318') || (status === 'Balanced' && '#B54708') || (status === 'Logged' && '#5924DC')}`,
                             paddingHorizontal: 15,
                             paddingVertical: 7,
                             borderRadius: 30,

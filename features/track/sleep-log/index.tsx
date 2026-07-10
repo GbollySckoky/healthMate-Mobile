@@ -23,6 +23,47 @@ import SafeArea from '@/components/safeAreaView/SafeAreaView';
 import { patientService } from '@/service/patientService';
 import { useQuery } from '@tanstack/react-query';
 
+type SleepValue = {
+  selectedMood?: string;
+  selectedEmoji?: boolean;
+};
+
+type SleepReading = {
+  id: number | string;
+  sleep?: SleepValue;
+  recordedAt?: string;
+  createdAt?: string;
+  status?: string;
+};
+
+const formatReadingDate = (date?: string) => {
+  if (!date) return 'No date recorded';
+
+  const readingDate = new Date(date);
+  if (Number.isNaN(readingDate.getTime())) return 'No date recorded';
+
+  return `${readingDate.toLocaleDateString()} at ${readingDate.toLocaleTimeString()}`;
+};
+
+const getSleepEmoji = (sleepQuality?: string) => {
+  switch (sleepQuality) {
+    case 'Excellent':
+      return '😴';
+    case 'Average':
+      return '😐';
+    case 'Poor':
+      return '😩';
+    default:
+      return '🌙';
+  }
+};
+
+const getSleepStatus = (sleepQuality?: string) => {
+  if (sleepQuality === 'Excellent') return 'Excellent';
+  if (sleepQuality === 'Average') return 'Average';
+  if (sleepQuality === 'Poor') return 'Low';
+  return 'Logged';
+};
 
 
 const screenWidth = Dimensions.get('window').width;
@@ -67,6 +108,10 @@ export default function MyBarChart() {
     queryFn: () => patientService.getSleep(),
   })
   console.log('Data', data)
+  const sleepReadings: SleepReading[] = data?.data ?? [];
+  const latestSleep = sleepReadings[0];
+  const latestSleepQuality = latestSleep?.sleep?.selectedMood;
+  const latestSleepStatus = latestSleep?.status ?? getSleepStatus(latestSleepQuality);
 
   if(isLoading){
       return (
@@ -102,9 +147,12 @@ export default function MyBarChart() {
                 style={styles.icon}
               />
               <CardText>Today’s sleep</CardText>
-              <CardAmount>8h 30mins</CardAmount>
-              <CardText>Recorded on: Jun 22, 09:45</CardText>
-              <Text style={styles.colorText}>Excellent</Text>
+              <CardAmount>{latestSleepQuality ?? 'No sleep logged'}</CardAmount>
+              <CardText>
+                Recorded on:{' '}
+                {formatReadingDate(latestSleep?.recordedAt ?? latestSleep?.createdAt)}
+              </CardText>
+              <Text style={styles.colorText}>{latestSleepStatus}</Text>
             </DetailsContainer>
             <View style={styles.container}>
               <View style={styles.chartContainer}>
@@ -130,9 +178,10 @@ export default function MyBarChart() {
             <View style={{ marginBottom: 40 }}>
               <Card>
                 <SubTitle>Sleep Log History</SubTitle>
-                {data?.data?.map((sleep: any) => {
-                  const { icon, hour, date, status, time } = sleep;
-                  const isLastItem = sleep.id === data?.data?.length - 1;
+                {sleepReadings.map((sleep, index) => {
+                  const sleepQuality = sleep.sleep?.selectedMood;
+                  const status = sleep.status ?? getSleepStatus(sleepQuality);
+                  const isLastItem = index === sleepReadings.length - 1;
                   return (
                     <View
                       key={sleep.id}
@@ -145,7 +194,7 @@ export default function MyBarChart() {
                         <View
                           style={{ flexDirection: 'row', alignItems: 'center' }}
                         >
-                         {sleep.sleep.selectedEmoji && (
+                         {sleep.sleep?.selectedEmoji && (
                           <Text
                             style={{
                               borderColor: '#f2f2f2',
@@ -155,7 +204,7 @@ export default function MyBarChart() {
                             }}
                           >
                             {' '}
-                            {sleep.sleep.selectedMood === 'Excellent' && '😴' || sleep.sleep.selectedMood === 'Average' && '😐' || sleep.sleep.selectedMood === 'Poor' && '😩' }{' '}
+                            {getSleepEmoji(sleepQuality)}{' '}
                           </Text>
                           )}
                           <View style={{ paddingLeft: 16 }}>
@@ -168,7 +217,7 @@ export default function MyBarChart() {
                                 fontFamily: 'Lato_400Regular',
                               }}
                             >
-                              {sleep.sleep.selectedMood}
+                              {sleepQuality ?? 'No quality'}
                             </Text>
                             <Text
                               style={{
@@ -179,14 +228,14 @@ export default function MyBarChart() {
                                 fontFamily: 'Lato_400Regular',
                               }}
                             >
-                              {new Date(sleep.recordedAt).toLocaleDateString()} . {new Date(sleep.recordedAt).toLocaleTimeString()}
+                              {formatReadingDate(sleep.recordedAt ?? sleep.createdAt)}
                             </Text>
                           </View>
                         </View>
                         <Text
                           style={{
-                            backgroundColor: `${(status === 'Excellent' && '#ECFDF3') || (status === 'Average' && '#FFFAEB') || (status === 'Low' && '#FEF3F2')}`,
-                            color: `${(status === 'Excellent' && '#027A48') || (status === 'Average' && '#B54708') || (status === 'Low' && '#B42318')}`,
+                            backgroundColor: `${(status === 'Excellent' && '#ECFDF3') || (status === 'Average' && '#FFFAEB') || (status === 'Low' && '#FEF3F2') || (status === 'Logged' && '#F4F3FF')}`,
+                            color: `${(status === 'Excellent' && '#027A48') || (status === 'Average' && '#B54708') || (status === 'Low' && '#B42318') || (status === 'Logged' && '#5924DC')}`,
                             paddingHorizontal: 15,
                             paddingVertical: 7,
                             borderRadius: 30,

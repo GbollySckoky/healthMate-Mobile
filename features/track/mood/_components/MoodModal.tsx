@@ -15,8 +15,22 @@ const date = {
   label: 'Date',
   placeholder: '10/05/1997',
 }
+
+type MoodInput = {
+  description: string;
+  mood: {
+    selectedMood: string;
+    selectedEmoji: boolean;
+  };
+  date: string;
+};
+
+type CalendarDay = {
+  dateString: string;
+};
+
 const MoodModal = () => {
-  const [inputValue, setInputValue] = useState({
+  const [inputValue, setInputValue] = useState<MoodInput>({
     description: "",
     mood:{
       selectedMood: "",
@@ -35,7 +49,7 @@ const MoodModal = () => {
     },
   };
 
-  const handleChange = (key: string, value: string) => {
+  const handleChange = (key: 'description' | 'date', value: string) => {
     setInputValue((prev) => ({
       ...prev,
       [key]: value,
@@ -47,14 +61,14 @@ const MoodModal = () => {
     // Store the emoji and value wrapped in an object with boolean conversion
     setInputValue((prev) => ({
       ...prev,
-      // [key]: {
-      mood: value,
-      // selectedEmoji: Boolean(emoji), //coverts a string to a boolean if the stirng is empty is false
-      // },
+      mood: {
+        selectedMood: value,
+        selectedEmoji: true,
+      },
     }));
   };
 
-  const handleDateSelect = (day: any) => {
+  const handleDateSelect = (day: CalendarDay) => {
     const selectedDate = day.dateString;
     handleChange('date', selectedDate);
     // setSelectDatePicker(new Date(selectedDate))

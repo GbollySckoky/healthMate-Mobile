@@ -1,7 +1,5 @@
 import {
-  Card,
   SmallText,
-  Status,
   SubTitle,
 } from '@/components/typography/Typography';
 import { useRouter } from 'expo-router';
@@ -19,32 +17,49 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import { ROUTES } from '@/lib/routes';
 import { patientService } from '@/service/patientService';
 import { useQuery } from '@tanstack/react-query';
+import { GetAppointment } from '@/lib/interface/get-appointments-interface';
 
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
 
+const getDoctorName = (doctor: GetAppointment['doctor']) => {
+  if (!doctor) return 'Doctor unavailable';
+  if (doctor.fullName) return doctor.fullName;
+  if (doctor.name) return doctor.name;
+
+  const name = [doctor.firstName, doctor.lastName].filter(Boolean).join(' ');
+  return name || 'Doctor unavailable';
+};
+
+const getDoctorImage = (doctor: GetAppointment['doctor']) => {
+  return doctor?.profileImage || doctor?.image || 'https://picsum.photos/seed/696/3000/2000';
+};
+
+const formatAppointmentDate = (date: string, time: string) => {
+  const appointmentDate = new Date(date);
+  const formattedDate = Number.isNaN(appointmentDate.getTime())
+    ? date
+    : appointmentDate.toLocaleDateString();
+
+  return `${time} | ${formattedDate}`;
+};
+
 const AppointmentCard = () => {
   const router = useRouter();
-  // Define appointment data
-  const appointmentData = {
-    id: 'dr-james-uche-june15',
-    doctorName: 'Dr James Uche',
-    date: 'June 15',
-    time: '2:00pm',
-    type: 'Video Call Consultation',
-    status: 'Starts in 15mins',
-  };
 
   const { data, isLoading, error, isError } = useQuery({
-    queryKey: ['getAppointments'],
-    queryFn: () => patientService.getAppointments(),
-  });
+    queryKey: ['getAppointments', 1, 1],
+    queryFn: () =>
+    patientService.getAppointments(1, 1),
+   });
 
-  const latestAppointment = data && data.length > 0 ? data[0] : null;
-  const handleAppointmentPress = () => {
+  const appointments = data?.data ?? [];
+  const latestAppointment = appointments[0] ?? null;
+
+  const handleAppointmentPress = (id: number) => {
     router.push({
       pathname: '/home-screen/appointment/[id]',
-      params: { id: appointmentData.id },
+      params: { id },
     });
   };
 
@@ -67,7 +82,7 @@ const AppointmentCard = () => {
       );
     }
 
-    if (!data || data.length === 0) {
+    if (appointments.length === 0) {
       return (
         <View style={style.stateContainer}>
           <AntDesign name="inbox" size={40} color="#717680" />
@@ -77,15 +92,22 @@ const AppointmentCard = () => {
       );
     }
 
+    if (!latestAppointment) {
+      return null;
+    }
+
     return (
-      <TouchableOpacity onPress={handleAppointmentPress} activeOpacity={0.7}>
+      <TouchableOpacity
+        onPress={() => handleAppointmentPress(latestAppointment.id)}
+        activeOpacity={0.7}
+      >
         <View style={style.Card}>
           <View style={style.Flex}>
             <View style={{ width: 50 }}>
               <Image
                 style={style.image}
                 source={{
-                  uri: 'https://picsum.photos/seed/696/3000/2000',
+                  uri: getDoctorImage(latestAppointment.doctor),
                 }}
                 placeholder={{ blurhash }}
                 contentFit="cover"
@@ -94,31 +116,27 @@ const AppointmentCard = () => {
             </View>
             <View style={style.Flexs}>
               <View style={{ marginLeft: 5 }}>
-                <SubTitle>{latestAppointment.doctor}</SubTitle>
+                <SubTitle>{getDoctorName(latestAppointment.doctor)}</SubTitle>
                 <View style={[style.flex, { marginTop: 5 }]}>
                   <View style={{ marginRight: 3 }}>
                     <Feather name="clock" size={13} color="#717680" />
                   </View>
                   <SmallText>
-                    {' '}
-                    {latestAppointment.appointment_time} |{' '}
-                    {latestAppointment.appointment_date}{' '}
+                    {formatAppointmentDate(
+                      latestAppointment.date,
+                      latestAppointment.time
+                    )}
                   </SmallText>
                 </View>
                 <View style={[style.flex, { marginTop: 5, marginBottom: 5 }]}>
                   <View style={{ marginRight: 3 }}>
                     <Feather name="video" size={13} color="#717680" />
                   </View>
-                  <SmallText> {latestAppointment.consultation_type}</SmallText>
-                  <SmallText>
-                    {' '}
-                    Approved:{' '}
-                    {latestAppointment.approved === true ? 'Yes' : 'No'}
-                  </SmallText>
+                  <SmallText> {latestAppointment.consultationType}</SmallText>
                 </View>
-                <SmallText>
-                  Health Concern: {latestAppointment.health_concerns}
-                </SmallText>
+                {/* <SmallText>
+                  Health Concern: {latestAppointment.healthConcern}
+                </SmallText> */}
               </View>
               <Text
                 style={{
@@ -142,7 +160,10 @@ const AppointmentCard = () => {
                 Reschedule
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={style.joinBtn}>
+            <TouchableOpacity
+              style={style.joinBtn}
+              onPress={() => router.push(ROUTES.home)}
+            >
               <Text style={[style.buttonText, { color: '#F2F2F2' }]}>
                 Join Call
               </Text>
@@ -168,56 +189,7 @@ const AppointmentCard = () => {
           <AntDesign name="arrow-right" size={17} color="#DD2590" />
         </TouchableOpacity>
       </View>
-<<<<<<< HEAD:features/home/_components/Appointment.tsx
-      <TouchableOpacity onPress={handleAppointmentPress} activeOpacity={0.7}>
-        <Card>
-          <View style={style.Flex}>
-            <View style={{ width: 50 }}>
-              <Image
-                style={style.image}
-                source={{ uri: 'https://picsum.photos/seed/696/3000/2000' }}
-                contentFit="cover"
-                transition={1000}
-              />
-            </View>
-            <View style={style.Flexs}>
-              <View style={{ marginLeft: 5 }}>
-                <SubTitle>{appointmentData.doctorName}</SubTitle>
-                <View style={[style.flex, { marginTop: 5 }]}>
-                  <View style={{ marginRight: 6 }}>
-                    <Feather name="clock" size={13} color="#717680" />
-                  </View>
-                  <SmallText>
-                    {appointmentData.time} | {appointmentData.date}
-                  </SmallText>
-                </View>
-                <View style={[style.flex, { marginTop: 5 }]}>
-                  <View style={{ marginRight: 6 }}>
-                    <Feather name="video" size={13} color="#717680" />
-                  </View>
-                  <SmallText>{appointmentData.type}</SmallText>
-                </View>
-              </View>
-              <Status>{appointmentData.status}</Status>
-            </View>
-          </View>
-          <View style={style.ButtonRow}>
-            <TouchableOpacity style={style.rescheduleBtn}>
-              <Text style={[style.buttonText, { color: '#252B37' }]}>
-                Reschedule
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={style.joinBtn} onPress={() => router.push(ROUTES.home)}>
-              <Text style={[style.buttonText, { color: '#F2F2F2' }]}>
-                Join Call
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </Card>
-      </TouchableOpacity>
-=======
       {renderAppointments()}
->>>>>>> 85b4f92abddf59638fbd73e8b0c2b730e21f410a:app/home-screen/_components/Appointment.tsx
     </View>
   );
 };

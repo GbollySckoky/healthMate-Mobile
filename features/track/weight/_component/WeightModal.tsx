@@ -20,7 +20,7 @@ const WeightModal = () => {
     date: new Date().toISOString(), // Initialize with today's date in YYYY-MM-DD format split date from time
   });
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const { closeModal } = useModal();
+  // const { closeModal } = useModal();
   const handleChange = (key: string, value: string) => {
     setInputValue((prev) => ({
       ...prev,
