@@ -11,6 +11,8 @@ import { Weight } from "@/lib/interface/weight";
 import { Sleep } from "@/lib/interface/sleep";
 import { Mood } from "@/lib/interface/mood";
 import { Appointment } from "@/lib/interface/createAppointment";
+import { GetAppointmentsResponse } from "@/lib/interface/get-appointments-interface";
+import { GetOverview } from "@/lib/interface/get-overview-interface";
 import instance from "../lib/axios";
 
 export const patientService = {
@@ -80,8 +82,30 @@ export const patientService = {
     const response = await instance.get(`${PATIENTS_ENDPOINTS.GET_ALL_HOSPITALS}`)
     return await response.data
   },
-   getDoctorById: async (doctorId: number) => {
+  getDoctorById: async (doctorId: number) => {
     const response = await instance.get(`${PATIENTS_ENDPOINTS.GET_DOCTOR}${doctorId}`)
+    return await response.data
+  },
+  getAppointments: async (
+    page = 1,
+    limit = 10,
+    q?: string,
+    status?: string
+  ): Promise<GetAppointmentsResponse>  => {
+    const params = new URLSearchParams({})
+    if(page)params.append('page', String(page))
+    if(limit)params.append('limit', String(limit))
+    if(q)params.append('q', q)
+    if(status)params.append('status', status)
+    const response = await instance.get(`${PATIENTS_ENDPOINTS.GET_ALL_APPOINTMENT}?${params.toString()}`)
+    return await response.data
+  },
+  getAppointmentById: async (appointmentId: number) => {
+    const response = await instance.get(`${PATIENTS_ENDPOINTS.GET_APPOINTMENT}${appointmentId}/appointments`)
+    return await response.data
+  },
+  getOverview: async (): Promise<GetOverview> => {
+    const response = await instance.get(PATIENTS_ENDPOINTS.GET_TRACK_OVERVIEW)
     return await response.data
   },
 }

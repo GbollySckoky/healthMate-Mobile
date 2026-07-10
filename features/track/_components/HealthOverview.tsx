@@ -1,12 +1,22 @@
 import { Text, View, StyleSheet, Pressable } from 'react-native';
-import { useCallback } from 'react';
-import { healthOverview } from '@/lib/data';
+import { ReactNode, useCallback } from 'react';
+// import { healthOverview } from '@/lib/data';
 import {
   CardText,
   CardTitle,
 } from '@/components/typography/Typography';
 import { Href, useRouter } from 'expo-router';
 import { colors } from '@/lib/colors';
+import { healthOverviews } from '@/lib/data';
+
+type HealthOverviewItem = {
+  id: number | string;
+  title: string;
+  text: string;
+  value: string;
+  icon: ReactNode;
+  url: string;
+};
 
 const HealthOverview = () => {
   const router = useRouter();
@@ -19,7 +29,7 @@ const HealthOverview = () => {
   );
 
   // Handle empty data
-  if (!healthOverview || healthOverview.length === 0) {
+  if (!healthOverviews || healthOverviews.length === 0) {
     return (
       <View style={style.emptyContainer}>
         <Text style={style.emptyText}>No health data available</Text>
@@ -29,7 +39,7 @@ const HealthOverview = () => {
 
   return (
     <View style={style.container}>
-      {healthOverview.map((health) => {
+      {(healthOverviews as HealthOverviewItem[]).map((health) => {
         const { title, id, text, value, icon, url } = health;
         return (
           <Pressable

@@ -443,7 +443,7 @@ export const healthOverviews = [
     text: 'Blood Pressure',
     id: 1,
     icon: <AntDesign name="heart" size={18} color="#DF0000" />,
-    url: '/(track)/blood-pressure',
+    url: ROUTES.bloodPressure,
   },
   {
     title: 'Mood',
@@ -451,7 +451,7 @@ export const healthOverviews = [
     text: 'Feeling Great',
     id: 2,
     icon: <Feather name="smile" size={18} color="#FFC847" />,
-    url: '/(track)/mood',
+    url: ROUTES.mood,
   },
   {
     title: 'Sleep',
@@ -459,7 +459,7 @@ export const healthOverviews = [
     text: 'Quality: Good',
     id: 3,
     icon: <FontAwesome name="moon-o" size={24} color="black" />,
-    url: '/(track)/sleep-log',
+    url: ROUTES.sleep,
   },
   {
     title: 'Weight',
@@ -467,7 +467,7 @@ export const healthOverviews = [
     text: 'Healthy range',
     id: 4,
     icon: <FontAwesome name="balance-scale" size={18} color="blue" />,
-    url: '/(track)/weight',
+    url: ROUTES.weight,
   },
   {
     title: 'Medications',
@@ -475,7 +475,7 @@ export const healthOverviews = [
     text: 'Taken today',
     id: 5,
     icon: <MaterialCommunityIcons name="pill" size={18} color="#C11574" />,
-    url: '/(track)/medication',
+    url: ROUTES.medication
   },
 ];
 

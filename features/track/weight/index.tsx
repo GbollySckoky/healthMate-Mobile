@@ -24,6 +24,21 @@ import SafeArea from '@/components/safeAreaView/SafeAreaView';
 import { useQuery } from '@tanstack/react-query';
 import { patientService } from '@/service/patientService';
 
+type WeightReading = {
+  id: number | string;
+  weight: string | number;
+  createdAt?: string;
+  recordedAt?: string;
+};
+
+const formatReadingDate = (date?: string) => {
+  if (!date) return 'No date recorded';
+
+  const readingDate = new Date(date);
+  if (Number.isNaN(readingDate.getTime())) return 'No date recorded';
+
+  return `${readingDate.toLocaleDateString()} at ${readingDate.toLocaleTimeString()}`;
+};
 
 const Weight = () => {
   const { openModal } = useModal();
@@ -34,6 +49,8 @@ const Weight = () => {
 
   
   console.log('DATA!!', data)
+  const weightReadings: WeightReading[] = data?.data ?? [];
+  const latestWeight = weightReadings[0];
   const [readings, setReadings] = useState([
     { date: 'Jun 20', systolic: 82, diastolic: 62 },
     { date: 'Jun 21', systolic: 95, diastolic: 75 },
@@ -118,8 +135,13 @@ const Weight = () => {
                 style={styles.icon}
               />
               <CardText>Current Weight</CardText>
-              <CardAmount>65 kg</CardAmount>
-              <CardText>Recorded on: Jun 22, 09:45</CardText>
+              <CardAmount>
+                {latestWeight ? `${latestWeight.weight} kg` : '-- kg'}
+              </CardAmount>
+              <CardText>
+                Recorded on:{' '}
+                {formatReadingDate(latestWeight?.createdAt ?? latestWeight?.recordedAt)}
+              </CardText>
             </DetailsContainer>
             {/* Weight Goal */}
             <Card>
@@ -191,11 +213,11 @@ const Weight = () => {
             <View style={{ marginBottom: 40 }}>
               <Card>
                 <SubTitle>Weight History</SubTitle>
-                {data?.data?.map((data: any) => {
-                  const isLastItem = data.id === data?.data?.length - 1;
+                {weightReadings.map((weightReading, index) => {
+                  const isLastItem = index === weightReadings.length - 1;
                   return (
                     <View
-                      key={data.id}
+                      key={weightReading.id}
                       style={[
                         styles.enhancedItemContainer,
                         isLastItem && styles.lastItem,
@@ -228,7 +250,7 @@ const Weight = () => {
                                 fontFamily: 'Lato_400Regular',
                               }}
                             >
-                              {data.weight}
+                              {weightReading.weight} kg
                             </Text>
                             <Text
                               style={{
@@ -239,8 +261,9 @@ const Weight = () => {
                                 fontFamily: 'Lato_400Regular',
                               }}
                             >
-                               {new Date(data.createdAt).toLocaleDateString()} at{' '}
-                              {new Date(data.createdAt).toLocaleTimeString()}
+                              {formatReadingDate(
+                                weightReading.createdAt ?? weightReading.recordedAt
+                              )}
                             </Text>
                           </View>
                         </View>

@@ -15,6 +15,7 @@ import {
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ModalProvider } from '@/context/ModalContext';
+import { OverviewProvider } from '@/context/getOverviewContext';
 import '../global.css';
 
 import {
@@ -81,19 +82,21 @@ export default function RootLayout() {
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
             keyboardVerticalOffset={0}
           >
-            <ModalProvider>
-              <Stack screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="onboarding" />
-                <Stack.Screen name="(tabs)" />
-                <Stack.Screen name="profile" />
-                <Stack.Screen name="settings" />
-                <Stack.Screen name="auth" />
-              </Stack>
-              <Toast
-                ref={(ref) => Toast.setRef(ref)}
-                style={{ paddingTop: 10 }}
-              />
-            </ModalProvider>
+            <OverviewProvider>
+              <ModalProvider>
+                <Stack screenOptions={{ headerShown: false }}>
+                  <Stack.Screen name="onboarding/index" />
+                  <Stack.Screen name="(tabs)" />
+                  <Stack.Screen name="profile/index" />
+                  <Stack.Screen name="settings/index" />
+                  <Stack.Screen name="auth" />
+                </Stack>
+                <Toast
+                  ref={(ref) => Toast.setRef(ref)}
+                  style={{ paddingTop: 10 }}
+                />
+              </ModalProvider>
+            </OverviewProvider>
           </KeyboardAvoidingView>
         </SafeAreaProvider>
       </GestureHandlerRootView>
