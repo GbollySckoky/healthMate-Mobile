@@ -15,5 +15,7 @@ export const PATIENTS_ENDPOINTS = {
     GET_ALL_DOCTORS: 'hospital/',
     GET_DOCTOR: 'hospital/doctor/',
     GET_APPOINTMENT: 'appointment/user/',
-    GET_TRACK_OVERVIEW: 'track/overview'
+    GET_TRACK_OVERVIEW: 'track/overview',
+    GET_PATIENT: 'me',
+    CREATE_PROFILE: 'me/profile'
 }

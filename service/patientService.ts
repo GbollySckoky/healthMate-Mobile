@@ -1,111 +1,137 @@
-import { login } from "@/types/login";
-import axiosService from "../lib/axios"
-import { forgotPassword } from "@/types/forgotPassword";
-import { verifyEmail } from "@/types/verifyEmail";
-import { PATIENTS_ENDPOINTS } from "@/lib/endpoints";
-import { Signup } from "@/lib/interface/signup-interface";
-import { CreateHealth } from "@/lib/interface/create-health-interface";
-import { BloodPressure } from "@/lib/interface/blood-pressure";
-import { Medication } from "@/lib/interface/medication";
-import { Weight } from "@/lib/interface/weight";
-import { Sleep } from "@/lib/interface/sleep";
-import { Mood } from "@/lib/interface/mood";
-import { Appointment } from "@/lib/interface/createAppointment";
-import { GetAppointmentsResponse } from "@/lib/interface/get-appointments-interface";
-import { GetOverview } from "@/lib/interface/get-overview-interface";
-import instance from "../lib/axios";
+import { login } from '@/types/login';
+import axiosService from '../lib/axios';
+import { forgotPassword } from '@/types/forgotPassword';
+import { verifyEmail } from '@/types/verifyEmail';
+import { PATIENTS_ENDPOINTS } from '@/lib/endpoints';
+import { Signup } from '@/lib/interface/signup-interface';
+import { CreateHealth } from '@/lib/interface/create-health-interface';
+import { BloodPressure } from '@/lib/interface/blood-pressure';
+import { Medication } from '@/lib/interface/medication';
+import { Weight } from '@/lib/interface/weight';
+import { Sleep } from '@/lib/interface/sleep';
+import { Mood } from '@/lib/interface/mood';
+import { Appointment } from '@/lib/interface/createAppointment';
+import {
+  GetAppointmentDetailsResponse,
+  GetAppointmentsResponse,
+} from '@/lib/interface/get-appointments-interface';
+import { GetDoctorsResponse } from '@/lib/interface/get-doctors-interface';
+import { GetOverview } from '@/lib/interface/get-overview-interface';
+import { GetHospitalsResponse } from '@/lib/interface/get-hospitals-interface';
+import instance from '../lib/axios';
 
 export const patientService = {
   login: async (payload: login) => {
-    return await instance.post(PATIENTS_ENDPOINTS.LOGIN, payload); 
+    return await instance.post(PATIENTS_ENDPOINTS.LOGIN, payload);
     // this returns the data because interceptor returns response.data
   },
   signup: async (payload: Signup) => {
-    return await instance.post(PATIENTS_ENDPOINTS.SIGNUP, payload); 
+    return await instance.post(PATIENTS_ENDPOINTS.SIGNUP, payload);
   },
   forgotPassword: async (payload: forgotPassword) => {
-    return await instance.post(PATIENTS_ENDPOINTS.FORGOT_PASSWORD, payload); 
+    return await instance.post(PATIENTS_ENDPOINTS.FORGOT_PASSWORD, payload);
   },
-  verifyEmail: async (email: string | undefined, payload: verifyEmail ) => {
-    return await instance.post(`${PATIENTS_ENDPOINTS.VERIFY_EMAIL}${email}`, payload); 
-  },
-  // createHealth: async (payload: CreateHealth) => {
-  //   return await axiosService().post(PATIENTS_ENDPOINTS.CREATE_HEALTH, payload); 
-  // },
-  getUser: async () => {
-    const response = await instance.get(PATIENTS_ENDPOINTS.USER)
-    return await response.data
+  verifyEmail: async (email: string | undefined, payload: verifyEmail) => {
+    return await instance.post(
+      `${PATIENTS_ENDPOINTS.VERIFY_EMAIL}${email}`,
+      payload
+    );
   },
   createBloodPressue: async (payload: BloodPressure) => {
-    return await instance.post(PATIENTS_ENDPOINTS.BLOOD_PRESSURE, payload)
+    return await instance.post(PATIENTS_ENDPOINTS.BLOOD_PRESSURE, payload);
   },
   getBloodPressure: async () => {
-    const response = await instance.get(PATIENTS_ENDPOINTS.BLOOD_PRESSURE)
-    return await response.data
+    const response = await instance.get(PATIENTS_ENDPOINTS.BLOOD_PRESSURE);
+    return await response.data;
   },
   createMedication: async (payload: Medication) => {
-    return await instance.post(PATIENTS_ENDPOINTS.MEDICATION, payload)
+    return await instance.post(PATIENTS_ENDPOINTS.MEDICATION, payload);
   },
   getMedication: async () => {
-    const response = await instance.get(PATIENTS_ENDPOINTS.MEDICATION)
-    return await response.data
+    const response = await instance.get(PATIENTS_ENDPOINTS.MEDICATION);
+    return await response.data;
   },
   createWeight: async (payload: Weight) => {
-    return await instance.post(PATIENTS_ENDPOINTS.WEIGHT, payload)
+    return await instance.post(PATIENTS_ENDPOINTS.WEIGHT, payload);
   },
   getWeight: async () => {
-    const response = await instance.get(PATIENTS_ENDPOINTS.WEIGHT)
-    return await response.data
+    const response = await instance.get(PATIENTS_ENDPOINTS.WEIGHT);
+    return await response.data;
   },
   createMood: async (payload: Mood) => {
-    return await instance.post(PATIENTS_ENDPOINTS.MOOD, payload)
+    return await instance.post(PATIENTS_ENDPOINTS.MOOD, payload);
   },
   getMood: async () => {
-    const response = await instance.get(PATIENTS_ENDPOINTS.MOOD)
-    return await response.data
+    const response = await instance.get(PATIENTS_ENDPOINTS.MOOD);
+    return await response.data;
   },
   createSleep: async (payload: Sleep) => {
-    return await instance.post(PATIENTS_ENDPOINTS.SLEEP, payload)
+    return await instance.post(PATIENTS_ENDPOINTS.SLEEP, payload);
   },
   getSleep: async () => {
-    const response = await instance.get(PATIENTS_ENDPOINTS.SLEEP)
-    return await response.data
+    const response = await instance.get(PATIENTS_ENDPOINTS.SLEEP);
+    return await response.data;
   },
-  createConsultation: async(payload: Appointment) => {
-    return await instance.post(PATIENTS_ENDPOINTS.BOOK_APPOINTMENT, payload)
+  createConsultation: async (payload: Appointment) => {
+    return await instance.post(PATIENTS_ENDPOINTS.BOOK_APPOINTMENT, payload);
   },
-  getDoctors: async (hospitalId: number) => {
-    const response = await instance.get(`${PATIENTS_ENDPOINTS.GET_ALL_DOCTORS}${hospitalId}/doctors`)
-    return await response.data
+  getDoctors: async (hospitalId: number): Promise<GetDoctorsResponse> => {
+    const response = await instance.get(
+      `${PATIENTS_ENDPOINTS.GET_ALL_DOCTORS}${hospitalId}/doctors`
+    );
+    return await response.data;
   },
-  getHospitals: async () => {
-    const response = await instance.get(`${PATIENTS_ENDPOINTS.GET_ALL_HOSPITALS}`)
-    return await response.data
+  getHospitals: async (
+    page = 1,
+    limit = 10,
+    q?: string
+  ): Promise<GetHospitalsResponse> => {
+    const params = new URLSearchParams({});
+    if (page) params.append('page', String(page));
+    if (limit) params.append('limit', String(limit));
+    if (q) params.append('q', q);
+    const response = await instance.get(
+      `${PATIENTS_ENDPOINTS.GET_ALL_HOSPITALS}?${params.toString()}`
+    );
+    return await response.data;
   },
   getDoctorById: async (doctorId: number) => {
-    const response = await instance.get(`${PATIENTS_ENDPOINTS.GET_DOCTOR}${doctorId}`)
-    return await response.data
+    const response = await instance.get(
+      `${PATIENTS_ENDPOINTS.GET_DOCTOR}${doctorId}`
+    );
+    return await response.data;
   },
   getAppointments: async (
     page = 1,
     limit = 10,
     q?: string,
     status?: string
-  ): Promise<GetAppointmentsResponse>  => {
-    const params = new URLSearchParams({})
-    if(page)params.append('page', String(page))
-    if(limit)params.append('limit', String(limit))
-    if(q)params.append('q', q)
-    if(status)params.append('status', status)
-    const response = await instance.get(`${PATIENTS_ENDPOINTS.GET_ALL_APPOINTMENT}?${params.toString()}`)
-    return await response.data
+  ): Promise<GetAppointmentsResponse> => {
+    const params = new URLSearchParams({});
+    if (page) params.append('page', String(page));
+    if (limit) params.append('limit', String(limit));
+    if (q) params.append('q', q);
+    if (status) params.append('status', status);
+    const response = await instance.get(
+      `${PATIENTS_ENDPOINTS.GET_ALL_APPOINTMENT}?${params.toString()}`
+    );
+    return await response.data;
   },
-  getAppointmentById: async (appointmentId: number) => {
-    const response = await instance.get(`${PATIENTS_ENDPOINTS.GET_APPOINTMENT}${appointmentId}/appointments`)
-    return await response.data
+  getAppointmentById: async (
+    appointmentId: number
+  ): Promise<GetAppointmentDetailsResponse> => {
+    const response = await instance.get(
+      `${PATIENTS_ENDPOINTS.GET_APPOINTMENT}${appointmentId}/appointments`
+    );
+    return await response.data;
   },
   getOverview: async (): Promise<GetOverview> => {
-    const response = await instance.get(PATIENTS_ENDPOINTS.GET_TRACK_OVERVIEW)
-    return await response.data
+    const response = await instance.get(PATIENTS_ENDPOINTS.GET_TRACK_OVERVIEW);
+    return await response.data;
   },
-}
+  getPatient: async () => {
+    const response = await instance.get(PATIENTS_ENDPOINTS.GET_PATIENT);
+    return await response.data;
+  },
+  
+};

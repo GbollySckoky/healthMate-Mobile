@@ -10,6 +10,7 @@ export interface AppointmentDoctor {
   specialization?: string;
   profileImage?: string | null;
   image?: string | null;
+  email?: string;
 }
 
 export interface AppointmentUser {
@@ -17,6 +18,14 @@ export interface AppointmentUser {
   firstName?: string;
   lastName?: string;
   email?: string;
+  isActive?: boolean;
+  profile?: string | null;
+}
+
+export interface AppointmentHospital {
+  id: number;
+  hospitalName: string;
+  email: string;
 }
 
 export interface GetAppointment {
@@ -31,6 +40,7 @@ export interface GetAppointment {
   status: AppointmentStatus;
   time: string;
   user: AppointmentUser | null;
+  hospital?: AppointmentHospital | null;
 }
 
 export interface PaginationMeta {
@@ -44,4 +54,9 @@ export interface GetAppointmentsResponse {
   data: GetAppointment[];
   message: string;
   meta: PaginationMeta;
+}
+
+export interface GetAppointmentDetailsResponse {
+  data: GetAppointment;
+  message: string;
 }
