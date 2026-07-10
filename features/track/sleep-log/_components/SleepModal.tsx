@@ -35,7 +35,6 @@ const SleepModal = () => {
   console.log(inputValue);
 
   const { date } = sleepData;
-  const { closeModal } = useModal();
   const handleChange = (
     key: keyof SleepInputType,
     value: string | SleepQuality
@@ -59,10 +58,10 @@ const SleepModal = () => {
 
   const handleSelectEmojiValue = (value: string) => {
     setSelectEmojiValue(value);
-    setInputValue((prev) => ({
-      ...prev,
-      sleep: value,
-    }));
+    // setInputValue((prev) => ({
+    //   ...prev,
+    //   sleep: value,
+    // }));
   };
 
   const mutation = useMutation({
@@ -89,11 +88,11 @@ const SleepModal = () => {
 
   return (
     <View>
-      <NumberInput
+      {/* <NumberInput
         {...sleep}
         value={inputValue.hours}
         onChangeText={(value) => handleChange('hours', value)}
-      />
+      /> */}
       <DateInput
         {...date}
         value={

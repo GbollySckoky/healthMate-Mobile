@@ -6,76 +6,74 @@ import {
   Title,
 } from '@/components/typography/Typography';
 import React, { useCallback } from 'react';
-<<<<<<< HEAD:features/home/_components/Activities.tsx
-import { healthOverview } from '@/lib/data';
-=======
->>>>>>> 85b4f92abddf59638fbd73e8b0c2b730e21f410a:app/home-screen/_components/Activities.tsx
 import { ScrollViewHorizontal } from '@/components/scrollView/ScrollViewHorizontal';
 import { Href, useRouter } from 'expo-router';
 import { Text, View, Pressable, StyleSheet } from 'react-native';
 import { ROUTES } from '@/lib/routes';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { patientService } from '@/service/patientService';
-import { useQuery } from '@tanstack/react-query';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Feather from '@expo/vector-icons/Feather';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import useDate from '@/hooks/useDate';
+import { useOverview } from '@/context/getOverviewContext';
 
 const Activities = () => {
-<<<<<<< HEAD:features/home/_components/Activities.tsx
   const router = useRouter();
-=======
-  const linkTo = useLinkTo();
-  const { data, isError, isLoading, error } = useQuery({
-    queryKey: ['getOverview'],
-    queryFn: () => patientService.getOverview(),
-  });
+  const { data } = useOverview();
   const { getReadableDate } = useDate();
-  console.log(data);
+  const overview = data?.data ?? null;
+  console.log('OVERVIEW!!', overview)
+  const readableDate = (value?: string | null) =>
+    value ? getReadableDate(value) : 'N/A';
+
   const healthOverview = [
     {
       title: 'Blood Pressure',
-      value: `${data?.latest_blood_pressure ? `${data?.latest_blood_pressure.systolic}/${data?.latest_blood_pressure.diastolic}mmHg` : 'N/A'} `,
-      text: `${getReadableDate(data?.latest_blood_pressure?.date_recorded) || 'N/A'}`,
+      value: overview?.bloodPressure
+        ? `${overview.bloodPressure.systolic || '-'}/${overview.bloodPressure.diastolic || '-'}mmHg`
+        : 'N/A',
+      text: readableDate(overview?.bloodPressure?.recordedAt),
       id: 1,
       icon: <AntDesign name="heart" size={24} color="#DF0000" />,
       url: ROUTES.bloodPressure,
     },
     {
       title: 'Mood',
-      value: `${data?.latest_mood ? data?.latest_mood.mood : 'Happy'} `,
-      text: `${getReadableDate(data?.latest_mood?.recorded_at) || 'N/A'}`,
+      value: overview?.mood?.mood.selectedMood || 'N/A',
+      text: readableDate(overview?.mood?.recordedAt),
       id: 2,
       icon: <Feather name="smile" size={24} color="#FFC847" />,
       url: ROUTES.mood,
     },
     {
       title: 'Sleep',
-      value: `${data?.latest_sleep ? data?.latest_sleep.quanlity : 'N/A'}`,
-      text: `${getReadableDate(data?.latest_sleep?.sleep_date) || 'N/A'}`,
+      value: overview?.sleep?.sleep.selectedMood || 'N/A',
+      text: readableDate(overview?.sleep?.recordedAt),
       id: 3,
       icon: <FontAwesome name="moon-o" size={24} color="black" />,
       url: ROUTES.sleep,
     },
     {
       title: 'Weight',
-      value: `${data?.latest_weight ? data?.latest_weight.weight : 'N/A'}`,
-      text: `${getReadableDate(data?.latest_weight?.recorded_at)}`,
+      value: overview?.weight
+        ? `${overview.weight.weight}kg`
+        : 'N/A',
+      text: readableDate(overview?.weight?.recordedAt),
       id: 4,
       icon: <FontAwesome name="balance-scale" size={24} color="blue" />,
       url: ROUTES.weight,
     },
     {
       title: 'Medications',
-      value: '2/3 doses',
-      text: 'Taken today',
+      value: overview?.medication?.name || 'N/A',
+      text: overview?.medication
+        ? readableDate(overview.medication.recordedAt)
+        : 'No medication',
       id: 5,
       icon: <MaterialCommunityIcons name="pill" size={24} color="#C11574" />,
       url: ROUTES.medication,
     },
   ];
->>>>>>> 85b4f92abddf59638fbd73e8b0c2b730e21f410a:app/home-screen/_components/Activities.tsx
 
   const handlePress = useCallback(
     (url: string) => {

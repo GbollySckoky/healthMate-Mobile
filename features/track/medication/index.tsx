@@ -20,6 +20,23 @@ import SafeArea from '@/components/safeAreaView/SafeAreaView';
 import { useQuery } from '@tanstack/react-query';
 import { patientService } from '@/service/patientService';
 
+type MedicationReading = {
+  id: number | string;
+  name?: string;
+  dosage?: string;
+  recordedAt?: string;
+  createdAt?: string;
+  status?: string;
+};
+
+const formatReadingDate = (date?: string) => {
+  if (!date) return 'No date recorded';
+
+  const readingDate = new Date(date);
+  if (Number.isNaN(readingDate.getTime())) return 'No date recorded';
+
+  return `${readingDate.toLocaleDateString()} at ${readingDate.toLocaleTimeString()}`;
+};
 
 const Medication = () => {
   const { openModal } = useModal();
@@ -28,6 +45,9 @@ const Medication = () => {
     queryFn: () => patientService.getMedication(),
   })
   console.log(data)
+  const medicationReadings: MedicationReading[] = data?.data ?? [];
+  const latestMedication = medicationReadings[0];
+  const latestMedicationStatus = latestMedication?.status ?? 'Logged';
 
   if(isLoading){
     return (
@@ -63,16 +83,21 @@ const Medication = () => {
                 style={styles.icon}
               />
               <CardText>Today Dose</CardText>
-              <CardAmount>2/3 doses</CardAmount>
-              <CardText>Recorded on: Jun 22, 09:45</CardText>
-              <Text style={styles.colorText}>Taken</Text>
+              <CardAmount>{latestMedication?.dosage ?? '--'}</CardAmount>
+              <CardText>
+                Recorded on:{' '}
+                {formatReadingDate(
+                  latestMedication?.recordedAt ?? latestMedication?.createdAt
+                )}
+              </CardText>
+              <Text style={styles.colorText}>{latestMedicationStatus}</Text>
             </DetailsContainer>
             <View style={{ marginBottom: 40 }}>
               <Card>
                 <SubTitle>Medication History</SubTitle>
-                {data?.data.map((recent: any) => {
-                  const { icon, bloodRate, date, status, time } = recent;
-                  const isLastItem = recent.id === data?.data?.length - 1;
+                {medicationReadings.map((recent, index) => {
+                  const status = recent.status ?? 'Logged';
+                  const isLastItem = index === medicationReadings.length - 1;
                   return (
                     <View
                       key={recent.id}
@@ -105,7 +130,7 @@ const Medication = () => {
                                 fontFamily: 'Lato_400Regular',
                               }}
                             >
-                              {recent.name}
+                              {recent.name ?? 'Medication'}
                             </Text>
                             <Text
                               style={{
@@ -116,15 +141,14 @@ const Medication = () => {
                                 fontFamily: 'Lato_400Regular',
                               }}
                             >
-                              {new Date(recent.recordedAt).toLocaleDateString()} {" "} at
-                              {new Date(recent.recordedAt).toLocaleTimeString()}
+                              {formatReadingDate(recent.recordedAt ?? recent.createdAt)}
                             </Text>
                           </View>
                         </View>
                         <Text
                           style={{
-                            backgroundColor: `${(status === 'Taken' && '#ECFDF3') || (status === 'Missed' && '#FEF3F2')}`,
-                            color: `${(status === 'Taken' && '#027A48') || (status === 'Missed' && '#B42318')}`,
+                            backgroundColor: `${(status === 'Taken' && '#ECFDF3') || (status === 'Missed' && '#FEF3F2') || (status === 'Logged' && '#F4F3FF')}`,
+                            color: `${(status === 'Taken' && '#027A48') || (status === 'Missed' && '#B42318') || (status === 'Logged' && '#5924DC')}`,
                             paddingHorizontal: 15,
                             paddingVertical: 7,
                             borderRadius: 30,
@@ -135,15 +159,15 @@ const Medication = () => {
                         </Text>
                         <Text
                           style={{
-                            backgroundColor: `${(status === 'Taken' && '#ECFDF3') || (status === 'Missed' && '#FEF3F2')}`,
-                            color: `${(status === 'Taken' && '#027A48') || (status === 'Missed' && '#B42318')}`,
+                            backgroundColor: '#FDF2FA',
+                            color: '#C11574',
                             paddingHorizontal: 15,
                             paddingVertical: 7,
                             borderRadius: 30,
                             fontFamily: 'Inter_500Medium',
                           }}
                         >
-                          {recent.dosage}
+                          {recent.dosage ?? '--'}
                         </Text>
                       </View>
                     </View>

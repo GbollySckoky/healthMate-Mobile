@@ -28,6 +28,23 @@ import { useQuery } from '@tanstack/react-query';
 import { patientService } from '@/service/patientService';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
+type BloodPressureReading = {
+  id: number | string;
+  systolic: string | number;
+  diastolic: string | number;
+  createdAt?: string;
+  recordedAt?: string;
+};
+
+const formatReadingDate = (date?: string) => {
+  if (!date) return 'No date recorded';
+
+  const readingDate = new Date(date);
+  if (Number.isNaN(readingDate.getTime())) return 'No date recorded';
+
+  return `${readingDate.toLocaleDateString()} at ${readingDate.toLocaleTimeString()}`;
+};
+
 const BloodPressure = () => {
   const { openModal } = useModal();
   const { width: screenWidth } = useWindowDimensions();
@@ -49,7 +66,8 @@ const BloodPressure = () => {
     queryFn: () => patientService.getBloodPressure(),
   })
   console.log("DATA!!", data)
- 
+  const bloodPressures: BloodPressureReading[] = data?.data ?? []
+  const latestBloodPressure = bloodPressures[0];
   // Prepare chart data
   const chartData = {
     labels: readings.map((r) => r.date.split(' ')[1]), // Just day numbers
@@ -127,8 +145,17 @@ const BloodPressure = () => {
                 style={styles.icon}
               />
               <CardText>Today’s Readings</CardText>
-              <CardAmount>120/80 mmHg</CardAmount>
-              <CardText>Recorded on: Jun 22, 09:45</CardText>
+              <CardAmount>
+                {latestBloodPressure
+                  ? `${latestBloodPressure.systolic}/${latestBloodPressure.diastolic} mmHg`
+                  : '--/-- mmHg'}
+              </CardAmount>
+              <CardText>
+                Recorded on:{' '}
+                {formatReadingDate(
+                  latestBloodPressure?.recordedAt ?? latestBloodPressure?.createdAt
+                )}
+              </CardText>
               <Text style={styles.colorText}>Normal</Text>
             </DetailsContainer>
             {/* Line Chart */}
@@ -170,8 +197,8 @@ const BloodPressure = () => {
             <View style={{ marginBottom: 40 }}>
               <Card>
                 <SubTitle>Recent Readings</SubTitle>
-                {data?.data?.map((recent: any,) => {
-                  const isLastItem = recent.id === data.data.length - 1;
+                {bloodPressures.map((recent, index) => {
+                  const isLastItem = index === bloodPressures.length - 1;
                   return (
                     <View
                       key={recent.id}
@@ -204,7 +231,7 @@ const BloodPressure = () => {
                                 fontFamily: 'Lato_400Regular',
                               }}
                             >
-                              {recent.systolic}/{recent.diastolic} mmH
+                              {recent.systolic}/{recent.diastolic} mmHg
                             </Text>
                             <Text
                               style={{
@@ -215,8 +242,7 @@ const BloodPressure = () => {
                                 fontFamily: 'Lato_400Regular',
                               }}
                             >
-                             {new Date(recent.createdAt).toLocaleDateString()} at{' '}
-                              {new Date(recent.createdAt).toLocaleTimeString()}
+                              {formatReadingDate(recent.recordedAt ?? recent.createdAt)}
                             </Text>
                           </View>
                         </View>
