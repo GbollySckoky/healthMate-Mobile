@@ -82,7 +82,7 @@ const LoginPage = () => {
       router.push(ROUTES.home);
     },
     onError: (error: any) => {
-      console.log('ERROR!!!!', error);
+      console.log('ERROR!!!!', error.response.data.message);
       Toast.show({
         type: 'error',
         text1: error.response.data.message,
