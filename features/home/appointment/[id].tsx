@@ -1,6 +1,13 @@
 import React from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
-import { ActivityIndicator, View, Text, StyleSheet } from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  Pressable,
+  View,
+  Text,
+  StyleSheet,
+} from 'react-native';
 import Entypo from '@expo/vector-icons/Entypo';
 import {
   BtnFlex,
@@ -21,16 +28,23 @@ import { ROUTES } from '@/lib/routes';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
 import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
 import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { patientService } from '@/service/patientService';
 import { GetAppointment } from '@/lib/interface/get-appointments-interface';
+import { AppointmentStatusBadge } from '@/components/AppointmentStatusBadge';
 
 const getDoctorName = (doctor: GetAppointment['doctor']) => {
   if (!doctor) return 'Doctor unavailable';
   if (doctor.fullName) return doctor.fullName;
   if (doctor.name) return doctor.name;
 
-  const name = [doctor.firstName, doctor.lastName].filter(Boolean).join(' ');
+  const name = [doctor.firstName, doctor.lastName]
+    .filter((value): value is string => Boolean(value))
+    .map(
+      (value) =>
+        value.charAt(0).toUpperCase() + value.slice(1).toLocaleLowerCase()
+    )
+    .join(' ');
   return name || 'Doctor unavailable';
 };
 
@@ -54,9 +68,19 @@ const formatAppointmentDate = (date?: string, time?: string) => {
   return [formattedDate, time].filter(Boolean).join(' at ');
 };
 
+const formatConsultationType = (consultationType?: string) => {
+  if (!consultationType) return 'N/A';
+
+  return (
+    consultationType.charAt(0).toUpperCase() +
+    consultationType.slice(1).toLocaleLowerCase().replaceAll('_', ' ')
+  );
+};
+
 const AppointmentDetails = () => {
   const { id } = useLocalSearchParams();
-  const appointmentId = Array.isArray(id) ? Number(id[0]) : Number(id);
+  const appointmentId = Array.isArray(id) ? id[0] : id;
+  const queryClient = useQueryClient();
   const profile = require('@/assets/images/Mobile.png');
   const { openModal, handleDisplay } = useDisplay();
   const {
@@ -66,25 +90,32 @@ const AppointmentDetails = () => {
     error,
   } = useQuery({
     queryKey: ['getAppointmentById', appointmentId],
-    queryFn: () => patientService.getAppointmentById(appointmentId),
-    enabled: Number.isFinite(appointmentId),
+    queryFn: () => patientService.getAppointmentById(appointmentId as string),
+    enabled: !!appointmentId,
   });
 
   const appointmentDetails = appointmentResponse?.data ?? null;
+  const cancelAppointment = useMutation({
+    mutationFn: (id: string) => patientService.cancelAppointment(id),
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ['getAppointmentById', appointmentId],
+        }),
+        queryClient.invalidateQueries({ queryKey: ['getAppointments'] }),
+      ]);
+    },
+  });
   const doctorImage = appointmentDetails
     ? getDoctorImage(appointmentDetails.doctor)
     : null;
 
-  const data = [
+  const detailItems = [
     {
       text:
         appointmentDetails?.note ||
         'No consultation note added yet for this appointment.',
       title: 'About',
-    },
-    {
-      text: appointmentDetails?.status || 'N/A',
-      title: 'Status',
     },
     {
       text: formatAppointmentDate(
@@ -94,7 +125,7 @@ const AppointmentDetails = () => {
       title: 'Date & Time',
     },
     {
-      text: appointmentDetails?.consultationType || 'N/A',
+      text: formatConsultationType(appointmentDetails?.consultationType),
       title: 'Consultation Type',
       icon: (
         <Feather
@@ -111,18 +142,46 @@ const AppointmentDetails = () => {
     },
   ];
 
+  const handleViewProfile = () => {
+    if (!appointmentDetails?.doctor?.id) return;
+
+    router.push({
+      pathname: '/consult-screen/consultation-deatils/[id]',
+      params: { id: appointmentDetails.doctor.id },
+    });
+  };
+
+  const canCancelAppointment =
+    appointmentDetails?.status?.toUpperCase() === 'PENDING' ||
+    appointmentDetails?.status?.toUpperCase() === 'UPCOMING';
+
+  const handleCancelAppointment = () => {
+    if (!appointmentId) return;
+
+    Alert.alert(
+      'Cancel booking?',
+      'This will cancel your appointment. This action cannot be undone.',
+      [
+        { text: 'Keep booking', style: 'cancel' },
+        {
+          text: 'Cancel booking',
+          style: 'destructive',
+          onPress: () => cancelAppointment.mutate(appointmentId),
+        },
+      ]
+    );
+  };
+
   const options = [
     {
       name: 'View Profile',
-      url: '/(profile)',
-    },
-    {
-      name: 'Cancel Booking',
-      url: '/settings',
+      url: appointmentDetails?.doctor?.id
+        ? `/consult-screen/consultation-deatils/${appointmentDetails.doctor.id}`
+        : ROUTES.home,
     },
     {
       name: 'Chat Doctor',
-      url: '/',
+      url: ROUTES.messages,
     },
     {
       name: 'Report Issue',
@@ -190,9 +249,14 @@ const AppointmentDetails = () => {
                   </View>
                 </View>
                 <Card>
-                  {data.map((item, index) => {
+                  <View style={styles.detailRow}>
+                    <Text style={styles.CardTitle}>Status</Text>
+                    <AppointmentStatusBadge status={appointmentDetails.status} />
+                  </View>
+                  <View style={styles.divider} />
+                  {detailItems.map((item, index) => {
                     const { text, title, icon } = item;
-                    const isLastItem = index === data.length - 1;
+                    const isLastItem = index === detailItems.length - 1;
 
                     return (
                       <View
@@ -204,20 +268,79 @@ const AppointmentDetails = () => {
                       >
                         <View style={styles.contentWrapper}>
                           <Text style={styles.CardTitle}>{title}</Text>
-                          <Text>
+                          <View style={styles.valueRow}>
                             {icon && (
-                              <Text style={styles.iconText}>{icon}</Text>
+                              <View style={styles.iconText}>{icon}</View>
                             )}
                             <Text style={styles.CardText}>{text}</Text>
-                          </Text>
+                          </View>
                         </View>
                         {!isLastItem && <View style={styles.divider} />}
                       </View>
                     );
                   })}
                 </Card>
+                <Card>
+                  <Pressable
+                    style={styles.actionRow}
+                    onPress={() => router.push(ROUTES.messages)}
+                  >
+                    <View>
+                      <Text style={styles.CardTitle}>Chat Doctor</Text>
+                      <Text style={styles.CardText}>
+                        Send a message to your doctor
+                      </Text>
+                    </View>
+                    <Feather name="chevron-right" size={18} color="#717680" />
+                  </Pressable>
+                  <View style={styles.divider} />
+                  <Pressable
+                    style={styles.actionRow}
+                    onPress={() => router.push(ROUTES.reportIssue)}
+                  >
+                    <View>
+                      <Text style={styles.CardTitle}>Report an Issue</Text>
+                      <Text style={styles.CardText}>
+                        Get help with this appointment
+                      </Text>
+                    </View>
+                    <Feather name="chevron-right" size={18} color="#717680" />
+                  </Pressable>
+                  <View style={styles.divider} />
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityState={{ disabled: !canCancelAppointment }}
+                    disabled={!canCancelAppointment || cancelAppointment.isPending}
+                    style={[
+                      styles.actionRow,
+                      (!canCancelAppointment || cancelAppointment.isPending) &&
+                        styles.disabledAction,
+                    ]}
+                    onPress={handleCancelAppointment}
+                  >
+                    <View>
+                      <Text style={styles.cancelActionTitle}>
+                        {cancelAppointment.isPending
+                          ? 'Cancelling booking...'
+                          : 'Cancel Booking'}
+                      </Text>
+                      <Text style={styles.CardText}>
+                        {canCancelAppointment
+                          ? 'Cancel this appointment'
+                          : 'This appointment can no longer be cancelled'}
+                      </Text>
+                    </View>
+                    <Feather name="x-circle" size={18} color="#B42318" />
+                  </Pressable>
+                  {cancelAppointment.isError && (
+                    <Text style={styles.cancelError}>
+                      {(cancelAppointment.error as Error).message ||
+                        'Unable to cancel this booking. Please try again.'}
+                    </Text>
+                  )}
+                </Card>
                 <BtnFlex>
-                  <RescheduleBtn _fn={() => router.push(ROUTES.home)}>
+                  <RescheduleBtn _fn={handleViewProfile}>
                     Reschedule
                   </RescheduleBtn>
                   <JoinBtn _fn={() => router.push(ROUTES.home)}>
@@ -292,7 +415,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
   },
   enhancedItemContainer: {
-    padding: 4,
+    paddingVertical: 8,
   },
   contentWrapper: {
     gap: 2,
@@ -300,8 +423,7 @@ const styles = StyleSheet.create({
   divider: {
     height: 1,
     backgroundColor: '#F5F5F5',
-    marginTop: 16,
-    // marginHorizontal: -4, // Slight inset for visual appeal
+    marginTop: 12,
   },
   CardText: {
     fontFamily: 'Lato_400Regular',
@@ -320,8 +442,38 @@ const styles = StyleSheet.create({
     // marginTop: 10
   },
   iconText: {
-    paddingRight: 58,
-    // backgroundColor: 'red'
+    marginRight: 6,
+  },
+  valueRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  detailRow: {
+    alignItems: 'flex-start',
+    gap: 8,
+    paddingVertical: 8,
+  },
+  actionRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+  },
+  disabledAction: {
+    opacity: 0.5,
+  },
+  cancelActionTitle: {
+    color: '#B42318',
+    fontFamily: 'Lato_400Regular',
+    fontSize: 14,
+    fontWeight: '500',
+    marginBottom: 5,
+  },
+  cancelError: {
+    color: '#B42318',
+    fontFamily: 'Lato_400Regular',
+    fontSize: 12,
+    marginTop: 8,
   },
   stateContainer: {
     alignItems: 'center',

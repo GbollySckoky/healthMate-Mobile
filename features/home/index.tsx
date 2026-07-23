@@ -65,7 +65,7 @@ const HomePage = () => {
           </Pressable>
 
           <Pressable
-            onPress={() => router.push('/notifications')}
+            onPress={handleDisplay}
             style={styles.profileButton}
             accessibilityLabel="Open profile menu"
             accessibilityRole="button"

@@ -23,6 +23,7 @@ import { Wrapper } from '@/components/typography/Typography'
 import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout'
 import Nav from '@/components/Header/Nav'
 import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout'
+// import { NavHeader } from '@/components/Header/Header'
 
 type Notification = {
   id: string
@@ -65,6 +66,7 @@ function getRelativeTime(dateString: string) {
 function NotificationSkeleton() {
   return (
     <Wrapper>
+      <Nav title="Notifications" />
       <View style={styles.skeletonWrap}>
         {[...Array(5)].map((_, i) => (
           <View key={i} style={styles.skeletonRow}>

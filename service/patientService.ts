@@ -1,10 +1,10 @@
 import { login } from '@/types/login';
-import axiosService from '../lib/axios';
+// import axiosService from '../lib/axios';
 import { forgotPassword } from '@/types/forgotPassword';
 import { verifyEmail } from '@/types/verifyEmail';
 import { PATIENTS_ENDPOINTS } from '@/lib/endpoints';
 import { Signup } from '@/lib/interface/signup-interface';
-import { CreateHealth } from '@/lib/interface/create-health-interface';
+// import { CreateHealth } from '@/lib/interface/create-health-interface';
 import { BloodPressure } from '@/lib/interface/blood-pressure';
 import { Medication } from '@/lib/interface/medication';
 import { Weight } from '@/lib/interface/weight';
@@ -126,6 +126,12 @@ export const patientService = {
     );
     return await response.data;
   },
+  cancelAppointment: async (appointmentId: string) => {
+    const response = await instance.patch(
+      `${PATIENTS_ENDPOINTS.CANCEL_APPOINTMENT}${appointmentId}/cancel`
+    );
+    return response.data;
+  },
   getOverview: async (): Promise<GetOverview> => {
     const response = await instance.get(PATIENTS_ENDPOINTS.GET_TRACK_OVERVIEW);
     return await response.data;
@@ -159,5 +165,9 @@ export const patientService = {
   },
   replyToTicket: async (id: string, payload: ReplyToTicket) => {
       return await instance.post(`support/patient/${id}/replies`, payload)
+  },
+  getMe: async () => {
+      const response = await instance.get(PATIENTS_ENDPOINTS.GET_ME);
+      return response.data
   },
 };
