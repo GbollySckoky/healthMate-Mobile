@@ -17,5 +17,10 @@ export const PATIENTS_ENDPOINTS = {
     GET_APPOINTMENT: 'appointment/user/',
     GET_TRACK_OVERVIEW: 'track/overview',
     GET_PATIENT: 'me',
-    CREATE_PROFILE: 'me/profile'
+    CREATE_PROFILE: 'me/profile',
+    GET_NOTIFICATIONS: 'notifications',
+    UN_READ_NOTIFICATIONS: 'notifications/unread-count',
+    READ_ALL_NOTIFICATIONS: 'notifications/read-all',
+    GET_SUPPORT: 'support/patient/mine',
+    GET_SUPPORT_DETAILS: 'support/patient/'
 }

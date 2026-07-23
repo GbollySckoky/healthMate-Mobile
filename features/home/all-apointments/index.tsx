@@ -17,6 +17,7 @@ import { patientService } from '@/service/patientService';
 import { useQuery } from '@tanstack/react-query';
 import SearchInput from '@/components/Input/SearchInput';
 import { GetAppointment } from '@/lib/interface/get-appointments-interface';
+import { AppointmentStatusBadge } from '@/components/AppointmentStatusBadge';
 
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
@@ -35,7 +36,9 @@ const getDoctorName = (doctor: GetAppointment['doctor']) => {
   if (doctor.fullName) return doctor.fullName;
   if (doctor.name) return doctor.name;
 
-  const name = [doctor.firstName, doctor.lastName].filter(Boolean).join(' ');
+  const name = [doctor.firstName, doctor.lastName].filter((value): value is string => Boolean(value))
+    .map((value) => value.charAt(0).toUpperCase() + value.slice(1).toLocaleLowerCase())
+    .join(' ');
   return name || 'Doctor unavailable';
 };
 
@@ -153,23 +156,10 @@ const AllApointments = () => {
                             <View style={{ marginRight: 3 }}>
                               <Feather name="video" size={13} color="#717680" />
                             </View>
-                            <SmallText>{consultationType}</SmallText>
+                            <SmallText>{consultationType.charAt(0).toUpperCase() + consultationType.slice(1).toLocaleLowerCase().replaceAll('_', " ")}</SmallText>
                           </View>
                         </View>
-                        <Text
-                          style={{
-                            color: '#5924DC',
-                            backgroundColor: '#F4F3FF',
-                            borderRadius: 10,
-                            padding: 10,
-                            fontWeight: 500,
-                            fontSize: 12,
-                            height: 35,
-                            fontFamily: 'Inter_500Medium',
-                          }}
-                        >
-                          {status}
-                        </Text>
+                        <AppointmentStatusBadge status={status} />
                       </View>
                     </View>
                     <View style={style.ButtonRow}>

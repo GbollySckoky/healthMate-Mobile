@@ -14,7 +14,7 @@ import EvilIcons from '@expo/vector-icons/EvilIcons';
 import { Image } from 'expo-image';
 import Feather from '@expo/vector-icons/Feather';
 import { NavHeader } from '@/components/Header/Header';
-import useDisplay from '@/hooks/useDisplay';
+import useDisplay from '@/lib/hooks/useDisplay';
 import ProfileModal from '@/components/modal/Profile';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { ROUTES } from '@/lib/routes';
@@ -68,7 +68,7 @@ const AppointmentDetails = () => {
     queryKey: ['getAppointmentById', appointmentId],
     queryFn: () => patientService.getAppointmentById(appointmentId),
     enabled: Number.isFinite(appointmentId),
-  })
+  });
 
   const appointmentDetails = appointmentResponse?.data ?? null;
   const doctorImage = appointmentDetails
@@ -77,7 +77,9 @@ const AppointmentDetails = () => {
 
   const data = [
     {
-      text: appointmentDetails?.note || 'No consultation note added yet for this appointment.',
+      text:
+        appointmentDetails?.note ||
+        'No consultation note added yet for this appointment.',
       title: 'About',
     },
     {
@@ -111,21 +113,21 @@ const AppointmentDetails = () => {
 
   const options = [
     {
-      name: "View Profile",
+      name: 'View Profile',
       url: '/(profile)',
     },
     {
-      name: "Cancel Booking",
-      url: '/settings'
+      name: 'Cancel Booking',
+      url: '/settings',
     },
     {
-      name: "Chat Doctor",
-      url: '/'
+      name: 'Chat Doctor',
+      url: '/',
     },
     {
-      name: "Report Issue",
-      url: ROUTES.reportIssue 
-    }
+      name: 'Report Issue',
+      url: ROUTES.reportIssue,
+    },
   ];
   return (
     <SafeArea>
@@ -134,7 +136,9 @@ const AppointmentDetails = () => {
           title="Appointment Details"
           _goBack={() => router.back()}
           _optionFn={() => handleDisplay()}
-          backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+          backIcon={
+            <Entypo name="chevron-small-left" size={24} color="black" />
+          }
           optionIcon={
             <Entypo name="dots-three-vertical" size={15} color="black" />
           }
@@ -170,7 +174,9 @@ const AppointmentDetails = () => {
                     style={styles.profileImage}
                   />
                   <View style={styles.infoContainer}>
-                    <MinTitle>{getDoctorName(appointmentDetails.doctor)}</MinTitle>
+                    <MinTitle>
+                      {getDoctorName(appointmentDetails.doctor)}
+                    </MinTitle>
                     <Text style={styles.specialtyText}>
                       {getDoctorSpecialty(appointmentDetails.doctor)}
                     </Text>
@@ -199,7 +205,9 @@ const AppointmentDetails = () => {
                         <View style={styles.contentWrapper}>
                           <Text style={styles.CardTitle}>{title}</Text>
                           <Text>
-                            {icon && <Text style={styles.iconText}>{icon}</Text>}
+                            {icon && (
+                              <Text style={styles.iconText}>{icon}</Text>
+                            )}
                             <Text style={styles.CardText}>{text}</Text>
                           </Text>
                         </View>
@@ -220,12 +228,18 @@ const AppointmentDetails = () => {
             )}
           </Wrapper>
         </ScreenOverFlowLayout>
-        <ProfileModal 
+        <ProfileModal
           isOpen={openModal}
           closeModal={handleDisplay}
           options={options}
-          icon={<MaterialIcons name="report-gmailerrorred" size={15} color='#FD6868' />}
-          values='Report Issue'
+          icon={
+            <MaterialIcons
+              name="report-gmailerrorred"
+              size={15}
+              color="#FD6868"
+            />
+          }
+          values="Report Issue"
         />
       </ScreenLayout>
     </SafeArea>
@@ -275,7 +289,7 @@ const styles = StyleSheet.create({
     fontFamily: 'LibreFranklin_400Regular',
   },
   lastItem: {
-    borderBottomWidth: 0, 
+    borderBottomWidth: 0,
   },
   enhancedItemContainer: {
     padding: 4,

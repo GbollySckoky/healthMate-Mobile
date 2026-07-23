@@ -7,7 +7,7 @@ import { useRouter } from 'expo-router';
 import { SubmitButton, Wrapper } from '@/components/typography/Typography';
 import { passwordData } from '@/lib/data';
 import PasswordInput from '@/components/Input/PasswordInput';
-import useDisplay from '@/hooks/useDisplay';
+import useDisplay from '@/lib/hooks/useDisplay';
 import Modal from '@/components/modal/Modal';
 import { colors } from '@/lib/colors';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -90,7 +90,7 @@ const ChangePassword = () => {
             closeModal={handleDisplay}
             isOpen={openModal}
             route={() => router.push(ROUTES.home)}
-            submitText='Done'
+            submitText="Done"
           />
         </Wrapper>
       </ScreenOverFlowLayout>

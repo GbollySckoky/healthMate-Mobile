@@ -19,6 +19,7 @@ import { GetDoctorsResponse } from '@/lib/interface/get-doctors-interface';
 import { GetOverview } from '@/lib/interface/get-overview-interface';
 import { GetHospitalsResponse } from '@/lib/interface/get-hospitals-interface';
 import instance from '../lib/axios';
+import { ReplyToTicket } from '@/lib/interface/support';
 
 export const patientService = {
   login: async (payload: login) => {
@@ -133,5 +134,30 @@ export const patientService = {
     const response = await instance.get(PATIENTS_ENDPOINTS.GET_PATIENT);
     return await response.data;
   },
-  
+  getNotification: async () => {
+      const response = await instance.get(PATIENTS_ENDPOINTS.GET_NOTIFICATIONS);
+      return response.data
+  },
+  markNotificationAsRead: async (id: string) => {
+      const response = await instance.patch(`notifications/${id}/read`);
+      return response.data
+  },
+  unReadNotifications: async () => {
+      const response = await instance.get(PATIENTS_ENDPOINTS.UN_READ_NOTIFICATIONS);
+      return response.data
+  },
+  markAllNotificationAsRead: async () => {
+      return await instance.patch(PATIENTS_ENDPOINTS.READ_ALL_NOTIFICATIONS);
+  },
+  getSupportTicket: async() => {
+      const response = await instance.get(PATIENTS_ENDPOINTS.GET_SUPPORT);
+      return response.data
+  },
+  getSupportDetails: async(id: string) => {
+      const response = await instance.get(`${PATIENTS_ENDPOINTS.GET_SUPPORT_DETAILS}${id}`);
+      return response.data
+  },
+  replyToTicket: async (id: string, payload: ReplyToTicket) => {
+      return await instance.post(`support/patient/${id}/replies`, payload)
+  },
 };

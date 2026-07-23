@@ -17,9 +17,9 @@ interface ModalType {
 }
 
 const LogoutModal = ({ icon, title, text, isOpen, closeModal }: ModalType) => {
-  if (!isOpen) return null;
+  const router = useRouter();
 
-  const router = useRouter()
+  if (!isOpen) return null;
 
   const handleLogout = async () => {
     try {

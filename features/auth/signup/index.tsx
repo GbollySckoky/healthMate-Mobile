@@ -17,9 +17,9 @@ import { Image } from 'react-native';
 import { router } from 'expo-router';
 import { ROUTES } from '@/lib/routes';
 import { CountStep } from '@/lib/constant';
-import useDisplay from '@/hooks/useDisplay';
+import useDisplay from '@/lib/hooks/useDisplay';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
-import { useDisplayList } from '@/hooks/useDisplayList';
+import { useDisplayList } from '@/lib/hooks/useDisplayList';
 import { patientService } from '@/service/patientService';
 import { useMutation } from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
@@ -27,7 +27,6 @@ import VerifyEmail from './VerifyCode';
 import { Signup } from '@/lib/interface/signup-interface';
 import Input from '@/components/Input/Input';
 import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
-
 
 const inputData = {
   email: {
@@ -93,7 +92,6 @@ const SignUpPage = () => {
     []
   );
 
-
   const signupMutation = useMutation({
     mutationFn: (payload: Signup) => patientService.signup(payload),
     onSuccess: (response: any) => {
@@ -146,116 +144,124 @@ const SignUpPage = () => {
     <SafeArea>
       <ScreenOverFlowLayout>
         <Wrapper>
-        {currentStep === CountStep.ZERO && (
-          <View>
-            <View style={styles.headerContainer}>
-              <Text style={styles.welcomeTitle}>
-                Create your HealthMate account
-              </Text>
-              <Text style={styles.welcomeSubtitle}>
-                Sign up with your phone number or email to begin.
-              </Text>
-            </View>
-
-
-            {/* Form Content */}
-            <View style={styles.formContainer}>
-               <Input
-                {...inputData.firstName}
-                value={inputValue.firstName || ''}
-                onChangeText={(value) => handleChange('firstName', value)}
-              />
-              <Input
-                {...inputData.lastName}
-                value={inputValue.lastName || ''}
-                onChangeText={(value) => handleChange('lastName', value)}
-              />
-              <EmailInput
-                label={inputData.email.label}
-                placeholder={inputData.email.placeholder}
-                value={inputValue.email}
-                onChangeText={(value) => handleChange('email', value)}
-              />
-             
-              <View>
-                <PasswordInput
-                  {...inputData.password}
-                  value={inputValue.password}
-                  onChangeText={(value) => handleChange('password', value)}
-                  secureTextEntry={!passwordVisibility}
-                  onToggleVisibility={() => handleToggleVisibility('password')}
-                  isPasswordVisible={passwordVisibility}
-                />
-                <PasswordInput
-                  {...inputData.confirmPassword}
-                  value={inputValue.confirmPassword}
-                  onChangeText={(value) => handleChange('confirmPassword', value)}
-                  secureTextEntry={!confirmPasswordVisibility}
-                  onToggleVisibility={() => handleToggleVisibility('confirmPassword')}
-                  isPasswordVisible={confirmPasswordVisibility}
-                />
+          {currentStep === CountStep.ZERO && (
+            <View>
+              <View style={styles.headerContainer}>
+                <Text style={styles.welcomeTitle}>
+                  Create your HealthMate account
+                </Text>
+                <Text style={styles.welcomeSubtitle}>
+                  Sign up with your phone number or email to begin.
+                </Text>
               </View>
-            </View>
 
-            {/* Sign up Button */}
-            <Pressable
-              style={[
-                styles.loginButton,
-                signupMutation.isPending && styles.loginButtonDisabled,
-              ]}
-              onPress={handleSignUp}
-              disabled={signupMutation.isPending}
-              accessibilityRole="button"
-              accessibilityLabel="Create account"
-            >
-              <Text style={styles.loginButtonText}>
-                {signupMutation.isPending ? 'Creating Account...' : 'Sign Up'}
-              </Text>
-            </Pressable>
+              {/* Form Content */}
+              <View style={styles.formContainer}>
+                <Input
+                  {...inputData.firstName}
+                  value={inputValue.firstName || ''}
+                  onChangeText={(value) => handleChange('firstName', value)}
+                />
+                <Input
+                  {...inputData.lastName}
+                  value={inputValue.lastName || ''}
+                  onChangeText={(value) => handleChange('lastName', value)}
+                />
+                <EmailInput
+                  label={inputData.email.label}
+                  placeholder={inputData.email.placeholder}
+                  value={inputValue.email}
+                  onChangeText={(value) => handleChange('email', value)}
+                />
 
-            {/* Login Link */}
-            <View style={styles.signUpContainer}>
-              <Text style={styles.signUpText}>Already have an account? </Text>
-              <TouchableOpacity
-                onPress={() => router.push(ROUTES.login)}
-                accessibilityRole="link"
-                accessibilityLabel="Go to login page"
+                <View>
+                  <PasswordInput
+                    {...inputData.password}
+                    value={inputValue.password}
+                    onChangeText={(value) => handleChange('password', value)}
+                    secureTextEntry={!passwordVisibility}
+                    onToggleVisibility={() =>
+                      handleToggleVisibility('password')
+                    }
+                    isPasswordVisible={passwordVisibility}
+                  />
+                  <PasswordInput
+                    {...inputData.confirmPassword}
+                    value={inputValue.confirmPassword}
+                    onChangeText={(value) =>
+                      handleChange('confirmPassword', value)
+                    }
+                    secureTextEntry={!confirmPasswordVisibility}
+                    onToggleVisibility={() =>
+                      handleToggleVisibility('confirmPassword')
+                    }
+                    isPasswordVisible={confirmPasswordVisibility}
+                  />
+                </View>
+              </View>
+
+              {/* Sign up Button */}
+              <Pressable
+                style={[
+                  styles.loginButton,
+                  signupMutation.isPending && styles.loginButtonDisabled,
+                ]}
+                onPress={handleSignUp}
+                disabled={signupMutation.isPending}
+                accessibilityRole="button"
+                accessibilityLabel="Create account"
               >
-                <Text style={styles.signUpLink}>Login</Text>
+                <Text style={styles.loginButtonText}>
+                  {signupMutation.isPending ? 'Creating Account...' : 'Sign Up'}
+                </Text>
+              </Pressable>
+
+              {/* Login Link */}
+              <View style={styles.signUpContainer}>
+                <Text style={styles.signUpText}>Already have an account? </Text>
+                <TouchableOpacity
+                  onPress={() => router.push(ROUTES.login)}
+                  accessibilityRole="link"
+                  accessibilityLabel="Go to login page"
+                >
+                  <Text style={styles.signUpLink}>Login</Text>
+                </TouchableOpacity>
+              </View>
+
+              {/* Divider */}
+              <View style={styles.dividerContainer}>
+                <View style={styles.dividerLine} />
+                <Text style={styles.dividerText}>Or</Text>
+                <View style={styles.dividerLine} />
+              </View>
+
+              {/* Google Sign In */}
+              <TouchableOpacity
+                style={styles.googleButton}
+                accessibilityRole="button"
+                accessibilityLabel="Sign up with Google"
+              >
+                <Image
+                  source={goggleLogo}
+                  alt="Google Logo"
+                  style={{ width: 20, height: 20 }}
+                />
+                <Text style={styles.googleButtonText}>
+                  {' '}
+                  Sign up with Google
+                </Text>
               </TouchableOpacity>
             </View>
+          )}
 
-            {/* Divider */}
-            <View style={styles.dividerContainer}>
-              <View style={styles.dividerLine} />
-              <Text style={styles.dividerText}>Or</Text>
-              <View style={styles.dividerLine} />
-            </View>
-
-            {/* Google Sign In */}
-            <TouchableOpacity
-              style={styles.googleButton}
-              accessibilityRole="button"
-              accessibilityLabel="Sign up with Google"
-            >
-              <Image
-                source={goggleLogo}
-                alt="Google Logo"
-                style={{ width: 20, height: 20 }}
-              />
-              <Text style={styles.googleButtonText}> Sign up with Google</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-
-        {currentStep === CountStep.ONE && (
-          <VerifyEmail
-            inputValue={inputValue}
-            handleChange={handleChange}
-            handleNextComponent={goToNextStep}
-            openModal={openModal}
-          />
-        )}
+          {currentStep === CountStep.ONE && (
+            <VerifyEmail
+              inputValue={inputValue}
+              handleChange={handleChange}
+              handleNextComponent={goToNextStep}
+              openModal={openModal}
+            />
+          )}
         </Wrapper>
       </ScreenOverFlowLayout>
     </SafeArea>

@@ -11,7 +11,7 @@ import { CardText, CardTitle } from '@/components/typography/Typography';
 import { Href, useRouter } from 'expo-router';
 import { colors } from '@/lib/colors';
 import { useOverview } from '@/context/getOverviewContext';
-import useDate from '@/hooks/useDate';
+import useDate from '@/lib/hooks/useDate';
 import { ROUTES } from '@/lib/routes';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Feather from '@expo/vector-icons/Feather';

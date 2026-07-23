@@ -1,7 +1,13 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import useToggles from '@/hooks/useToggles';
+import useToggles from '@/lib/hooks/useToggles';
 import { colors } from '@/lib/colors';
 
 interface SelectInputType {
@@ -11,14 +17,31 @@ interface SelectInputType {
   label: string;
 }
 
-const SelectInput = ({ options, value, onChangeText, label }: SelectInputType) => {
+const SelectInput = ({
+  options,
+  value,
+  onChangeText,
+  label,
+}: SelectInputType) => {
   const { toggle, handleToggle } = useToggles();
-  const icon = toggle ? <AntDesign name="up" size={15} color="black" /> : <AntDesign name="down" size={15} color="black" />;
+  const icon = toggle ? (
+    <AntDesign name="up" size={15} color="black" />
+  ) : (
+    <AntDesign name="down" size={15} color="black" />
+  );
 
   return (
     <View style={{ marginTop: 10 }}>
-      <Text style={{fontWeight: '500', fontSize: 14, fontFamily: 'Inter_500Medium', marginBottom: 3, color: '#414651'}}>
-         {label}
+      <Text
+        style={{
+          fontWeight: '500',
+          fontSize: 14,
+          fontFamily: 'Inter_500Medium',
+          marginBottom: 3,
+          color: '#414651',
+        }}
+      >
+        {label}
       </Text>
 
       <Pressable style={styles.input} onPress={handleToggle}>
@@ -34,10 +57,10 @@ const SelectInput = ({ options, value, onChangeText, label }: SelectInputType) =
               style={styles.option}
               onPress={() => {
                 onChangeText(option);
-                handleToggle(); 
+                handleToggle();
               }}
             >
-             <View
+              <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
@@ -58,7 +81,6 @@ const SelectInput = ({ options, value, onChangeText, label }: SelectInputType) =
                   <AntDesign name="check" size={15} color={colors.red} />
                 )}
               </View>
-
             </TouchableOpacity>
           ))}
         </View>
