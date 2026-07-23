@@ -1,24 +1,28 @@
-import { SubmitButton, Wrapper } from '@/components/typography/Typography'
-import { useDisplayList } from '@/hooks/useDisplayList'
-import React from 'react'
-import { Image, Text, TouchableOpacity, View } from 'react-native'
-import { CountStep } from '@/lib/constant'
-import { router } from 'expo-router'
-import { ROUTES } from '@/lib/routes'
+import { SubmitButton, Wrapper } from '@/components/typography/Typography';
+import { useDisplayList } from '@/lib/hooks/useDisplayList';
+import React from 'react';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { CountStep } from '@/lib/constant';
+import { router } from 'expo-router';
+import { ROUTES } from '@/lib/routes';
 
 const Success = () => {
-  const image = require('@/assets/images/ChatGPT_Image_Jul_17__2025__02_53_49_AM-removebg-preview 1.png')
-  const {goToNextStep, goToPreviousStep, currentStep} = useDisplayList() 
+  const image = require('@/assets/images/ChatGPT_Image_Jul_17__2025__02_53_49_AM-removebg-preview 1.png');
+  const { goToNextStep, goToPreviousStep, currentStep } = useDisplayList();
   return (
     <View style={{ flex: 1, backgroundColor: '#C11574' }}>
-      <View 
-        style={{ 
-            flex: 1,
-            width: '92%',
-            marginLeft: 'auto',
-            marginRight: 'auto', }}>
+      <View
+        style={{
+          flex: 1,
+          width: '92%',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+        }}
+      >
         {/* Top content */}
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View
+          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+        >
           <Image source={image} />
           <Text
             style={{
@@ -41,7 +45,7 @@ const Success = () => {
               fontSize: 24,
             }}
           >
-          Set Up Completed. Go to home and start Tracking!
+            Set Up Completed. Go to home and start Tracking!
           </Text>
         </View>
 
@@ -56,7 +60,7 @@ const Success = () => {
             alignItems: 'center',
           }}
           onPress={() => router.push(ROUTES.home)}
-          >
+        >
           <Text
             style={{
               color: '#C11574',
@@ -66,13 +70,13 @@ const Success = () => {
               paddingVertical: 10,
             }}
           >
-           Go To Home
+            Go To Home
           </Text>
         </TouchableOpacity>
         {/* {currentStep === CountStep.ONE && <Form />} */}
       </View>
     </View>
-  )
-}
+  );
+};
 
-export default Success
+export default Success;

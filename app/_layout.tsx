@@ -89,6 +89,7 @@ export default function RootLayout() {
                   <Stack.Screen name="(tabs)" />
                   <Stack.Screen name="profile/index" />
                   <Stack.Screen name="settings/index" />
+                  <Stack.Screen name="notifications/index" />
                   <Stack.Screen name="auth" />
                 </Stack>
                 <Toast

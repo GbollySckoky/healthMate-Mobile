@@ -4,13 +4,20 @@ import { Wrapper, SubTitle } from '@/components/typography/Typography';
 import { NavHeader } from '@/components/Header/Header';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
-import { Image, View, Text, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
+import {
+  Image,
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  ActivityIndicator,
+} from 'react-native';
 import { colors } from '@/lib/colors';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
 import About from './About';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Feather from '@expo/vector-icons/Feather';
-import useToggles from '@/hooks/useToggles';
+import useToggles from '@/lib/hooks/useToggles';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
 import { useQuery } from '@tanstack/react-query';
 import { patientService } from '@/service/patientService';
@@ -38,7 +45,9 @@ const ConsultationDetails = () => {
           <NavHeader
             title="Doctor's Profile"
             _goBack={() => router.back()}
-            backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+            backIcon={
+              <Entypo name="chevron-small-left" size={24} color="black" />
+            }
           />
 
           <View style={styles.centerState}>
@@ -57,7 +66,9 @@ const ConsultationDetails = () => {
           <NavHeader
             title="Doctor's Profile"
             _goBack={() => router.back()}
-            backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+            backIcon={
+              <Entypo name="chevron-small-left" size={24} color="black" />
+            }
           />
 
           <View style={styles.centerState}>
@@ -78,7 +89,9 @@ const ConsultationDetails = () => {
         <NavHeader
           title="Doctor's Profile"
           _goBack={() => router.back()}
-          backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+          backIcon={
+            <Entypo name="chevron-small-left" size={24} color="black" />
+          }
         />
 
         <ScreenOverFlowLayout>
@@ -109,16 +122,20 @@ const ConsultationDetails = () => {
               <View style={styles.flexContainer}>
                 <View style={{ flex: 1 }}>
                   <SubTitle>
-                    Dr {consultation?.firstName.charAt(0).toUpperCase() + consultation?.firstName.slice(1) || '-'} {consultation?.lastName.charAt(0).toUpperCase() + consultation?.lastName.slice(1)  || ''}
+                    Dr{' '}
+                    {consultation?.firstName.charAt(0).toUpperCase() +
+                      consultation?.firstName.slice(1) || '-'}{' '}
+                    {consultation?.lastName.charAt(0).toUpperCase() +
+                      consultation?.lastName.slice(1) || ''}
                   </SubTitle>
 
                   <Text style={styles.specialtyText}>
-                    {consultation?.profile?.specialization || 'General Practitioner'}
+                    {consultation?.profile?.specialization ||
+                      'General Practitioner'}
                   </Text>
 
                   <Text style={styles.hospitalText}>
-                    <EvilIcons name="location" size={13} />
-                    {' '}
+                    <EvilIcons name="location" size={13} />{' '}
                     {consultation?.hospital?.hospitalName || '-'}
                   </Text>
                 </View>

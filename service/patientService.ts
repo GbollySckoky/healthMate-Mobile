@@ -1,10 +1,10 @@
 import { login } from '@/types/login';
-import axiosService from '../lib/axios';
+// import axiosService from '../lib/axios';
 import { forgotPassword } from '@/types/forgotPassword';
 import { verifyEmail } from '@/types/verifyEmail';
 import { PATIENTS_ENDPOINTS } from '@/lib/endpoints';
 import { Signup } from '@/lib/interface/signup-interface';
-import { CreateHealth } from '@/lib/interface/create-health-interface';
+// import { CreateHealth } from '@/lib/interface/create-health-interface';
 import { BloodPressure } from '@/lib/interface/blood-pressure';
 import { Medication } from '@/lib/interface/medication';
 import { Weight } from '@/lib/interface/weight';
@@ -19,6 +19,7 @@ import { GetDoctorsResponse } from '@/lib/interface/get-doctors-interface';
 import { GetOverview } from '@/lib/interface/get-overview-interface';
 import { GetHospitalsResponse } from '@/lib/interface/get-hospitals-interface';
 import instance from '../lib/axios';
+import { ReplyToTicket } from '@/lib/interface/support';
 
 export const patientService = {
   login: async (payload: login) => {
@@ -125,6 +126,12 @@ export const patientService = {
     );
     return await response.data;
   },
+  cancelAppointment: async (appointmentId: string) => {
+    const response = await instance.patch(
+      `${PATIENTS_ENDPOINTS.CANCEL_APPOINTMENT}${appointmentId}/cancel`
+    );
+    return response.data;
+  },
   getOverview: async (): Promise<GetOverview> => {
     const response = await instance.get(PATIENTS_ENDPOINTS.GET_TRACK_OVERVIEW);
     return await response.data;
@@ -133,5 +140,34 @@ export const patientService = {
     const response = await instance.get(PATIENTS_ENDPOINTS.GET_PATIENT);
     return await response.data;
   },
-  
+  getNotification: async () => {
+      const response = await instance.get(PATIENTS_ENDPOINTS.GET_NOTIFICATIONS);
+      return response.data
+  },
+  markNotificationAsRead: async (id: string) => {
+      const response = await instance.patch(`notifications/${id}/read`);
+      return response.data
+  },
+  unReadNotifications: async () => {
+      const response = await instance.get(PATIENTS_ENDPOINTS.UN_READ_NOTIFICATIONS);
+      return response.data
+  },
+  markAllNotificationAsRead: async () => {
+      return await instance.patch(PATIENTS_ENDPOINTS.READ_ALL_NOTIFICATIONS);
+  },
+  getSupportTicket: async() => {
+      const response = await instance.get(PATIENTS_ENDPOINTS.GET_SUPPORT);
+      return response.data
+  },
+  getSupportDetails: async(id: string) => {
+      const response = await instance.get(`${PATIENTS_ENDPOINTS.GET_SUPPORT_DETAILS}${id}`);
+      return response.data
+  },
+  replyToTicket: async (id: string, payload: ReplyToTicket) => {
+      return await instance.post(`support/patient/${id}/replies`, payload)
+  },
+  getMe: async () => {
+      const response = await instance.get(PATIENTS_ENDPOINTS.GET_ME);
+      return response.data
+  },
 };

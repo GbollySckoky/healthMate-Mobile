@@ -85,6 +85,19 @@ export default function TabsLayout() {
             ),
           }}
         />
+        <Tabs.Screen
+          name="profile"
+          options={{
+            title: 'Profile',
+            tabBarIcon: ({ color, size, focused }) => (
+              <MaterialCommunityIcons
+                name={focused ? 'message-text' : 'message-text-outline'}
+                size={size}
+                color={color}
+              />
+            ),
+          }}
+        />
       </Tabs>
     // </QueryClientProvider>
   );

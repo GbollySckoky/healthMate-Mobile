@@ -1,7 +1,9 @@
-module.exports = function (api) {
-  api.cache(true);
-  return {
-    presets: ['babel-preset-expo'],
-    plugins: ['nativewind/babel'], // this line uses the plugin inside the nativewind package
-  };
-};
+const { defineConfig } = require('eslint/config');
+const expoConfig = require('eslint-config-expo/flat');
+
+module.exports = defineConfig([
+  expoConfig,
+  {
+    ignores: ['node_modules/', '.expo/', 'dist/'],
+  },
+]);

@@ -1,15 +1,17 @@
-import {
-  Card,
-  LatoText,
-  SubTitle,
-} from '@/components/typography/Typography';
+import { Card, LatoText, SubTitle } from '@/components/typography/Typography';
 import { colors } from '@/lib/colors';
 import { Image } from 'expo-image';
 import React from 'react';
-import { View, Text, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  ActivityIndicator,
+} from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { router } from 'expo-router';
-import useDisplay from '@/hooks/useDisplay';
+import useDisplay from '@/lib/hooks/useDisplay';
 import LogoutModal from '@/components/modal/LogoutModal';
 import { ROUTES } from '@/lib/routes';
 import { otherMenuItems } from '@/lib/data';
@@ -24,7 +26,7 @@ import Entypo from '@expo/vector-icons/Entypo';
 
 const Profile = () => {
   const profileImage = require('@/assets/images/Ellipse 165.png');
- 
+
   const navigate = () => {
     router.push(ROUTES.editProfileName);
   };
@@ -37,27 +39,27 @@ const Profile = () => {
     router.push(route as any); // Type assertion for dynamic navigation
   };
 
-  const {openModal, handleDisplay} = useDisplay()
+  const { openModal, handleDisplay } = useDisplay();
   const { data, isLoading, error, isError } = useQuery({
     queryKey: ['getPatient'],
-    queryFn: () => patientService.getPatient()
-  })
-  console.log('12345',data)
+    queryFn: () => patientService.getPatient(),
+  });
+  console.log('12345', data);
 
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size="large" />
       </View>
-    )
+    );
   }
 
   if (isError as unknown) {
-    return(
-       <Text className="h-full flex items-center justify-center text-sm text-red-500">
+    return (
+      <Text className="h-full flex items-center justify-center text-sm text-red-500">
         {(error as Error).message}
       </Text>
-    )
+    );
   }
 
   return (
@@ -94,7 +96,9 @@ const Profile = () => {
             <MaterialIcons name="mode-edit" size={20} color="black" />
           </Pressable>
         </View>
-        <SubTitle>{data.firstName || '-'} {data.lastName}</SubTitle>
+        <SubTitle>
+          {data.firstName || '-'} {data.lastName}
+        </SubTitle>
         <Text
           style={{
             color: colors.purple,
@@ -112,13 +116,34 @@ const Profile = () => {
       <View>
         <LatoText>Account Information</LatoText>
         <Card>
-          <AccountInfo  
-          icon={<EvilIcons name="user" size={24} color={colors.lightRed} />} 
-          title='Name' value={data.firstName} subValue={data.lastName} 
-          next={<Entypo name="chevron-small-right" size={24} color={colors.lightBlack}/>} />
-          <AccountInfo  icon={<Fontisto name="email" size={20} color={colors.lightRed} />} title='Email' value={data.email }/>
-          <AccountInfo  icon={<Feather name="phone" size={20} color={colors.lightRed} />} title='Phone Number' value={data.phoneNumber }/>
-          <AccountInfo  icon={<Feather name="calendar" size={20} color={colors.lightRed} />} title='Date of birth' value={data.email }/>
+          <AccountInfo
+            icon={<EvilIcons name="user" size={24} color={colors.lightRed} />}
+            title="Name"
+            value={data.firstName}
+            subValue={data.lastName}
+            next={
+              <Entypo
+                name="chevron-small-right"
+                size={24}
+                color={colors.lightBlack}
+              />
+            }
+          />
+          <AccountInfo
+            icon={<Fontisto name="email" size={20} color={colors.lightRed} />}
+            title="Email"
+            value={data.email}
+          />
+          <AccountInfo
+            icon={<Feather name="phone" size={20} color={colors.lightRed} />}
+            title="Phone Number"
+            value={data.phoneNumber}
+          />
+          <AccountInfo
+            icon={<Feather name="calendar" size={20} color={colors.lightRed} />}
+            title="Date of birth"
+            value={data.email}
+          />
         </Card>
       </View>
 
@@ -162,14 +187,14 @@ const Profile = () => {
         <Text style={styles.settingsText}>Log out</Text>
       </Pressable>
       <LogoutModal
-            icon={
-              <Ionicons name="alert-circle-outline" size={24} color="#D92D20" />
-            }
-            title="Are you sure you want to log out?"
-            text="You'll need to sign in again to access your health dashboard."
-            closeModal={handleDisplay}
-            isOpen={openModal}
-          />
+        icon={
+          <Ionicons name="alert-circle-outline" size={24} color="#D92D20" />
+        }
+        title="Are you sure you want to log out?"
+        text="You'll need to sign in again to access your health dashboard."
+        closeModal={handleDisplay}
+        isOpen={openModal}
+      />
     </View>
   );
 };
@@ -193,12 +218,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.lightGray,
     borderRadius: 10,
-    marginVertical: 20
+    marginVertical: 20,
   },
   settingsText: {
     marginLeft: 10,
     fontFamily: 'Lato_700Bold',
     fontWeight: '600',
-    color: colors.lightRed
+    color: colors.lightRed,
   },
 });

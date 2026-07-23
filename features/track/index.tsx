@@ -4,7 +4,7 @@ import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayo
 import { Wrapper } from '@/components/typography/Typography';
 import HealthOverview from './_components/HealthOverview';
 import Nav from '@/components/Header/Nav';
-import { Pressable, Text } from 'react-native';
+import { Pressable } from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { colors } from '@/lib/colors';
 
