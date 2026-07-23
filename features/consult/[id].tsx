@@ -72,14 +72,17 @@ const ConsultationId = () => {
     id?: string;
     hospitalName?: string;
   }>();
-  const hospitalId = Number(getParamValue(id));
+  console.log("ID!!", id)
+  const hospitalId = String(id);
   const routeHospitalName = getParamValue(hospitalName);
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['getAllDoctors', hospitalId],
     queryFn: () => patientService.getDoctors(hospitalId),
-    enabled: Number.isFinite(hospitalId),
+    enabled: !!id,
   });
+
+  console.log('DATA!!', data)
 
   const doctors = data?.data ?? [];
   const apiHospitalName = doctors.find(
