@@ -146,7 +146,7 @@ const About = ({ consultation }: { consultation: any }) => {
             color: colors.green,
           }}
         >
-          ₦{consultation?.profile?.consultationFee || '0'}
+          ₦{consultation?.profile?.consultationFee.toLocaleString() || '0'}
         </Text>
       </View>
 

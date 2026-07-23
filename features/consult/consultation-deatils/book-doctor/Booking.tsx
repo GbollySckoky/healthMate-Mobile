@@ -68,7 +68,7 @@ const Booking = () => {
     '4:00pm',
     '5:00pm',
   ];
-  const consultationType = ['Video Call', 'Audio Call', 'Physical Appointment'];
+  const consultationType = [{label:'Video Call', value:'video_call'}, {label:'Audio Call', value:"audio_call"}, {label:'Physical Appointment', value: 'in_person'}];
   
   const mutation = useMutation({
     mutationKey: ['createConsultation'],
@@ -92,9 +92,9 @@ const Booking = () => {
       time: inputValue.time,
       consultationType: inputValue.consultationType,
       healthConcern: inputValue.healthConcern,
-      doctorId: 1,
-      hospitalId: 1,
-      amount: 100000
+      doctorId: "cmrhgvd780003fe1gjjhtlkif",
+      hospitalId: "cmrfzcxki0000hr1ygohewps4",
+      amount: 200000
     }
     console.log("submit_daata", data)
     await mutation.mutate(data)
@@ -169,7 +169,7 @@ const Booking = () => {
         {consultationType.map((consult, index) => (
           <View key={index}>
             <Pressable
-              onPress={() => handleChange('consultationType', consult)}
+              onPress={() => handleChange('consultationType', consult.value)}
             >
               <Text
                 style={{
@@ -177,17 +177,17 @@ const Booking = () => {
                   borderWidth: 1,
                   borderRadius: 5,
                   borderColor:
-                    inputValue.consultationType === consult
+                    inputValue.consultationType === consult.value
                       ? colors.lightRed
                       : colors.broderColor,
                   fontSize: 12,
                   backgroundColor:
-                    inputValue.consultationType === consult
+                    inputValue.consultationType === consult.value
                       ? colors.lightPurple
                       : '',
                 }}
               >
-                {consult}
+                {consult.label}
               </Text>
             </Pressable>
           </View>

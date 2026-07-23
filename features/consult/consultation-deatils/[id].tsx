@@ -25,7 +25,7 @@ const ConsultationDetails = () => {
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['getDoctorById', id],
-    queryFn: () => patientService.getDoctorById(Number(id)),
+    queryFn: () => patientService.getDoctorById(String(id)),
     enabled: !!id,
   });
 
@@ -109,7 +109,7 @@ const ConsultationDetails = () => {
               <View style={styles.flexContainer}>
                 <View style={{ flex: 1 }}>
                   <SubTitle>
-                    Dr {consultation?.firstName || '-'} {consultation?.lastName || ''}
+                    Dr {consultation?.firstName.charAt(0).toUpperCase() + consultation?.firstName.slice(1) || '-'} {consultation?.lastName.charAt(0).toUpperCase() + consultation?.lastName.slice(1)  || ''}
                   </SubTitle>
 
                   <Text style={styles.specialtyText}>

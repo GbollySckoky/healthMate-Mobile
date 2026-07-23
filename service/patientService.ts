@@ -75,7 +75,7 @@ export const patientService = {
   createConsultation: async (payload: Appointment) => {
     return await instance.post(PATIENTS_ENDPOINTS.BOOK_APPOINTMENT, payload);
   },
-  getDoctors: async (hospitalId: number): Promise<GetDoctorsResponse> => {
+  getDoctors: async (hospitalId: string): Promise<GetDoctorsResponse> => {
     const response = await instance.get(
       `${PATIENTS_ENDPOINTS.GET_ALL_DOCTORS}${hospitalId}/doctors`
     );
@@ -95,7 +95,7 @@ export const patientService = {
     );
     return await response.data;
   },
-  getDoctorById: async (doctorId: number) => {
+  getDoctorById: async (doctorId: string) => {
     const response = await instance.get(
       `${PATIENTS_ENDPOINTS.GET_DOCTOR}${doctorId}`
     );
@@ -118,7 +118,7 @@ export const patientService = {
     return await response.data;
   },
   getAppointmentById: async (
-    appointmentId: number
+    appointmentId: string
   ): Promise<GetAppointmentDetailsResponse> => {
     const response = await instance.get(
       `${PATIENTS_ENDPOINTS.GET_APPOINTMENT}${appointmentId}/appointments`
