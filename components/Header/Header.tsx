@@ -12,9 +12,9 @@ export const NavHeader = ({
 }: {
   title?: string;
   text?: string;
-  _goBack: () => void;
+  _goBack?: () => void;
   _optionFn?: () => void;
-  backIcon: ReactElement;
+  backIcon?: ReactElement;
   optionIcon?: ReactElement;
 }) => {
   return (

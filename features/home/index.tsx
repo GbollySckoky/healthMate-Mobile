@@ -7,35 +7,36 @@ import Streak from '@/features/home/_components/Streak';
 import Activities from '@/features/home/_components/Activities';
 import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import useDisplay from '@/hooks/useDisplay';
+import useDisplay from '@/lib/hooks/useDisplay';
 import ProfileModal from '@/components/modal/Profile';
 import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout';
 import { ROUTES } from '@/lib/routes';
+import { useRouter } from 'expo-router';
 
 const HomePage = () => {
   const { openModal, handleDisplay } = useDisplay();
-  
+  const router = useRouter()
   const options = [
     {
-      name: "View my Profile",
+      name: 'View my Profile',
       url: ROUTES.profile,
     },
     {
-      name: "Settings",
-      url: '/settings'
+      name: 'Settings',
+      url: '/settings',
     },
     {
-      name: "Logout",
-      url: ROUTES.login
-    }
+      name: 'Logout',
+      url: ROUTES.login,
+    },
   ];
 
   // Dynamic greeting based on time of day
   const getGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return "Good Morning";
-    if (hour < 17) return "Good Afternoon";
-    return "Good Evening";
+    if (hour < 12) return 'Good Morning';
+    if (hour < 17) return 'Good Afternoon';
+    return 'Good Evening';
   };
 
   return (
@@ -45,13 +46,14 @@ const HomePage = () => {
         <View>
           <Title>{getGreeting()}, Sarah 👋</Title>
           <Text style={styles.subGreeting}>
-            Let's take a step toward a healthier you today.
+            Let&apos;s take a step toward a healthier you today.
           </Text>
         </View>
-        
+
         <View style={styles.headerIcons}>
-          <Pressable 
+          <Pressable
             style={styles.notificationButton}
+            onPress={() => router.push('/notifications')}
             accessibilityLabel="View notifications"
             accessibilityRole="button"
           >
@@ -61,14 +63,14 @@ const HomePage = () => {
               color="#717680"
             />
           </Pressable>
-          
+
           <Pressable
             onPress={handleDisplay}
             style={styles.profileButton}
             accessibilityLabel="Open profile menu"
             accessibilityRole="button"
           >
-            <Text style={styles.profileInitial}>S</Text> 
+            <Text style={styles.profileInitial}>S</Text>
           </Pressable>
         </View>
       </View>
@@ -80,13 +82,13 @@ const HomePage = () => {
           <AppointmentCard />
           <Streak />
           <Reminder />
-          
-          <ProfileModal 
+
+          <ProfileModal
             isOpen={openModal}
             closeModal={handleDisplay}
             options={options}
             icon={<MaterialIcons name="logout" size={17} />}
-            values='Logout'
+            values="Logout"
           />
         </Wrapper>
       </ScreenOverFlowLayout>
@@ -134,7 +136,7 @@ const styles = StyleSheet.create({
   profileInitial: {
     color: 'white',
     fontSize: 14,
-    fontFamily: 'LibreFranklin_600SemiBold', 
+    fontFamily: 'LibreFranklin_600SemiBold',
     fontWeight: '600',
   },
 
@@ -152,7 +154,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 2,
   },
-  
+
   // Flex Utilities
   rowCenter: {
     flexDirection: 'row',
@@ -163,7 +165,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  
+
   // Button Styles
   buttonRow: {
     flexDirection: 'row',

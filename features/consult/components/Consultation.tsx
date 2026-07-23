@@ -12,7 +12,7 @@ import { ScrollViewHorizontal } from '@/components/scrollView/ScrollViewHorizont
 import { SubTitle } from '@/components/typography/Typography';
 import { colors } from '@/lib/colors';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import useToggle from '@/hooks/useToggle';
+import useToggle from '@/lib/hooks/useToggle';
 import Feather from '@expo/vector-icons/Feather';
 import { ROUTES } from '@/lib/routes';
 import {

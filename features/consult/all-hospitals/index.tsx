@@ -22,7 +22,7 @@ import { consultationData } from '@/lib/data';
 import { Link } from 'expo-router';
 import Feather from '@expo/vector-icons/Feather';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import useToggle from '@/hooks/useToggle';
+import useToggle from '@/lib/hooks/useToggle';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
 import { useQuery } from '@tanstack/react-query';
 import { patientService } from '@/service/patientService';

@@ -18,6 +18,7 @@ import { ROUTES } from '@/lib/routes';
 import { patientService } from '@/service/patientService';
 import { useQuery } from '@tanstack/react-query';
 import { GetAppointment } from '@/lib/interface/get-appointments-interface';
+import { AppointmentStatusBadge } from '@/components/AppointmentStatusBadge';
 
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
@@ -27,7 +28,10 @@ const getDoctorName = (doctor: GetAppointment['doctor']) => {
   if (doctor.fullName) return doctor.fullName;
   if (doctor.name) return doctor.name;
 
-  const name = [doctor.firstName, doctor.lastName].filter(Boolean).join(' ');
+  const name = [doctor.firstName, doctor.lastName]
+    .filter((value): value is string => Boolean(value))
+    .map((value) => value.charAt(0).toUpperCase() + value.slice(1).toLocaleLowerCase())
+    .join(' ');
   return name || 'Doctor unavailable';
 };
 
@@ -55,6 +59,7 @@ const AppointmentCard = () => {
 
   const appointments = data?.data ?? [];
   const latestAppointment = appointments[0] ?? null;
+  console.log(latestAppointment)
 
   const handleAppointmentPress = (id: number) => {
     router.push({
@@ -132,26 +137,13 @@ const AppointmentCard = () => {
                   <View style={{ marginRight: 3 }}>
                     <Feather name="video" size={13} color="#717680" />
                   </View>
-                  <SmallText> {latestAppointment.consultationType}</SmallText>
+                  <SmallText> {latestAppointment.consultationType.charAt(0).toUpperCase() + latestAppointment.consultationType.slice(1).toLocaleLowerCase().replaceAll('_', " ")}</SmallText>
                 </View>
                 {/* <SmallText>
                   Health Concern: {latestAppointment.healthConcern}
                 </SmallText> */}
               </View>
-              <Text
-                style={{
-                  color: '#5924DC',
-                  backgroundColor: '#F4F3FF',
-                  borderRadius: 10,
-                  padding: 10,
-                  fontWeight: 500,
-                  fontSize: 12,
-                  height: 35,
-                  fontFamily: 'Inter_500Medium',
-                }}
-              >
-                {latestAppointment.status}
-              </Text>
+              <AppointmentStatusBadge status={latestAppointment.status} />
             </View>
           </View>
           <View style={style.ButtonRow}>

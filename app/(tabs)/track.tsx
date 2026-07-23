@@ -1,5 +1,4 @@
 import React from 'react';
-import { Text, View } from 'react-native';
 import TrackPage from '@/features/track';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
 const Track = () => {

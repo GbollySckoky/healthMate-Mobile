@@ -1,18 +1,14 @@
-import React, { useCallback} from 'react';
+import React, { useCallback } from 'react';
 import { NavHeader } from '@/components/Header/Header';
 import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout';
 import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
 import Entypo from '@expo/vector-icons/Entypo';
 import { Href, useRouter } from 'expo-router';
-import {
-  Card,
-  Wrapper,
-} from '@/components/typography/Typography';
+import { Card, Wrapper } from '@/components/typography/Typography';
 import { settingsData } from '@/lib/data';
 import { Text, View, StyleSheet, Pressable } from 'react-native';
 import { colors } from '@/lib/colors';
-import useToggle from '@/hooks/useToggle';
-
+import useToggle from '@/lib/hooks/useToggle';
 
 const SettingsPage = () => {
   const router = useRouter();
@@ -55,7 +51,11 @@ const SettingsPage = () => {
                         <Text>{icon}</Text>
                         <Text style={{ marginLeft: 7 }}>{title}</Text>
                       </View>
-                     {url && <Pressable onPress={() => handlePress(url)}>{rightIcon}</Pressable>}  
+                      {url && (
+                        <Pressable onPress={() => handlePress(url)}>
+                          {rightIcon}
+                        </Pressable>
+                      )}
                     </View>
                     {!isLastItem && <View style={styles.divider} />}
                   </View>

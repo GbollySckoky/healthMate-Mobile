@@ -20,7 +20,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Feather from '@expo/vector-icons/Feather';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import useDate from '@/hooks/useDate';
+import useDate from '@/lib/hooks/useDate';
 import { useOverview } from '@/context/getOverviewContext';
 
 type HealthOverviewItem = {
@@ -77,9 +77,7 @@ const Activities = () => {
     },
     {
       title: 'Weight',
-      value: overview?.weight
-        ? `${overview.weight.weight}kg`
-        : 'N/A',
+      value: overview?.weight ? `${overview.weight.weight}kg` : 'N/A',
       text: readableDate(overview?.weight?.recordedAt),
       id: 4,
       icon: <FontAwesome name="balance-scale" size={24} color="blue" />,
