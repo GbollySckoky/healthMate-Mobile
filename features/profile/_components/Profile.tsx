@@ -1,14 +1,9 @@
-import { Card, LatoText, SubTitle } from '@/components/typography/Typography';
+// app/(routes)/profile.tsx
+import { Card, LatoText, SubTitle, Wrapper } from '@/components/typography/Typography';
 import { colors } from '@/lib/colors';
 import { Image } from 'expo-image';
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  ActivityIndicator,
-} from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { router } from 'expo-router';
 import useDisplay from '@/lib/hooks/useDisplay';
@@ -16,45 +11,41 @@ import LogoutModal from '@/components/modal/LogoutModal';
 import { ROUTES } from '@/lib/routes';
 import { otherMenuItems } from '@/lib/data';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useQuery } from '@tanstack/react-query';
-import { patientService } from '@/service/patientService';
 import AccountInfo from '@/components/AccountInfo';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import Feather from '@expo/vector-icons/Feather';
 import Entypo from '@expo/vector-icons/Entypo';
+import ProfileSkeleton from '@/lib/components/ProfileSkeleton';
+import useGetMe from '@/lib/hooks/useGetMe';
+
+function getAge(dateOfBirth?: string) {
+  if (!dateOfBirth) return null;
+  const dob = new Date(dateOfBirth);
+  if (isNaN(dob.getTime())) return null;
+  const diff = Date.now() - dob.getTime();
+  return Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+}
 
 const Profile = () => {
   const profileImage = require('@/assets/images/Ellipse 165.png');
 
-  const navigate = () => {
-    router.push(ROUTES.editProfileName);
-  };
-
-  const navigateToSettings = () => {
-    router.push(ROUTES.settings);
-  };
-
-  const handleMenuNavigation = (route: string) => {
-    router.push(route as any); // Type assertion for dynamic navigation
-  };
+  const navigate = () => router.push(ROUTES.editProfileName);
+  const handleMenuNavigation = (route: string) => router.push(route as any);
 
   const { openModal, handleDisplay } = useDisplay();
-  const { data, isLoading, error, isError } = useQuery({
-    queryKey: ['getPatient'],
-    queryFn: () => patientService.getPatient(),
-  });
-  console.log('12345', data);
 
+  const {patient, isLoading, isError, error} = useGetMe()
+  console.log('Pia', patient)
   if (isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
+      <View style={{ padding: 20 }}>
+        <ProfileSkeleton />
       </View>
     );
   }
 
-  if (isError as unknown) {
+  if (isError) {
     return (
       <Text className="h-full flex items-center justify-center text-sm text-red-500">
         {(error as Error).message}
@@ -62,25 +53,16 @@ const Profile = () => {
     );
   }
 
+  const age = getAge(patient.dateOfBirth);
+
   return (
-    <View>
-      <View
-        style={{
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
+    <Wrapper>
+      <View style={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
         <View style={{ position: 'relative' }}>
           <Image
-            source={profileImage}
+            source={patient.profilePicture ? { uri: patient.profilePicture } : profileImage}
             alt="profileimage"
-            style={{
-              width: 100,
-              height: 100,
-              borderRadius: 100,
-              marginBottom: 5,
-            }}
+            style={{ width: 100, height: 100, borderRadius: 100, marginBottom: 5 }}
           />
           <Pressable
             style={{
@@ -97,19 +79,21 @@ const Profile = () => {
           </Pressable>
         </View>
         <SubTitle>
-          {data.firstName || '-'} {data.lastName}
+          {patient.firstName || '-'} {patient.lastName}
         </SubTitle>
-        <Text
-          style={{
-            color: colors.purple,
-            fontWeight: '400',
-            fontSize: 12,
-            marginTop: 5,
-            fontFamily: 'LibreFranklin_400Regular',
-          }}
-        >
-          38 years
-        </Text>
+        {age !== null && (
+          <Text
+            style={{
+              color: colors.purple,
+              fontWeight: '400',
+              fontSize: 12,
+              marginTop: 5,
+              fontFamily: 'LibreFranklin_400Regular',
+            }}
+          >
+            {age} years
+          </Text>
+        )}
       </View>
 
       {/* Account Info */}
@@ -119,30 +103,34 @@ const Profile = () => {
           <AccountInfo
             icon={<EvilIcons name="user" size={24} color={colors.lightRed} />}
             title="Name"
-            value={data.firstName}
-            subValue={data.lastName}
-            next={
-              <Entypo
-                name="chevron-small-right"
-                size={24}
-                color={colors.lightBlack}
-              />
-            }
+            value={patient.firstName}
+            subValue={patient.lastName}
+            next={<Entypo name="chevron-small-right" size={24} color={colors.lightBlack} />}
           />
           <AccountInfo
             icon={<Fontisto name="email" size={20} color={colors.lightRed} />}
             title="Email"
-            value={data.email}
+            value={patient.email}
           />
           <AccountInfo
             icon={<Feather name="phone" size={20} color={colors.lightRed} />}
             title="Phone Number"
-            value={data.phoneNumber}
+            value={patient?.profile.phoneNumber}
           />
           <AccountInfo
             icon={<Feather name="calendar" size={20} color={colors.lightRed} />}
             title="Date of birth"
-            value={data.email}
+            value={patient?.profile.dateOfBirth}
+          />
+          <AccountInfo
+            icon={<Feather name="calendar" size={20} color={colors.lightRed} />}
+            title="Gender"
+            value={patient?.profile.gender.charAt(0).toUpperCase() + patient?.profile.gender.slice(1).toLowerCase()}
+          />
+          <AccountInfo
+            icon={<Feather name="calendar" size={20} color={colors.lightRed} />}
+            title="Allergies"
+            value={patient?.profile.allergies}
           />
         </Card>
       </View>
@@ -155,10 +143,7 @@ const Profile = () => {
             const { title, id, icon, route } = item;
             const isLastItem = index === otherMenuItems.length - 1;
             return (
-              <View
-                key={id}
-                style={[styles.container, isLastItem && styles.lastItem]}
-              >
+              <View key={id} style={[styles.container, isLastItem && styles.lastItem]}>
                 <Pressable onPress={() => handleMenuNavigation(route)}>
                   <View style={{ flexDirection: 'row' }}>
                     <Text>{icon}</Text>
@@ -181,30 +166,26 @@ const Profile = () => {
         </Card>
       </View>
 
-      {/*Log out */}
+      {/* Log out */}
       <Pressable style={styles.settingsContainer} onPressIn={handleDisplay}>
         <MaterialIcons name="logout" size={17} color={colors.lightRed} />
         <Text style={styles.settingsText}>Log out</Text>
       </Pressable>
       <LogoutModal
-        icon={
-          <Ionicons name="alert-circle-outline" size={24} color="#D92D20" />
-        }
+        icon={<Ionicons name="alert-circle-outline" size={24} color="#D92D20" />}
         title="Are you sure you want to log out?"
         text="You'll need to sign in again to access your health dashboard."
         closeModal={handleDisplay}
         isOpen={openModal}
       />
-    </View>
+    </Wrapper>
   );
 };
 
 export default Profile;
 
 const styles = StyleSheet.create({
-  lastItem: {
-    borderBottomWidth: 0, // Remove border from last item
-  },
+  lastItem: { borderBottomWidth: 0 },
   container: {
     marginBottom: 15,
     borderBottomWidth: 1,

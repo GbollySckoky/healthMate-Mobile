@@ -14,7 +14,6 @@ import {
   Calendar,
   MessageSquare,
   CheckCircle2,
-  AlertCircle,
 } from 'lucide-react-native'
 import useGetUnReadNotification from '@/lib/hooks/useGetUnReadNotification'
 import useGetNotification from '@/lib/hooks/useGetNotification'
@@ -23,22 +22,10 @@ import { Wrapper } from '@/components/typography/Typography'
 import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout'
 import Nav from '@/components/Header/Nav'
 import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout'
-// import { NavHeader } from '@/components/Header/Header'
+import { Notification } from '@/lib/interface/notification'
+import SafeArea from '@/components/safeAreaView/SafeAreaView';
 
-type Notification = {
-  id: string
-  title: string
-  body: string
-  type: string
-  isRead: boolean
-  readAt: string | null
-  createdAt: string
-  supportTicketId: string | null
-  appointmentId: string | null
-  doctorId: string | null
-  hospitalId: string | null
-  patientId: string | null
-}
+
 
 const typeConfig: Record<
   string,
@@ -124,39 +111,41 @@ const NotificationScreen = () => {
     const Icon = config.icon
 
     return (
-      <ScreenLayout>
-        <Nav title="Notifications" />
-        <ScreenOverFlowLayout>
-          <Wrapper>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              onPress={() => handleNotificationPress(item)}
-              style={[
-                styles.card,
-                item.isRead ? styles.cardRead : styles.cardUnread,
-              ]}
-            >
-              <View style={[styles.iconWrap, { backgroundColor: config.bg }]}>
-                <Icon size={16} color={config.color} />
-              </View>
-
-              <View style={{ flex: 1 }}>
-                <View style={styles.cardHeader}>
-                  <Text style={styles.title} numberOfLines={1}>
-                    {item.title}
-                  </Text>
-                  <Text style={styles.time}>{getRelativeTime(item.createdAt)}</Text>
+      <SafeArea>
+        <ScreenLayout>
+          <Nav title="Notifications" />
+          <ScreenOverFlowLayout>
+            <Wrapper>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() => handleNotificationPress(item)}
+                style={[
+                  styles.card,
+                  item.isRead ? styles.cardRead : styles.cardUnread,
+                ]}
+              >
+                <View style={[styles.iconWrap, { backgroundColor: config.bg }]}>
+                  <Icon size={16} color={config.color} />
                 </View>
-                <Text style={styles.body} numberOfLines={2}>
-                  {item.body}
-                </Text>
-              </View>
 
-              {!item.isRead && <View style={styles.dot} />}
-            </TouchableOpacity>
-          </Wrapper>
-        </ScreenOverFlowLayout>
-      </ScreenLayout>
+                <View style={{ flex: 1 }}>
+                  <View style={styles.cardHeader}>
+                    <Text style={styles.title} numberOfLines={1}>
+                      {item.title}
+                    </Text>
+                    <Text style={styles.time}>{getRelativeTime(item.createdAt)}</Text>
+                  </View>
+                  <Text style={styles.body} numberOfLines={2}>
+                    {item.body}
+                  </Text>
+                </View>
+
+                {!item.isRead && <View style={styles.dot} />}
+              </TouchableOpacity>
+            </Wrapper>
+          </ScreenOverFlowLayout>
+        </ScreenLayout>
+      </SafeArea>
     )
   }
 
@@ -171,7 +160,7 @@ const NotificationScreen = () => {
   if (isError) {
     return (
       <View style={styles.centerState}>
-        <AlertCircle size={28} color="#f87171" />
+        {/* <AlertCircle size={28} color="#f87171" /> */}
         <Text style={styles.errorText}>
           {(error as Error)?.message ?? 'Failed to load notifications'}
         </Text>
