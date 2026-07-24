@@ -91,7 +91,7 @@ export default function TabsLayout() {
             title: 'Profile',
             tabBarIcon: ({ color, size, focused }) => (
               <MaterialCommunityIcons
-                name={focused ? 'message-text' : 'message-text-outline'}
+                name={focused ? 'account-badge-outline' : 'account'}
                 size={size}
                 color={color}
               />

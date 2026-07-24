@@ -3,7 +3,7 @@ export interface SUPPORT_TICKET {
   category: string;
   description: string;
   message: string;
-  patientId: string;
+  doctorId: string;
   appointmentId: string;
   hospitalId: string;
   attachmentUrl?: string;

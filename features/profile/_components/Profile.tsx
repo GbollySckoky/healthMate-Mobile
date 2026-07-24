@@ -31,17 +31,12 @@ const Profile = () => {
   const profileImage = require('@/assets/images/Ellipse 165.png');
 
   const navigate = () => router.push(ROUTES.editProfileName);
-  const navigateToSettings = () => router.push(ROUTES.settings);
   const handleMenuNavigation = (route: string) => router.push(route as any);
 
   const { openModal, handleDisplay } = useDisplay();
-  // const { data, isLoading, error, isError } = useQuery({
-  //   queryKey: ['me'],
-  //   queryFn: () => patientService.getMe(),
-  // });
 
-  const {patient, isLoading, isError, error, refetch, isRefetching} = useGetMe()
-
+  const {patient, isLoading, isError, error} = useGetMe()
+  console.log('Pia', patient)
   if (isLoading) {
     return (
       <View style={{ padding: 20 }}>
@@ -120,12 +115,22 @@ const Profile = () => {
           <AccountInfo
             icon={<Feather name="phone" size={20} color={colors.lightRed} />}
             title="Phone Number"
-            value={patient.phoneNumber}
+            value={patient?.profile.phoneNumber}
           />
           <AccountInfo
             icon={<Feather name="calendar" size={20} color={colors.lightRed} />}
             title="Date of birth"
-            value={patient.dateOfBirth}
+            value={patient?.profile.dateOfBirth}
+          />
+          <AccountInfo
+            icon={<Feather name="calendar" size={20} color={colors.lightRed} />}
+            title="Gender"
+            value={patient?.profile.gender.charAt(0).toUpperCase() + patient?.profile.gender.slice(1).toLowerCase()}
+          />
+          <AccountInfo
+            icon={<Feather name="calendar" size={20} color={colors.lightRed} />}
+            title="Allergies"
+            value={patient?.profile.allergies}
           />
         </Card>
       </View>

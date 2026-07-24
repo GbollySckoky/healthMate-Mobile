@@ -1,5 +1,4 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import AntDesign from '@expo/vector-icons/AntDesign';
 import Feather from '@expo/vector-icons/Feather';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Entypo from '@expo/vector-icons/Entypo';
@@ -631,5 +630,17 @@ export const otherMenuItems = [
       />
     ),
     route: ROUTES.reminder, // Changed to a more appropriate route
+  },
+  {
+    title: 'Settings',
+    id: 8,
+    icon: (
+      <Feather 
+        name="settings"
+        size={20}
+        color={colors.lightRed}
+      />
+    ),
+    route: ROUTES.settings, // Changed to a more appropriate route
   },
 ];

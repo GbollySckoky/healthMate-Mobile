@@ -19,7 +19,7 @@ import { GetDoctorsResponse } from '@/lib/interface/get-doctors-interface';
 import { GetOverview } from '@/lib/interface/get-overview-interface';
 import { GetHospitalsResponse } from '@/lib/interface/get-hospitals-interface';
 import instance from '../lib/axios';
-import { ReplyToTicket } from '@/lib/interface/support';
+import { ReplyToTicket, SUPPORT_TICKET } from '@/lib/interface/support';
 import { EditProfile, Profile } from '@/lib/interface/user';
 
 export const patientService = {
@@ -172,5 +172,8 @@ export const patientService = {
   },
   editProfile: async (payload: EditProfile) => {
       return await instance.post(PATIENTS_ENDPOINTS.CREATE_PROFILE, payload)
+  },
+  createSupportTicket: async (payload: SUPPORT_TICKET) => {
+      return await instance.post(PATIENTS_ENDPOINTS.CREATE_SUPPORT, payload)
   },
 };

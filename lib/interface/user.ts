@@ -19,3 +19,24 @@ export interface Profile {
     allergies: string;
     profilePicture: string;
 }
+
+export interface UserProfile {
+  allergies: string;
+  dateOfBirth: string;
+  gender: "male" | "female" | "other";
+  healthCondition: string;
+  profilePicture: string;
+}
+
+export interface UserResponse {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  isActive: boolean;
+  createdAt: string; 
+  updatedAt: string;
+  profile: UserProfile;
+}
+
+
