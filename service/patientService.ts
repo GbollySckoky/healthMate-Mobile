@@ -19,7 +19,8 @@ import { GetDoctorsResponse } from '@/lib/interface/get-doctors-interface';
 import { GetOverview } from '@/lib/interface/get-overview-interface';
 import { GetHospitalsResponse } from '@/lib/interface/get-hospitals-interface';
 import instance from '../lib/axios';
-import { ReplyToTicket } from '@/lib/interface/support';
+import { ReplyToTicket, SUPPORT_TICKET } from '@/lib/interface/support';
+import { EditProfile, Profile } from '@/lib/interface/user';
 
 export const patientService = {
   login: async (payload: login) => {
@@ -136,16 +137,12 @@ export const patientService = {
     const response = await instance.get(PATIENTS_ENDPOINTS.GET_TRACK_OVERVIEW);
     return await response.data;
   },
-  getPatient: async () => {
-    const response = await instance.get(PATIENTS_ENDPOINTS.GET_PATIENT);
-    return await response.data;
-  },
   getNotification: async () => {
       const response = await instance.get(PATIENTS_ENDPOINTS.GET_NOTIFICATIONS);
       return response.data
   },
   markNotificationAsRead: async (id: string) => {
-      const response = await instance.patch(`notifications/${id}/read`);
+      const response = await instance.patch(`notifications/patient/${id}/read`);
       return response.data
   },
   unReadNotifications: async () => {
@@ -169,5 +166,14 @@ export const patientService = {
   getMe: async () => {
       const response = await instance.get(PATIENTS_ENDPOINTS.GET_ME);
       return response.data
+  },
+  createProfile: async (payload: Profile) => {
+      return await instance.post(PATIENTS_ENDPOINTS.CREATE_PROFILE, payload)
+  },
+  editProfile: async (payload: EditProfile) => {
+      return await instance.post(PATIENTS_ENDPOINTS.CREATE_PROFILE, payload)
+  },
+  createSupportTicket: async (payload: SUPPORT_TICKET) => {
+      return await instance.post(PATIENTS_ENDPOINTS.CREATE_SUPPORT, payload)
   },
 };
