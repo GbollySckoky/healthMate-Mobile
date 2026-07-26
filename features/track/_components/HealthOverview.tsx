@@ -1,11 +1,10 @@
 import {
-  ActivityIndicator,
   Text,
   View,
   StyleSheet,
   Pressable,
 } from 'react-native';
-import { ReactNode, useCallback } from 'react';
+import { ReactNode, useCallback} from 'react';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { CardText, CardTitle } from '@/components/typography/Typography';
 import { Href, useRouter } from 'expo-router';
@@ -16,6 +15,7 @@ import { ROUTES } from '@/lib/routes';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Feather from '@expo/vector-icons/Feather';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import OverviewCardSkeleton from '@/lib/components/TrackSkeleton';
 
 type HealthOverviewItem = {
   id: number | string;
@@ -31,13 +31,13 @@ const HealthOverview = () => {
   const { data, isError, isLoading, error, refetch } = useOverview();
   const { getReadableDate } = useDate();
   const overview = data?.data ?? null;
-  const hasOverviewData = Boolean(
-    overview?.bloodPressure ||
-      overview?.mood ||
-      overview?.sleep ||
-      overview?.weight ||
-      overview?.medication
-  );
+  // const hasOverviewData = Boolean(
+  //   overview?.bloodPressure ||
+  //     overview?.mood ||
+  //     overview?.sleep ||
+  //     overview?.weight ||
+  //     overview?.medication
+  // );
 
   const readableDate = (value?: string | null) =>
     value ? getReadableDate(value) : 'N/A';
@@ -98,11 +98,18 @@ const HealthOverview = () => {
 
   if (isLoading) {
     return (
-      <View style={style.stateContainer}>
-        <ActivityIndicator size="small" color="#DD2590" />
-        <Text style={style.stateText}>Loading overview...</Text>
+      <View style={style.container}>
+        {[1, 2, 3, 4, 5].map((key) => (
+          <OverviewCardSkeleton key={key} />
+        ))}
       </View>
     );
+  }
+
+  // If the request errored but there's no data to show either way,
+  // fail silently instead of surfacing an error/retry card.
+  if (isError && !overview) {
+    return null;
   }
 
   if (isError) {
@@ -118,16 +125,16 @@ const HealthOverview = () => {
     );
   }
 
-  if (!hasOverviewData) {
-    return (
-      <View style={style.stateContainer}>
-        <Text style={style.stateText}>No health overview yet</Text>
-        <Text style={style.stateSubText}>
-          Track your health activities to see them here.
-        </Text>
-      </View>
-    );
-  }
+  // if (!hasOverviewData) {
+  //   return (
+  //     <View style={style.stateContainer}>
+  //       <Text style={style.stateText}>No health overview yet</Text>
+  //       <Text style={style.stateSubText}>
+  //         Track your health activities to see them here.
+  //       </Text>
+  //     </View>
+  //   );
+  // }
 
   return (
     <View style={style.container}>
@@ -189,6 +196,9 @@ export const style = StyleSheet.create({
   iconContainer: {
     paddingBottom: 15,
     fontSize: 24,
+  },
+  skeletonIcon: {
+    marginBottom: 15,
   },
   valueContainer: {
     paddingTop: 4,

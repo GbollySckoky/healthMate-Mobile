@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Animated, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import {
   SmallText,
   SubTitle,
@@ -45,6 +45,88 @@ const getDoctorName = (doctor: GetAppointment['doctor']) => {
 const getDoctorImage = (doctor: GetAppointment['doctor']) => {
   return doctor?.profileImage || doctor?.image || 'https://picsum.photos/seed/696/3000/2000';
 };
+
+// ---------- Skeleton primitives ----------
+
+const useShimmer = () => {
+  const opacity = useRef(new Animated.Value(0.35)).current;
+
+  useEffect(() => {
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(opacity, {
+          toValue: 1,
+          duration: 700,
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacity, {
+          toValue: 0.35,
+          duration: 700,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [opacity]);
+
+  return opacity;
+};
+
+const SkeletonBlock = ({
+  width,
+  height,
+  borderRadius = 6,
+  style: extraStyle,
+}: {
+  width: number | `${number}%`;
+  height: number;
+  borderRadius?: number;
+  style?: object;
+}) => {
+  const opacity = useShimmer();
+
+  return (
+    <Animated.View
+      style={[
+        {
+          width,
+          height,
+          borderRadius,
+          backgroundColor: '#E5E7EB',
+          opacity,
+        },
+        extraStyle,
+      ]}
+    />
+  );
+};
+
+const AppointmentCardSkeleton = () => (
+  <View style={style.Card}>
+    <View style={style.Flex}>
+      <View style={{ width: 50 }}>
+        <SkeletonBlock width={50} height={50} borderRadius={100} />
+      </View>
+      <View style={style.Flexs}>
+        <View style={{ marginLeft: 5, flex: 1 }}>
+          <SkeletonBlock width="60%" height={16} />
+          <View style={[style.flex, { marginTop: 10 }]}>
+            <SkeletonBlock width={90} height={12} />
+          </View>
+          <View style={[style.flex, { marginTop: 8 }]}>
+            <SkeletonBlock width={110} height={12} />
+          </View>
+        </View>
+        <SkeletonBlock width={70} height={22} borderRadius={20} />
+      </View>
+    </View>
+    <View style={style.ButtonRow}>
+      <SkeletonBlock width={100} height={34} borderRadius={8} style={{ marginTop: 14 }} />
+      <SkeletonBlock width={100} height={34} borderRadius={8} style={{ marginTop: 14 }} />
+    </View>
+  </View>
+);
 
 const AllApointments = () => {
   const [page, setPage] = useState(1);
@@ -97,9 +179,10 @@ const AllApointments = () => {
             />
             <View style={{ marginBottom: 30 }}>
               {isLoading && (
-                <View style={style.stateContainer}>
-                  <ActivityIndicator size="large" color="#DD2590" />
-                  <Text style={style.stateText}>Loading appointments...</Text>
+                <View>
+                  {[1, 2, 3, 4].map((key) => (
+                    <AppointmentCardSkeleton key={key} />
+                  ))}
                 </View>
               )}
 
