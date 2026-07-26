@@ -5,11 +5,11 @@ import {
   SubTitle,
   Title,
 } from '@/components/typography/Typography';
-import React, { ReactNode, useCallback } from 'react';
+import React, { ReactNode, useCallback, useEffect, useRef } from 'react';
 import { ScrollViewHorizontal } from '@/components/scrollView/ScrollViewHorizontal';
 import { Href, useRouter } from 'expo-router';
 import {
-  ActivityIndicator,
+  Animated,
   Text,
   View,
   Pressable,
@@ -31,6 +31,73 @@ type HealthOverviewItem = {
   icon: ReactNode;
   url: string;
 };
+
+// ---------- Skeleton primitives ----------
+
+const useShimmer = () => {
+  const opacity = useRef(new Animated.Value(0.35)).current;
+
+  useEffect(() => {
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(opacity, {
+          toValue: 1,
+          duration: 700,
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacity, {
+          toValue: 0.35,
+          duration: 700,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [opacity]);
+
+  return opacity;
+};
+
+const SkeletonBlock = ({
+  width,
+  height,
+  borderRadius = 6,
+  style: extraStyle,
+}: {
+  width: number | `${number}%`;
+  height: number;
+  borderRadius?: number;
+  style?: object;
+}) => {
+  const opacity = useShimmer();
+
+  return (
+    <Animated.View
+      style={[
+        {
+          width,
+          height,
+          borderRadius,
+          backgroundColor: '#E5E7EB',
+          opacity,
+        },
+        extraStyle,
+      ]}
+    />
+  );
+};
+
+const OverviewCardSkeleton = () => (
+  <MinCard style={style.MinCard}>
+    <SkeletonBlock width={24} height={24} borderRadius={12} style={style.skeletonIcon} />
+    <SkeletonBlock width="70%" height={13} />
+    <View style={style.valueWrapper}>
+      <SkeletonBlock width="50%" height={20} style={{ marginBottom: 8 }} />
+      <SkeletonBlock width="40%" height={12} />
+    </View>
+  </MinCard>
+);
 
 const Activities = () => {
   const router = useRouter();
@@ -103,10 +170,11 @@ const Activities = () => {
   );
 
   const renderLoadingState = () => (
-    <View style={style.stateCard}>
-      <ActivityIndicator size="small" color="#DD2590" />
-      <Text style={style.stateText}>Loading overview...</Text>
-    </View>
+    <ScrollViewHorizontal>
+      {[1, 2, 3, 4, 5].map((key) => (
+        <OverviewCardSkeleton key={key} />
+      ))}
+    </ScrollViewHorizontal>
   );
 
   const renderErrorState = () => (
@@ -184,6 +252,9 @@ export const style = StyleSheet.create({
   },
   iconText: {
     paddingBottom: 15,
+  },
+  skeletonIcon: {
+    marginBottom: 15,
   },
   valueWrapper: {
     paddingTop: 4,

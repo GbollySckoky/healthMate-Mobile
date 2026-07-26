@@ -9,7 +9,6 @@ import {
   View,
   TouchableOpacity,
   StyleSheet,
-  ActivityIndicator,
 } from 'react-native';
 import { Image } from 'expo-image';
 import Feather from '@expo/vector-icons/Feather';
@@ -19,6 +18,7 @@ import { patientService } from '@/service/patientService';
 import { useQuery } from '@tanstack/react-query';
 import { GetAppointment } from '@/lib/interface/get-appointments-interface';
 import { AppointmentStatusBadge } from '@/components/AppointmentStatusBadge';
+import AppointmentCardSkeleton from '@/lib/components/AppointmentSkeleton';
 
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
@@ -48,6 +48,7 @@ const formatAppointmentDate = (date: string, time: string) => {
   return `${time} | ${formattedDate}`;
 };
 
+
 const AppointmentCard = () => {
   const router = useRouter();
 
@@ -59,7 +60,6 @@ const AppointmentCard = () => {
 
   const appointments = data?.data ?? [];
   const latestAppointment = appointments[0] ?? null;
-  console.log(latestAppointment)
 
   const handleAppointmentPress = (id: number) => {
     router.push({
@@ -70,12 +70,7 @@ const AppointmentCard = () => {
 
   const renderAppointments = () => {
     if (isLoading) {
-      return (
-        <View style={style.stateContainer}>
-          <ActivityIndicator size="large" color="#DF0000" />
-          <Text style={style.stateText}>Loading appointment...</Text>
-        </View>
-      );
+      return <AppointmentCardSkeleton />;
     }
 
     if (isError) {
@@ -178,7 +173,7 @@ const AppointmentCard = () => {
           onPress={handleSeeAllAppointments}
         >
           <Text style={style.linkText}> See All </Text>
-          <AntDesign name="arrow-right" size={17} color="#DD2590" />
+          <AntDesign name="arrow-right" size={15} color="#DD2590" />
         </TouchableOpacity>
       </View>
       {renderAppointments()}

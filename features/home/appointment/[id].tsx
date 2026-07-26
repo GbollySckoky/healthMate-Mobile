@@ -1,7 +1,6 @@
 import React from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
-  ActivityIndicator,
   Alert,
   Pressable,
   View,
@@ -21,9 +20,6 @@ import EvilIcons from '@expo/vector-icons/EvilIcons';
 import { Image } from 'expo-image';
 import Feather from '@expo/vector-icons/Feather';
 import { NavHeader } from '@/components/Header/Header';
-import useDisplay from '@/lib/hooks/useDisplay';
-import ProfileModal from '@/components/modal/Profile';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { ROUTES } from '@/lib/routes';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
 import { ScreenOverFlowLayout } from '@/components/scrollView/ScreenOverFlowLayout';
@@ -32,6 +28,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { patientService } from '@/service/patientService';
 import { GetAppointment } from '@/lib/interface/get-appointments-interface';
 import { AppointmentStatusBadge } from '@/components/AppointmentStatusBadge';
+import { useModal } from '@/context/ModalContext';
+import CreateSupportTicket from './CreateSupport';
+import AppointmentDetailsSkeleton from '@/lib/components/AllAppointmentSkeleton';
 
 const getDoctorName = (doctor: GetAppointment['doctor']) => {
   if (!doctor) return 'Doctor unavailable';
@@ -77,12 +76,14 @@ const formatConsultationType = (consultationType?: string) => {
   );
 };
 
+
 const AppointmentDetails = () => {
   const { id } = useLocalSearchParams();
   const appointmentId = Array.isArray(id) ? id[0] : id;
   const queryClient = useQueryClient();
   const profile = require('@/assets/images/Mobile.png');
-  const { openModal, handleDisplay } = useDisplay();
+  // const { openModal,handleDisplay } = useDisplay();
+  const { openModal } = useModal();
   const {
     data: appointmentResponse,
     isLoading,
@@ -172,29 +173,38 @@ const AppointmentDetails = () => {
     );
   };
 
-  const options = [
-    {
-      name: 'View Profile',
-      url: appointmentDetails?.doctor?.id
-        ? `/consult-screen/consultation-deatils/${appointmentDetails.doctor.id}`
-        : ROUTES.home,
-    },
-    {
-      name: 'Chat Doctor',
-      url: ROUTES.messages,
-    },
-    {
-      name: 'Report Issue',
-      url: ROUTES.reportIssue,
-    },
-  ];
+  const handleReportIssue = () => {
+    openModal(<CreateSupportTicket appointmentId={appointmentId} />, {
+      title: 'Create Support Ticket',
+      description: '',
+      onClose: () => {},
+    });
+  };
+
+  // const options = [
+  //   {
+  //     name: 'View Profile',
+  //     url: appointmentDetails?.doctor?.id
+  //       ? `/consult-screen/consultation-deatils/${appointmentDetails.doctor.id}`
+  //       : ROUTES.home,
+  //   },
+  //   {
+  //     name: 'Chat Doctor',
+  //     url: ROUTES.messages,
+  //   },
+  //   {
+  //     name: 'Report Issue',
+  //     onPress: handleReportIssue,
+  //   },
+  // ];
+
   return (
     <SafeArea>
       <ScreenLayout>
         <NavHeader
           title="Appointment Details"
           _goBack={() => router.back()}
-          _optionFn={() => handleDisplay()}
+          // _optionFn={() => handleDisplay()}
           backIcon={
             <Entypo name="chevron-small-left" size={24} color="black" />
           }
@@ -204,12 +214,7 @@ const AppointmentDetails = () => {
         />
         <ScreenOverFlowLayout>
           <Wrapper>
-            {isLoading && (
-              <View style={styles.stateContainer}>
-                <ActivityIndicator size="large" color="#DD2590" />
-                <Text style={styles.stateText}>Loading appointment...</Text>
-              </View>
-            )}
+            {isLoading && <AppointmentDetailsSkeleton />}
 
             {isError && (
               <View style={styles.stateContainer}>
@@ -251,7 +256,9 @@ const AppointmentDetails = () => {
                 <Card>
                   <View style={styles.detailRow}>
                     <Text style={styles.CardTitle}>Status</Text>
-                    <AppointmentStatusBadge status={appointmentDetails.status} />
+                    <AppointmentStatusBadge
+                      status={appointmentDetails.status}
+                    />
                   </View>
                   <View style={styles.divider} />
                   {detailItems.map((item, index) => {
@@ -296,7 +303,7 @@ const AppointmentDetails = () => {
                   <View style={styles.divider} />
                   <Pressable
                     style={styles.actionRow}
-                    onPress={() => router.push(ROUTES.reportIssue)}
+                    onPress={handleReportIssue}
                   >
                     <View>
                       <Text style={styles.CardTitle}>Report an Issue</Text>
@@ -310,7 +317,9 @@ const AppointmentDetails = () => {
                   <Pressable
                     accessibilityRole="button"
                     accessibilityState={{ disabled: !canCancelAppointment }}
-                    disabled={!canCancelAppointment || cancelAppointment.isPending}
+                    disabled={
+                      !canCancelAppointment || cancelAppointment.isPending
+                    }
                     style={[
                       styles.actionRow,
                       (!canCancelAppointment || cancelAppointment.isPending) &&
@@ -351,10 +360,10 @@ const AppointmentDetails = () => {
             )}
           </Wrapper>
         </ScreenOverFlowLayout>
-        <ProfileModal
-          isOpen={openModal}
-          closeModal={handleDisplay}
-          options={options}
+        {/* <ProfileModal
+          // isOpen={openModal}
+          // closeModal={handleDisplay}
+          // options={options}
           icon={
             <MaterialIcons
               name="report-gmailerrorred"
@@ -363,7 +372,7 @@ const AppointmentDetails = () => {
             />
           }
           values="Report Issue"
-        />
+        /> */}
       </ScreenLayout>
     </SafeArea>
   );
@@ -431,7 +440,6 @@ const styles = StyleSheet.create({
     color: '#414651',
     fontStyle: 'normal',
     fontWeight: 400,
-    // backgroundColor: 'red'
   },
   CardTitle: {
     fontFamily: 'Lato_400Regular',
@@ -439,7 +447,6 @@ const styles = StyleSheet.create({
     color: '#414651',
     fontWeight: '500',
     marginBottom: 5,
-    // marginTop: 10
   },
   iconText: {
     marginRight: 6,
