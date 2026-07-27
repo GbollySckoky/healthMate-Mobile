@@ -1,6 +1,13 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { BarChart } from 'react-native-chart-kit';
-import { StyleSheet, View, Text, Dimensions, ActivityIndicator } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  Animated,
+  Easing,
+} from 'react-native';
 import { NavHeader } from '@/components/Header/Header';
 import { router } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
@@ -15,7 +22,6 @@ import {
   SubTitle,
   Wrapper,
 } from '@/components/typography/Typography';
-import { sleepLogHistory } from '@/lib/data';
 import { Button } from '@/components/button/Button';
 import SleepModal from './_components/SleepModal';
 import { useModal } from '@/context/ModalContext';
@@ -65,7 +71,6 @@ const getSleepStatus = (sleepQuality?: string) => {
   return 'Logged';
 };
 
-
 const screenWidth = Dimensions.get('window').width;
 
 const datas = {
@@ -82,16 +87,16 @@ const chartConfig = {
   backgroundGradientFrom: '#ffffff',
   backgroundGradientTo: '#ffffff',
   decimalPlaces: 0,
-  color: (opacity = 1) => `rgba(185, 85, 45, ${opacity})`, // Orange-red color
-  labelColor: (opacity = 1) => `rgba(128, 128, 128, ${opacity})`, // Gray labels
+  color: (opacity = 1) => `rgba(185, 85, 45, ${opacity})`,
+  labelColor: (opacity = 1) => `rgba(128, 128, 128, ${opacity})`,
   style: {
     borderRadius: 8,
   },
   barPercentage: 0.7,
-  fillShadowGradient: '#B9552D', // Orange-red fill
+  fillShadowGradient: '#B9552D',
   fillShadowGradientOpacity: 1,
   propsForBackgroundLines: {
-    strokeDasharray: '5,5', // Dashed grid lines
+    strokeDasharray: '5,5',
     stroke: '#e0e0e0',
     strokeWidth: 1,
   },
@@ -101,33 +106,125 @@ const chartConfig = {
   },
 };
 
+// ---------- Skeleton primitives ----------
+
+type SkeletonBoxProps = {
+  width: number | string;
+  height: number;
+  borderRadius?: number;
+  style?: object;
+};
+
+const SkeletonBox = ({ width, height, borderRadius = 6, style }: SkeletonBoxProps) => {
+  const opacity = useRef(new Animated.Value(0.3)).current;
+
+  useEffect(() => {
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(opacity, {
+          toValue: 1,
+          duration: 700,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacity, {
+          toValue: 0.3,
+          duration: 700,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [opacity]);
+
+  return (
+    <Animated.View
+      style={[
+        { width, height, borderRadius, backgroundColor: '#E5E7EB', opacity },
+        style,
+      ]}
+    />
+  );
+};
+
+const SleepLogSkeletonItem = ({ isLastItem }: { isLastItem: boolean }) => (
+  <View
+    style={[styles.enhancedItemContainer, isLastItem && styles.lastItem]}
+  >
+    <View style={styles.flex}>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <SkeletonBox width={36} height={36} borderRadius={8} />
+        <View style={{ paddingLeft: 16 }}>
+          <SkeletonBox width={90} height={14} style={{ marginBottom: 6 }} />
+          <SkeletonBox width={130} height={12} />
+        </View>
+      </View>
+      <SkeletonBox width={70} height={28} borderRadius={30} />
+    </View>
+  </View>
+);
+
+const SleepSkeleton = () => (
+  <Wrapper>
+    <DetailsContainer>
+      <SkeletonBox
+        width={48}
+        height={48}
+        borderRadius={100}
+        style={{ marginBottom: 10 }}
+      />
+      <SkeletonBox width={100} height={12} style={{ marginBottom: 8 }} />
+      <SkeletonBox width={140} height={22} style={{ marginBottom: 10 }} />
+      <SkeletonBox width={180} height={12} style={{ marginBottom: 10 }} />
+      <SkeletonBox width={70} height={20} borderRadius={50} />
+    </DetailsContainer>
+
+    <View style={styles.container}>
+      <View style={styles.chartContainer}>
+        <SkeletonBox width={130} height={14} style={{ marginBottom: 15 }} />
+        <SkeletonBox
+          width={screenWidth - 45}
+          height={300}
+          borderRadius={8}
+        />
+      </View>
+    </View>
+
+    <View style={{ marginBottom: 40 }}>
+      <Card>
+        <SkeletonBox width={160} height={14} style={{ marginBottom: 15 }} />
+        {Array.from({ length: 4 }).map((_, index) => (
+          <SleepLogSkeletonItem key={index} isLastItem={index === 3} />
+        ))}
+      </Card>
+    </View>
+  </Wrapper>
+);
+
+// ---------- Main screen ----------
+
 export default function MyBarChart() {
   const { openModal } = useModal();
-   const {data, isLoading, isError, error} = useQuery({
-    queryKey: ['sleep'],
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['getSleep'],
     queryFn: () => patientService.getSleep(),
-  })
-  console.log('Data', data)
+  });
+
   const sleepReadings: SleepReading[] = data?.data ?? [];
   const latestSleep = sleepReadings[0];
   const latestSleepQuality = latestSleep?.sleep?.selectedMood;
   const latestSleepStatus = latestSleep?.status ?? getSleepStatus(latestSleepQuality);
 
-  if(isLoading){
-      return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
-      )
-  }
-  
   if (isError as unknown) {
-    return(
-       <Text className="h-full flex items-center justify-center text-sm text-red-500">
+    return (
+      <Text className="h-full flex items-center justify-center text-sm text-red-500">
         {(error as Error).message}
       </Text>
-    )
+    );
   }
+
   return (
     <SafeArea>
       <ScreenLayout>
@@ -138,119 +235,122 @@ export default function MyBarChart() {
           text="Track your readings to monitor your heart health"
         />
         <ScreenOverFlowLayout>
-          <Wrapper>
-            <DetailsContainer>
-              <FontAwesome
-                name="moon-o"
-                size={24}
-                color="#C11574"
-                style={styles.icon}
-              />
-              <CardText>Today’s sleep</CardText>
-              <CardAmount>{latestSleepQuality ?? 'No sleep logged'}</CardAmount>
-              <CardText>
-                Recorded on:{' '}
-                {formatReadingDate(latestSleep?.recordedAt ?? latestSleep?.createdAt)}
-              </CardText>
-              <Text style={styles.colorText}>{latestSleepStatus}</Text>
-            </DetailsContainer>
-            <View style={styles.container}>
-              <View style={styles.chartContainer}>
-                <SubTitle>Sleep Trends</SubTitle>
-                <BarChart
-                  style={styles.chart}
-                  data={datas}
-                  width={screenWidth - 45}
-                  height={300}
-                  yAxisLabel=""
-                  yAxisSuffix=""
-                  chartConfig={chartConfig}
-                  verticalLabelRotation={0}
-                  fromZero={true}
-                  showValuesOnTopOfBars={false}
-                  withHorizontalLabels={true}
-                  withVerticalLabels={true}
-                  segments={5}
+          {isLoading ? (
+            <SleepSkeleton />
+          ) : (
+            <Wrapper>
+              <DetailsContainer>
+                <FontAwesome
+                  name="moon-o"
+                  size={24}
+                  color="#C11574"
+                  style={styles.icon}
                 />
+                <CardText>Toda&apos;s sleep</CardText>
+                <CardAmount>{latestSleepQuality ?? 'No sleep logged'}</CardAmount>
+                <CardText>
+                  Recorded on:{' '}
+                  {formatReadingDate(latestSleep?.recordedAt ?? latestSleep?.createdAt)}
+                </CardText>
+                <Text style={styles.colorText}>{latestSleepStatus}</Text>
+              </DetailsContainer>
+              <View style={styles.container}>
+                <View style={styles.chartContainer}>
+                  <SubTitle>Sleep Trends</SubTitle>
+                  <BarChart
+                    style={styles.chart}
+                    data={datas}
+                    width={screenWidth - 45}
+                    height={300}
+                    yAxisLabel=""
+                    yAxisSuffix=""
+                    chartConfig={chartConfig}
+                    verticalLabelRotation={0}
+                    fromZero={true}
+                    showValuesOnTopOfBars={false}
+                    withHorizontalLabels={true}
+                    withVerticalLabels={true}
+                    segments={5}
+                  />
+                </View>
               </View>
-            </View>
-            {/* sleep log */}
-            <View style={{ marginBottom: 40 }}>
-              <Card>
-                <SubTitle>Sleep Log History</SubTitle>
-                {sleepReadings.map((sleep, index) => {
-                  const sleepQuality = sleep.sleep?.selectedMood;
-                  const status = sleep.status ?? getSleepStatus(sleepQuality);
-                  const isLastItem = index === sleepReadings.length - 1;
-                  return (
-                    <View
-                      key={sleep.id}
-                      style={[
-                        styles.enhancedItemContainer,
-                        isLastItem && styles.lastItem,
-                      ]}
-                    >
-                      <View style={styles.flex}>
-                        <View
-                          style={{ flexDirection: 'row', alignItems: 'center' }}
-                        >
-                         {sleep.sleep?.selectedEmoji && (
+              <View style={{ marginBottom: 40 }}>
+                <Card>
+                  <SubTitle>Sleep Log History</SubTitle>
+                  {sleepReadings.map((sleep, index) => {
+                    const sleepQuality = sleep.sleep?.selectedMood;
+                    const status = sleep.status ?? getSleepStatus(sleepQuality);
+                    const isLastItem = index === sleepReadings.length - 1;
+                    return (
+                      <View
+                        key={sleep.id}
+                        style={[
+                          styles.enhancedItemContainer,
+                          isLastItem && styles.lastItem,
+                        ]}
+                      >
+                        <View style={styles.flex}>
+                          <View
+                            style={{ flexDirection: 'row', alignItems: 'center' }}
+                          >
+                            {sleep.sleep?.selectedEmoji && (
+                              <Text
+                                style={{
+                                  borderColor: '#f2f2f2',
+                                  borderWidth: 1,
+                                  padding: 6,
+                                  borderRadius: 5,
+                                }}
+                              >
+                                {' '}
+                                {getSleepEmoji(sleepQuality)}{' '}
+                              </Text>
+                            )}
+                            <View style={{ paddingLeft: 16 }}>
+                              <Text
+                                style={{
+                                  fontWeight: '500',
+                                  fontSize: 14,
+                                  color: '#414651',
+                                  paddingTop: 2,
+                                  fontFamily: 'Lato_400Regular',
+                                }}
+                              >
+                                {sleepQuality ?? 'No quality'}
+                              </Text>
+                              <Text
+                                style={{
+                                  fontWeight: '400',
+                                  fontSize: 12,
+                                  color: '#717680',
+                                  paddingTop: 2,
+                                  fontFamily: 'Lato_400Regular',
+                                }}
+                              >
+                                {formatReadingDate(sleep.recordedAt ?? sleep.createdAt)}
+                              </Text>
+                            </View>
+                          </View>
                           <Text
                             style={{
-                              borderColor: '#f2f2f2',
-                              borderWidth: 1,
-                              padding: 6,
-                              borderRadius: 5,
+                              backgroundColor: `${(status === 'Excellent' && '#ECFDF3') || (status === 'Average' && '#FFFAEB') || (status === 'Low' && '#FEF3F2') || (status === 'Logged' && '#F4F3FF')}`,
+                              color: `${(status === 'Excellent' && '#027A48') || (status === 'Average' && '#B54708') || (status === 'Low' && '#B42318') || (status === 'Logged' && '#5924DC')}`,
+                              paddingHorizontal: 15,
+                              paddingVertical: 7,
+                              borderRadius: 30,
+                              fontFamily: 'Inter_500Medium',
                             }}
                           >
-                            {' '}
-                            {getSleepEmoji(sleepQuality)}{' '}
+                            {status}
                           </Text>
-                          )}
-                          <View style={{ paddingLeft: 16 }}>
-                            <Text
-                              style={{
-                                fontWeight: '500',
-                                fontSize: 14,
-                                color: '#414651',
-                                paddingTop: 2,
-                                fontFamily: 'Lato_400Regular',
-                              }}
-                            >
-                              {sleepQuality ?? 'No quality'}
-                            </Text>
-                            <Text
-                              style={{
-                                fontWeight: '400',
-                                fontSize: 12,
-                                color: '#717680',
-                                paddingTop: 2,
-                                fontFamily: 'Lato_400Regular',
-                              }}
-                            >
-                              {formatReadingDate(sleep.recordedAt ?? sleep.createdAt)}
-                            </Text>
-                          </View>
                         </View>
-                        <Text
-                          style={{
-                            backgroundColor: `${(status === 'Excellent' && '#ECFDF3') || (status === 'Average' && '#FFFAEB') || (status === 'Low' && '#FEF3F2') || (status === 'Logged' && '#F4F3FF')}`,
-                            color: `${(status === 'Excellent' && '#027A48') || (status === 'Average' && '#B54708') || (status === 'Low' && '#B42318') || (status === 'Logged' && '#5924DC')}`,
-                            paddingHorizontal: 15,
-                            paddingVertical: 7,
-                            borderRadius: 30,
-                            fontFamily: 'Inter_500Medium',
-                          }}
-                        >
-                          {status}
-                        </Text>
                       </View>
-                    </View>
-                  );
-                })}
-              </Card>
-            </View>
-          </Wrapper>
+                    );
+                  })}
+                </Card>
+              </View>
+            </Wrapper>
+          )}
         </ScreenOverFlowLayout>
         <Button
           _fn={() =>
@@ -258,7 +358,6 @@ export default function MyBarChart() {
               title: 'Log Your Sleep',
               description: '',
               onClose: () => {},
-              // btnText: 'Save Reading'
             })
           }
         >
@@ -294,12 +393,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter_500Medium',
     marginTop: 7,
   },
-  // container: {
-  //   flex: 1,
-  //   backgroundColor: '#f5f5f5',
-  //   padding: 20,
-  //   justifyContent: 'center'
-  // },
   chartContainer: {
     backgroundColor: 'white',
     borderRadius: 12,
@@ -327,7 +420,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   lastItem: {
-    borderBottomWidth: 0, // Remove border from last item
+    borderBottomWidth: 0,
   },
   enhancedItemContainer: {
     paddingTop: 5,
@@ -339,6 +432,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 18,
-    // backgroundColor: 'red'
   },
 });

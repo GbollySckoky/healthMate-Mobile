@@ -9,6 +9,7 @@ import { settingsData } from '@/lib/data';
 import { Text, View, StyleSheet, Pressable } from 'react-native';
 import { colors } from '@/lib/colors';
 import useToggle from '@/lib/hooks/useToggle';
+import SafeArea from '@/components/safeAreaView/SafeAreaView';
 
 const SettingsPage = () => {
   const router = useRouter();
@@ -22,112 +23,114 @@ const SettingsPage = () => {
   );
 
   return (
-    <ScreenLayout>
-      <NavHeader
-        title="Settings"
-        _goBack={() => router.back()}
-        backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
-      />
-      <ScreenOverFlowLayout>
-        <Wrapper>
-          <View>
-            <Text style={styles.lato}>Account Settings</Text>
-            <Card>
-              {settingsData.slice(0, 2).map((setting, index) => {
-                const { icon, title, id, url, rightIcon } = setting;
-                const isLastItem = index === settingsData.length - 1;
-                return (
-                  <View
-                    key={index}
-                    style={[
-                      styles.enhancedItemContainer,
-                      isLastItem && styles.lastItem,
-                    ]}
-                  >
-                    <View style={styles.Flex}>
-                      <View
-                        style={{ flexDirection: 'row', alignItems: 'center' }}
-                      >
-                        <Text>{icon}</Text>
-                        <Text style={{ marginLeft: 7 }}>{title}</Text>
+    <SafeArea>
+      <ScreenLayout>
+        <NavHeader
+          title="Settings"
+          _goBack={() => router.back()}
+          backIcon={<Entypo name="chevron-small-left" size={24} color="black" />}
+        />
+        <ScreenOverFlowLayout>
+          <Wrapper>
+            <View>
+              <Text style={styles.lato}>Account Settings</Text>
+              <Card>
+                {settingsData.slice(0, 2).map((setting, index) => {
+                  const { icon, title, id, url, rightIcon } = setting;
+                  const isLastItem = index === settingsData.length - 1;
+                  return (
+                    <View
+                      key={index}
+                      style={[
+                        styles.enhancedItemContainer,
+                        isLastItem && styles.lastItem,
+                      ]}
+                    >
+                      <View style={styles.Flex}>
+                        <View
+                          style={{ flexDirection: 'row', alignItems: 'center' }}
+                        >
+                          <Text>{icon}</Text>
+                          <Text style={{ marginLeft: 7 }}>{title}</Text>
+                        </View>
+                        {url && (
+                          <Pressable onPress={() => handlePress(url)}>
+                            {rightIcon}
+                          </Pressable>
+                        )}
                       </View>
-                      {url && (
-                        <Pressable onPress={() => handlePress(url)}>
-                          {rightIcon}
+                      {!isLastItem && <View style={styles.divider} />}
+                    </View>
+                  );
+                })}
+              </Card>
+            </View>
+            {/* NOTIFICATION */}
+            <View style={{ marginTop: 25 }}>
+              <Text style={styles.lato}>Notifications</Text>
+              <Card>
+                {settingsData.slice(2, 4).map((setting, index) => {
+                  const { icon, title, id, toggleOn, toggleOff } = setting;
+                  const isLastItem = index === settingsData.length - 1;
+                  return (
+                    <View
+                      key={id}
+                      style={[
+                        styles.enhancedItemContainer,
+                        isLastItem && styles.lastItem,
+                      ]}
+                    >
+                      <View style={styles.Flex}>
+                        <View
+                          style={{ flexDirection: 'row', alignItems: 'center' }}
+                        >
+                          <Text>{icon}</Text>
+                          <Text style={styles.latoText}>{title}</Text>
+                        </View>
+                        <Pressable onPress={() => handleToggle(id)}>
+                          {isToggle === id ? toggleOn : toggleOff}
                         </Pressable>
-                      )}
-                    </View>
-                    {!isLastItem && <View style={styles.divider} />}
-                  </View>
-                );
-              })}
-            </Card>
-          </View>
-          {/* NOTIFICATION */}
-          <View style={{ marginTop: 25 }}>
-            <Text style={styles.lato}>Notifications</Text>
-            <Card>
-              {settingsData.slice(2, 4).map((setting, index) => {
-                const { icon, title, id, toggleOn, toggleOff } = setting;
-                const isLastItem = index === settingsData.length - 1;
-                return (
-                  <View
-                    key={id}
-                    style={[
-                      styles.enhancedItemContainer,
-                      isLastItem && styles.lastItem,
-                    ]}
-                  >
-                    <View style={styles.Flex}>
-                      <View
-                        style={{ flexDirection: 'row', alignItems: 'center' }}
-                      >
-                        <Text>{icon}</Text>
-                        <Text style={styles.latoText}>{title}</Text>
                       </View>
-                      <Pressable onPress={() => handleToggle(id)}>
-                        {isToggle === id ? toggleOn : toggleOff}
-                      </Pressable>
+                      {!isLastItem && <View style={styles.divider} />}
                     </View>
-                    {!isLastItem && <View style={styles.divider} />}
-                  </View>
-                );
-              })}
-            </Card>
-          </View>
-          {/* Help & Support */}
-          <View style={{ marginTop: 25 }}>
-            <Text style={styles.lato}>Help & Support</Text>
-            <Card>
-              {settingsData.slice(4, 6).map((setting, index) => {
-                const { icon, title, id, rightIcon } = setting;
-                const isLastItem = index === settingsData.length - 1;
-                return (
-                  <View
-                    key={id}
-                    style={[
-                      styles.enhancedItemContainer,
-                      isLastItem && styles.lastItem,
-                    ]}
-                  >
-                    <View style={styles.Flex}>
-                      <View
-                        style={{ flexDirection: 'row', alignItems: 'center' }}
-                      >
-                        <Text>{icon}</Text>
-                        <Text style={styles.latoText}>{title}</Text>
+                  );
+                })}
+              </Card>
+            </View>
+            {/* Help & Support */}
+            <View style={{ marginTop: 25 }}>
+              <Text style={styles.lato}>Help & Support</Text>
+              <Card>
+                {settingsData.slice(4, 6).map((setting, index) => {
+                  const { icon, title, id, rightIcon } = setting;
+                  const isLastItem = index === settingsData.length - 1;
+                  return (
+                    <View
+                      key={id}
+                      style={[
+                        styles.enhancedItemContainer,
+                        isLastItem && styles.lastItem,
+                      ]}
+                    >
+                      <View style={styles.Flex}>
+                        <View
+                          style={{ flexDirection: 'row', alignItems: 'center' }}
+                        >
+                          <Text>{icon}</Text>
+                          <Text style={styles.latoText}>{title}</Text>
+                        </View>
+                        <Text>{rightIcon}</Text>
                       </View>
-                      <Text>{rightIcon}</Text>
+                      {!isLastItem && <View style={styles.divider} />}
                     </View>
-                    {!isLastItem && <View style={styles.divider} />}
-                  </View>
-                );
-              })}
-            </Card>
-          </View>
-        </Wrapper>
-      </ScreenOverFlowLayout>
-    </ScreenLayout>
+                  );
+                })}
+              </Card>
+            </View>
+          </Wrapper>
+        </ScreenOverFlowLayout>
+      </ScreenLayout>
+    </SafeArea>
   );
 };
 

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Pressable,
   Keyboard,
+  Image
 } from 'react-native';
 import { Wrapper } from '@/components/typography/Typography';
 import { colors } from '@/lib/colors';
@@ -13,7 +14,6 @@ import EmailInput from '@/components/Input/EmailInput';
 import PasswordInput from '@/components/Input/PasswordInput';
 import Feather from '@expo/vector-icons/Feather';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import { Image } from 'react-native';
 import { router } from 'expo-router';
 import { ROUTES } from '@/lib/routes';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
@@ -200,7 +200,7 @@ const LoginPage = () => {
 
         {/* Sign Up Link */}
         <View style={styles.signUpContainer}>
-          <Text style={styles.signUpText}>Don't have an account? </Text>
+          <Text style={styles.signUpText}>Don&apos;t have an account? </Text>
           <TouchableOpacity onPress={() => router.push(ROUTES.signup)}>
             <Text style={styles.signUpLink}>Sign Up</Text>
           </TouchableOpacity>

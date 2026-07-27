@@ -12,6 +12,7 @@ import ProfileModal from '@/components/modal/Profile';
 import { ScreenLayout } from '@/components/ScreenLayout/ScreenLayout';
 import { ROUTES } from '@/lib/routes';
 import { useRouter } from 'expo-router';
+import useGetMe from '@/lib/hooks/useGetMe';
 
 const HomePage = () => {
   const { openModal, handleDisplay } = useDisplay();
@@ -38,13 +39,14 @@ const HomePage = () => {
     if (hour < 17) return 'Good Afternoon';
     return 'Good Evening';
   };
-
+ 
+  const {patient} = useGetMe()
   return (
     <ScreenLayout>
       {/* Header Section */}
       <View style={styles.headerContainer}>
         <View>
-          <Title>{getGreeting()}, Sarah 👋</Title>
+          <Title>{getGreeting()}, {patient?.firstName || ''} 👋</Title>
           <Text style={styles.subGreeting}>
             Let&apos;s take a step toward a healthier you today.
           </Text>
@@ -59,19 +61,19 @@ const HomePage = () => {
           >
             <MaterialIcons
               name="notifications-none"
-              size={22}
+              size={26}
               color="#717680"
             />
           </Pressable>
 
-          <Pressable
+          {/* <Pressable
             onPress={handleDisplay}
             style={styles.profileButton}
             accessibilityLabel="Open profile menu"
             accessibilityRole="button"
           >
             <Text style={styles.profileInitial}>S</Text>
-          </Pressable>
+          </Pressable> */}
         </View>
       </View>
 

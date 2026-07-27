@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import CustomCalendar from '@/components/calendar/CustomCalendar';
-import { Pressable, Text, View, StyleSheet, Keyboard } from 'react-native';
+import { Pressable, Text, View, StyleSheet } from 'react-native';
 import { sleepExperienceData, sleepData } from '@/lib/data';
 import DateInput from '@/components/Input/DateInput';
 import { SubmitButton } from '@/components/typography/Typography';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Sleep } from '@/lib/interface/sleep';
-import { AxiosError } from 'axios';
+// import { AxiosError } from 'axios';
 import { patientService } from '@/service/patientService';
 import { useModal } from '@/context/ModalContext';
+import Toast from 'react-native-toast-message';
 
 interface SleepQuality {
   selectedMood: string;
@@ -32,6 +33,7 @@ const SleepModal = () => {
   const [selectDatePicker, setSelectDatePicker] = useState(false);
   const [selectEmojiValue, setSelectEmojiValue] = useState('');
   const { closeModal } = useModal();
+  const queryClient = useQueryClient();
   console.log(inputValue);
 
   const { date } = sleepData;
@@ -66,15 +68,20 @@ const SleepModal = () => {
 
   const mutation = useMutation({
     mutationFn: (payload: Sleep) => patientService.createSleep(payload),
-    onSuccess: (response) => {
-      console.log(response)
-      closeModal()
-    },
-    onError:(error: AxiosError) => {
-      console.log("Error!!",error)
-        console.log("STATUS:", error.response?.status);
-  console.log("ERROR DATA:", error.response?.data);
-    }
+   onSuccess: async () => {
+    Toast.show({
+      type: 'success',
+      text1: 'Mood created successfully',
+    });
+    await queryClient.invalidateQueries({ queryKey: ['getSleep'] });
+    closeModal()
+  },
+  onError:(error: any) => {
+    Toast.show({
+      type: 'error',
+      text1: error.response.data.message,
+    });
+  }
   })
 
   const handleCreateSleep = async () => {
