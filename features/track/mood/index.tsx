@@ -72,7 +72,7 @@ const getMoodStatus = (mood?: string) => {
 const Mood = () => {
   const { openModal } = useModal();
   const {data, isLoading, isError, error} = useQuery({
-    queryKey: ['mood'],
+    queryKey: ['getmood'],
     queryFn: () => patientService.getMood(),
   })
   console.log("Data", data)

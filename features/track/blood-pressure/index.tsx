@@ -15,11 +15,12 @@ import {
   StyleSheet,
   Text,
   View,
-  ActivityIndicator,
   useWindowDimensions,
+  Animated,
+  Easing,
 } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/button/Button';
 import BloodPressureModal from './BloodPressureModal';
 import { useModal } from '@/context/ModalContext';
@@ -45,6 +46,121 @@ const formatReadingDate = (date?: string) => {
   return `${readingDate.toLocaleDateString()} at ${readingDate.toLocaleTimeString()}`;
 };
 
+// ---------- Skeleton primitives ----------
+
+type SkeletonBoxProps = {
+  width: number | string;
+  height: number;
+  borderRadius?: number;
+  style?: object;
+};
+
+const SkeletonBox = ({ width, height, borderRadius = 6, style }: SkeletonBoxProps) => {
+  const opacity = useRef(new Animated.Value(0.3)).current;
+
+  useEffect(() => {
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(opacity, {
+          toValue: 1,
+          duration: 700,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacity, {
+          toValue: 0.3,
+          duration: 700,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [opacity]);
+
+  return (
+    <Animated.View
+      style={[
+        { width, height, borderRadius, backgroundColor: '#E5E7EB', opacity },
+        style,
+      ]}
+    />
+  );
+};
+
+const ReadingSkeletonItem = ({ isLastItem }: { isLastItem: boolean }) => (
+  <View
+    style={[styles.enhancedItemContainer, isLastItem && styles.lastItem]}
+  >
+    <View style={styles.flex}>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <SkeletonBox width={38} height={38} borderRadius={8} />
+        <View style={{ paddingLeft: 16 }}>
+          <SkeletonBox width={100} height={14} style={{ marginBottom: 6 }} />
+          <SkeletonBox width={130} height={12} />
+        </View>
+      </View>
+    </View>
+  </View>
+);
+
+const BloodPressureSkeleton = ({
+  chartWidth,
+  chartHeight,
+}: {
+  chartWidth: number;
+  chartHeight: number;
+}) => (
+  <View style={styles.contentWrapper}>
+    <DetailsContainer>
+      <SkeletonBox
+        width={48}
+        height={48}
+        borderRadius={100}
+        style={{ marginBottom: 10 }}
+      />
+      <SkeletonBox width={110} height={12} style={{ marginBottom: 8 }} />
+      <SkeletonBox width={130} height={22} style={{ marginBottom: 10 }} />
+      <SkeletonBox width={180} height={12} style={{ marginBottom: 10 }} />
+      <SkeletonBox width={70} height={20} borderRadius={50} />
+    </DetailsContainer>
+
+    {/* Chart placeholder */}
+    <View style={styles.chartContainer}>
+      <SubTitle>BP Trends</SubTitle>
+      <SkeletonBox
+        width={chartWidth}
+        height={chartHeight}
+        borderRadius={8}
+        style={{ marginVertical: 8, alignSelf: 'center' }}
+      />
+      <View style={styles.legend}>
+        <View style={styles.legendItem}>
+          <SkeletonBox width={12} height={12} borderRadius={6} style={{ marginRight: 8 }} />
+          <SkeletonBox width={50} height={12} />
+        </View>
+        <View style={styles.legendItem}>
+          <SkeletonBox width={12} height={12} borderRadius={6} style={{ marginRight: 8 }} />
+          <SkeletonBox width={60} height={12} />
+        </View>
+      </View>
+    </View>
+
+    {/* Recent readings placeholder */}
+    <View style={{ marginBottom: 40 }}>
+      <Card>
+        <SubTitle>Recent Readings</SubTitle>
+        {Array.from({ length: 4 }).map((_, index) => (
+          <ReadingSkeletonItem key={index} isLastItem={index === 3} />
+        ))}
+      </Card>
+    </View>
+  </View>
+);
+
+// ---------- Main screen ----------
+
 const BloodPressure = () => {
   const { openModal } = useModal();
   const { width: screenWidth } = useWindowDimensions();
@@ -61,25 +177,25 @@ const BloodPressure = () => {
     { date: 'Jun 26', systolic: 140, diastolic: 82 },
     { date: 'Jun 27', systolic: 140, diastolic: 82 },
   ]);
-   const {data, isLoading, isError, error} = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ['bloodPressure'],
     queryFn: () => patientService.getBloodPressure(),
-  })
-  console.log("DATA!!", data)
-  const bloodPressures: BloodPressureReading[] = data?.data ?? []
+  });
+
+  const bloodPressures: BloodPressureReading[] = data?.data ?? [];
   const latestBloodPressure = bloodPressures[0];
-  // Prepare chart data
+
   const chartData = {
-    labels: readings.map((r) => r.date.split(' ')[1]), // Just day numbers
+    labels: readings.map((r) => r.date.split(' ')[1]),
     datasets: [
       {
         data: readings.map((r) => r.systolic),
-        color: (opacity = 1) => `rgba(239, 68, 68, ${opacity})`, // Red for systolic
+        color: (opacity = 1) => `rgba(239, 68, 68, ${opacity})`,
         strokeWidth: 3,
       },
       {
         data: readings.map((r) => r.diastolic),
-        color: (opacity = 1) => `rgba(59, 130, 246, ${opacity})`, // Blue for diastolic
+        color: (opacity = 1) => `rgba(59, 130, 246, ${opacity})`,
         strokeWidth: 3,
       },
     ],
@@ -106,24 +222,14 @@ const BloodPressure = () => {
     },
   };
 
-   if(isLoading){
-      return (
-      <SafeArea>
-        <View style={styles.stateContainer}>
-        <ActivityIndicator size="large" />
-        </View>
-      </SafeArea>
-      )
-  }
-
   if (isError as unknown) {
-    return(
+    return (
       <SafeArea>
         <View style={styles.stateContainer}>
           <Text style={styles.errorText}>{(error as Error).message}</Text>
         </View>
       </SafeArea>
-    )
+    );
   }
 
   return (
@@ -136,135 +242,118 @@ const BloodPressure = () => {
           text="Track your readings to monitor your heart health"
         />
         <ScreenOverFlowLayout>
-          <View style={styles.contentWrapper}>
-            <DetailsContainer>
-              <AntDesign
-                name="heart"
-                size={24}
-                color="#DF0000"
-                style={styles.icon}
-              />
-              <CardText>Today’s Readings</CardText>
-              <CardAmount>
-                {latestBloodPressure
-                  ? `${latestBloodPressure.systolic}/${latestBloodPressure.diastolic} mmHg`
-                  : '--/-- mmHg'}
-              </CardAmount>
-              <CardText>
-                Recorded on:{' '}
-                {formatReadingDate(
-                  latestBloodPressure?.recordedAt ?? latestBloodPressure?.createdAt
-                )}
-              </CardText>
-              <Text style={styles.colorText}>Normal</Text>
-            </DetailsContainer>
-            {/* Line Chart */}
-            <View style={styles.chartContainer}>
-              <SubTitle>BP Trends</SubTitle>
-              <LineChart
-                data={chartData}
-                width={chartWidth}
-                height={chartHeight}
-                chartConfig={chartConfig}
-                bezier
-                style={styles.chart}
-                withInnerLines={true}
-                withOuterLines={false}
-                yAxisSuffix=""
-                yAxisInterval={1}
-                fromZero={false}
-                // color={true}
-                segments={6}
-              />
+          {isLoading ? (
+            <BloodPressureSkeleton chartWidth={chartWidth} chartHeight={chartHeight} />
+          ) : (
+            <View style={styles.contentWrapper}>
+              <DetailsContainer>
+                <AntDesign
+                  name="heart"
+                  size={24}
+                  color="#DF0000"
+                  style={styles.icon}
+                />
+                <CardText>Today&apos;s Readings</CardText>
+                <CardAmount>
+                  {latestBloodPressure
+                    ? `${latestBloodPressure.systolic}/${latestBloodPressure.diastolic} mmHg`
+                    : '--/-- mmHg'}
+                </CardAmount>
+                <CardText>
+                  Recorded on:{' '}
+                  {formatReadingDate(
+                    latestBloodPressure?.recordedAt ?? latestBloodPressure?.createdAt
+                  )}
+                </CardText>
+                <Text style={styles.colorText}>Normal</Text>
+              </DetailsContainer>
 
-              {/* Legend */}
-              <View style={styles.legend}>
-                <View style={styles.legendItem}>
-                  <View
-                    style={[styles.legendDot, { backgroundColor: '#EF4444' }]}
-                  />
-                  <Text style={styles.legendText}>Systolic</Text>
-                </View>
-                <View style={styles.legendItem}>
-                  <View
-                    style={[styles.legendDot, { backgroundColor: '#3B82F6' }]}
-                  />
-                  <Text style={styles.legendText}>Diastolic</Text>
+              <View style={styles.chartContainer}>
+                <SubTitle>BP Trends</SubTitle>
+                <LineChart
+                  data={chartData}
+                  width={chartWidth}
+                  height={chartHeight}
+                  chartConfig={chartConfig}
+                  bezier
+                  style={styles.chart}
+                  withInnerLines={true}
+                  withOuterLines={false}
+                  yAxisSuffix=""
+                  yAxisInterval={1}
+                  fromZero={false}
+                  segments={6}
+                />
+                <View style={styles.legend}>
+                  <View style={styles.legendItem}>
+                    <View style={[styles.legendDot, { backgroundColor: '#EF4444' }]} />
+                    <Text style={styles.legendText}>Systolic</Text>
+                  </View>
+                  <View style={styles.legendItem}>
+                    <View style={[styles.legendDot, { backgroundColor: '#3B82F6' }]} />
+                    <Text style={styles.legendText}>Diastolic</Text>
+                  </View>
                 </View>
               </View>
-            </View>
-            {/* Recnnt Readings */}
-            <View style={{ marginBottom: 40 }}>
-              <Card>
-                <SubTitle>Recent Readings</SubTitle>
-                {bloodPressures.map((recent, index) => {
-                  const isLastItem = index === bloodPressures.length - 1;
-                  return (
-                    <View
-                      key={recent.id}
-                      style={[
-                        styles.enhancedItemContainer,
-                        isLastItem && styles.lastItem,
-                      ]}
-                    >
-                      <View style={styles.flex}>
-                        <View
-                          style={{ flexDirection: 'row', alignItems: 'center' }}
-                        >
-                          <Text
-                            style={{
-                              borderColor: '#f2f2f2',
-                              borderWidth: 1,
-                              padding: 6,
-                              borderRadius: 5,
-                            }}
-                          >
-                            <FontAwesome name="stethoscope" size={24} color="#DF0000" />
-                          </Text>
-                          <View style={{ paddingLeft: 16 }}>
+
+              <View style={{ marginBottom: 40 }}>
+                <Card>
+                  <SubTitle>Recent Readings</SubTitle>
+                  {bloodPressures.map((recent, index) => {
+                    const isLastItem = index === bloodPressures.length - 1;
+                    return (
+                      <View
+                        key={recent.id}
+                        style={[
+                          styles.enhancedItemContainer,
+                          isLastItem && styles.lastItem,
+                        ]}
+                      >
+                        <View style={styles.flex}>
+                          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <Text
                               style={{
-                                fontWeight: '500',
-                                fontSize: 14,
-                                color: '#414651',
-                                paddingTop: 2,
-                                fontFamily: 'Lato_400Regular',
+                                borderColor: '#f2f2f2',
+                                borderWidth: 1,
+                                padding: 6,
+                                borderRadius: 5,
                               }}
                             >
-                              {recent.systolic}/{recent.diastolic} mmHg
+                              <FontAwesome name="stethoscope" size={24} color="#DF0000" />
                             </Text>
-                            <Text
-                              style={{
-                                fontWeight: '400',
-                                fontSize: 12,
-                                color: '#717680',
-                                paddingTop: 2,
-                                fontFamily: 'Lato_400Regular',
-                              }}
-                            >
-                              {formatReadingDate(recent.recordedAt ?? recent.createdAt)}
-                            </Text>
+                            <View style={{ paddingLeft: 16 }}>
+                              <Text
+                                style={{
+                                  fontWeight: '500',
+                                  fontSize: 14,
+                                  color: '#414651',
+                                  paddingTop: 2,
+                                  fontFamily: 'Lato_400Regular',
+                                }}
+                              >
+                                {recent.systolic}/{recent.diastolic} mmHg
+                              </Text>
+                              <Text
+                                style={{
+                                  fontWeight: '400',
+                                  fontSize: 12,
+                                  color: '#717680',
+                                  paddingTop: 2,
+                                  fontFamily: 'Lato_400Regular',
+                                }}
+                              >
+                                {formatReadingDate(recent.recordedAt ?? recent.createdAt)}
+                              </Text>
+                            </View>
                           </View>
                         </View>
-                        {/* <Text
-                          style={{
-                            backgroundColor: `${(status === 'Normal' && '#ECFDF3') || (status === 'High' && '#FEF3F2')}`,
-                            color: `${(status === 'Normal' && '#027A48') || (status === 'High' && '#B42318')}`,
-                            paddingHorizontal: 15,
-                            paddingVertical: 7,
-                            borderRadius: 30,
-                            fontFamily: 'Inter_500Medium',
-                          }}
-                        >
-                          {status}
-                        </Text> */}
                       </View>
-                    </View>
-                  );
-                })}
-              </Card>
+                    );
+                  })}
+                </Card>
+              </View>
             </View>
-          </View>
+          )}
         </ScreenOverFlowLayout>
         <Button
           _fn={() =>
@@ -272,7 +361,6 @@ const BloodPressure = () => {
               title: 'Add Blood Pressure Reading',
               description: '',
               onClose: () => {},
-              // btnText: 'Save Reading'
             })
           }
         >
@@ -322,7 +410,7 @@ const styles = StyleSheet.create({
     marginTop: 7,
   },
   lastItem: {
-    borderBottomWidth: 0, // Remove border from last item
+    borderBottomWidth: 0,
   },
   enhancedItemContainer: {
     paddingTop: 5,
@@ -334,13 +422,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 18,
-    // backgroundColor: 'red'
-  },
-  container: {
-    // flex: 1,
-    backgroundColor: '#f5f5f5',
-    padding: 20,
-    justifyContent: 'center',
   },
   chartContainer: {
     backgroundColor: '#ffffff',
@@ -355,11 +436,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#f2f2f2',
   },
-
   chart: {
     marginVertical: 8,
     borderRadius: 8,
-    // backgroundColor: 'red'
   },
   legend: {
     flexDirection: 'row',
@@ -376,11 +455,6 @@ const styles = StyleSheet.create({
     height: 12,
     borderRadius: 6,
     marginRight: 8,
-  },
-  legendColor: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
   },
   legendText: {
     fontSize: 14,

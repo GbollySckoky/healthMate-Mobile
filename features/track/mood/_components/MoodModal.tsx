@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { MoodData } from '@/lib/data';
-import { View, StyleSheet, Text, Pressable, Keyboard } from 'react-native';
+import { View, StyleSheet, Text, Pressable } from 'react-native';
 import TextAreaInput from '@/components/Input/TextAreaInput';
 import { SubmitButton } from '@/components/typography/Typography';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Mood } from '@/lib/interface/mood';
 import { patientService } from '@/service/patientService';
-import { AxiosError } from 'axios';
+// import { AxiosError } from 'axios';
 import CustomCalendar from '@/components/calendar/CustomCalendar';
 import DateInput from '@/components/Input/DateInput';
 import { useModal } from '@/context/ModalContext';
+import Toast from 'react-native-toast-message';
 
 const date = {
   label: 'Date',
@@ -41,6 +42,7 @@ const MoodModal = () => {
   const [selectEmoji, setSelectEmoji] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
   const { closeModal } = useModal();
+  const queryClient = useQueryClient();
 
   const data = {
     mood: {
@@ -81,14 +83,19 @@ const MoodModal = () => {
   }
    const mutation = useMutation({
     mutationFn: (payload: Mood) => patientService.createMood(payload),
-    onSuccess: (response) => {
-      console.log(response)
+    onSuccess: async () => {
+      Toast.show({
+        type: 'success',
+        text1: 'Mood created successfully',
+      });
+      await queryClient.invalidateQueries({ queryKey: ['getmood'] });
       closeModal()
     },
-    onError:(error: AxiosError) => {
-      console.log("Error!!",error)
-        console.log("STATUS:", error.response?.status);
-    console.log("ERROR DATA:", error.response?.data);
+    onError:(error: any) => {
+      Toast.show({
+        type: 'error',
+        text1: error.response.data.message,
+      });
     }
   })
       

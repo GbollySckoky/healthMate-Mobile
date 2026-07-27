@@ -1,5 +1,5 @@
-const ErrorDetails = () => {
-    return (
-        
-    )
-}
+// const ErrorDetails = () => {
+//     return (
+
+//     )
+// } 

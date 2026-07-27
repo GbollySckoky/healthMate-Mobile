@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
-import { View, Text, Keyboard, Pressable, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import NumberInput from '@/components/Input/NumberInput';
 import { MedicationData } from '@/lib/data';
 import Input from '@/components/Input/Input';
 import { SubmitButton } from '@/components/typography/Typography';
-import { AxiosError } from 'axios';
+// import { AxiosError } from 'axios';
 import { Medication } from '@/lib/interface/medication';
 import { patientService } from '@/service/patientService';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import DateInput from '@/components/Input/DateInput';
 import CustomCalendar from '@/components/calendar/CustomCalendar';
 import { useModal } from '@/context/ModalContext';
+import Toast from 'react-native-toast-message';
 
 type MedicationInputType = Record<string, string>;
 const date = {
@@ -24,6 +25,7 @@ const MedicationModal = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const { closeModal } = useModal();
   const { name, dosage } = MedicationData;
+  const queryClient = useQueryClient();
   const handleChange = (key: string, value: string) => {
     setInputValue((prev) => ({
       ...prev,
@@ -43,15 +45,21 @@ const MedicationModal = () => {
 
    const mutation = useMutation({
       mutationFn: (payload: Medication) => patientService.createMedication(payload),
-      onSuccess: (response) => {
-        console.log(response)
-        closeModal()
+      onSuccess: async () => {
+        Toast.show({
+          type: 'success',
+          text1: 'Medication created successfully',
+        });
+       await queryClient.invalidateQueries({ queryKey: ['getmedication'] });
+        closeModal();
       },
-      onError:(error: AxiosError) => {
-        console.log("Error!!",error)
-         console.log("STATUS:", error.response?.status);
-    console.log("ERROR DATA:", error.response?.data);
-      }
+      onError: (error: any) => {
+        console.log('Error!!', error);
+        Toast.show({
+          type: 'error',
+          text1: error.response.data.message,
+        });
+      },
     })
   
     const handleCreateMedication = async () => {
@@ -97,17 +105,3 @@ const MedicationModal = () => {
 
 export default MedicationModal;
 
-const styles = StyleSheet.create({
-  button: {
-    backgroundColor: '#DD2590',
-    paddingVertical: 12,
-    borderRadius: 10,
-    marginTop: 25,
-  },
-  buttonText: {
-    color: 'white',
-    textAlign: 'center',
-    fontWeight: '600',
-    fontSize: 16,
-  },
-});
