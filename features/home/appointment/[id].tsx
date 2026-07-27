@@ -82,7 +82,6 @@ const AppointmentDetails = () => {
   const appointmentId = Array.isArray(id) ? id[0] : id;
   const queryClient = useQueryClient();
   const profile = require('@/assets/images/Mobile.png');
-  // const { openModal,handleDisplay } = useDisplay();
   const { openModal } = useModal();
   const {
     data: appointmentResponse,

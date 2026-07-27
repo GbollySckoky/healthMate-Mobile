@@ -10,7 +10,6 @@ import {
   Text,
   StyleSheet,
   Pressable,
-  ActivityIndicator,
 } from 'react-native';
 import { colors } from '@/lib/colors';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
@@ -21,6 +20,8 @@ import useToggles from '@/lib/hooks/useToggles';
 import SafeArea from '@/components/safeAreaView/SafeAreaView';
 import { useQuery } from '@tanstack/react-query';
 import { patientService } from '@/service/patientService';
+import ConsultationDetailsSkeleton from '@/lib/components/ConsultationDetails';
+
 
 const ConsultationDetails = () => {
   const router = useRouter();
@@ -37,7 +38,7 @@ const ConsultationDetails = () => {
   });
 
   const consultation = data?.data;
-
+  console.log('Profile', consultation)
   if (isLoading) {
     return (
       <SafeArea>
@@ -50,10 +51,11 @@ const ConsultationDetails = () => {
             }
           />
 
-          <View style={styles.centerState}>
-            <ActivityIndicator size="large" color="#DD2590" />
-            <Text style={styles.loadingText}>Loading doctor profile...</Text>
-          </View>
+          <ScreenOverFlowLayout>
+            <Wrapper>
+              <ConsultationDetailsSkeleton />
+            </Wrapper>
+          </ScreenOverFlowLayout>
         </ScreenLayout>
       </SafeArea>
     );
@@ -93,7 +95,6 @@ const ConsultationDetails = () => {
             <Entypo name="chevron-small-left" size={24} color="black" />
           }
         />
-
         <ScreenOverFlowLayout>
           <Wrapper>
             <View>
@@ -210,6 +211,28 @@ const styles = StyleSheet.create({
     backgroundColor: '#E5EBED',
     padding: 5,
     borderRadius: 40,
+  },
+
+  skeletonAboutSection: {
+    marginTop: 30,
+    borderTopWidth: 1,
+    borderTopColor: '#F2F2F2',
+    paddingTop: 20,
+    marginBottom: 50,
+  },
+
+  skeletonAvailabilityCard: {
+    backgroundColor: colors.white,
+    borderWidth: 1,
+    borderColor: colors.broderColor,
+    borderRadius: 14,
+    padding: 14,
+  },
+
+  skeletonChipRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
   },
 
   centerState: {

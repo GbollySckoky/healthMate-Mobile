@@ -71,7 +71,7 @@ const SignUpPage = () => {
   const [confirmPasswordVisibility, setConfirmPasswordVisibility] =
     useState(false);
   const goggleLogo = require('@/assets/images/google-logo.webp');
-  const { openModal, handleDisplay } = useDisplay();
+  const { openModal } = useDisplay();
   const { currentStep, goToNextStep } = useDisplayList();
 
   const handleChange = useCallback((key: string, value: string) => {
