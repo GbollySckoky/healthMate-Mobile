@@ -10,7 +10,6 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  ActivityIndicator,
   Image,
   Pressable,
 } from 'react-native';
@@ -22,6 +21,7 @@ import SafeArea from '@/components/safeAreaView/SafeAreaView';
 import { useQuery } from '@tanstack/react-query';
 import { patientService } from '@/service/patientService';
 import { GetDoctor } from '@/lib/interface/get-doctors-interface';
+import DoctorCardSkeleton from '@/lib/components/Consultation';
 
 const profileFallback = require('@/assets/images/Ellipse 165.png');
 
@@ -45,7 +45,7 @@ const getDoctorImageSource = (doctor: GetDoctor) => {
 };
 
 const getConsultationFee = (doctor: GetDoctor) => {
-  const fee = doctor.profile?.consultationFee;
+  const fee = doctor.profile?.consultationFee?.toLocaleString();
   return fee ? `₦ ${fee}` : '₦ 0';
 };
 
@@ -64,6 +64,7 @@ const doctorMatchesSearch = (doctor: GetDoctor, query: string) => {
 
   return searchableText.includes(normalizedQuery);
 };
+
 
 const ConsultationId = () => {
   const router = useRouter();
@@ -95,40 +96,62 @@ const ConsultationId = () => {
     [doctors, searchQuery]
   );
 
-  const renderState = (content: React.ReactNode) => (
-    <SafeArea>
-      <ScreenLayout>
-        <NavHeader
-          title={title}
-          _goBack={() => router.back()}
-          backIcon={
-            <Entypo name="chevron-small-left" size={24} color="black" />
-          }
-        />
-        <View style={style.stateContainer}>{content}</View>
-      </ScreenLayout>
-    </SafeArea>
-  );
-
   if (isLoading) {
-    return renderState(
-      <>
-        <ActivityIndicator size="large" color="#DD2590" />
-        <Text style={style.stateText}>Loading doctors...</Text>
-      </>
+    return (
+      <SafeArea>
+        <ScreenLayout>
+          <NavHeader
+            title={title}
+            _goBack={() => router.back()}
+            backIcon={
+              <Entypo name="chevron-small-left" size={24} color="black" />
+            }
+          />
+          <ScreenOverFlowLayout>
+            <Wrapper>
+              <View style={style.searchRow}>
+                <SearchInput
+                  placeholder="Search for a doctor or specialty"
+                  value={searchInput}
+                  onChangeText={(value) => setSearchInput(value)}
+                />
+                <Text style={style.filterButton}>
+                  <Ionicons name="filter-outline" size={20} color="black" />
+                </Text>
+              </View>
+              <View style={style.listWrapper}>
+                {[1, 2, 3, 4].map((key) => (
+                  <DoctorCardSkeleton key={key} />
+                ))}
+              </View>
+            </Wrapper>
+          </ScreenOverFlowLayout>
+        </ScreenLayout>
+      </SafeArea>
     );
   }
 
   if (isError) {
-    return renderState(
-      <>
-        <Text style={style.errorText}>
-          {(error as Error).message || 'Unable to load doctors'}
-        </Text>
-        <Pressable style={style.retryButton} onPress={() => refetch()}>
-          <Text style={style.retryText}>Try Again</Text>
-        </Pressable>
-      </>
+    return (
+      <SafeArea>
+        <ScreenLayout>
+          <NavHeader
+            title={title}
+            _goBack={() => router.back()}
+            backIcon={
+              <Entypo name="chevron-small-left" size={24} color="black" />
+            }
+          />
+          <View style={style.stateContainer}>
+            <Text style={style.errorText}>
+              {(error as Error).message || 'Unable to load doctors'}
+            </Text>
+            <Pressable style={style.retryButton} onPress={() => refetch()}>
+              <Text style={style.retryText}>Try Again</Text>
+            </Pressable>
+          </View>
+        </ScreenLayout>
+      </SafeArea>
     );
   }
 

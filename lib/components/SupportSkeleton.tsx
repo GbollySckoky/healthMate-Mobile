@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Animated, StyleSheet } from "react-native";
-import { View } from "react-native";
+import { Animated, StyleSheet, View } from "react-native";
 import { colors } from "../colors";
 
 const useShimmer = () => {

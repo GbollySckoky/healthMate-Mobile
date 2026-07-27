@@ -1,13 +1,13 @@
 import { SubTitle } from '@/components/typography/Typography';
 import { colors } from '@/lib/colors';
 import React from 'react';
-import { Text, TouchableOpacity, View, ScrollView } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import Feather from '@expo/vector-icons/Feather';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { router } from 'expo-router';
-import { ROUTES } from '@/lib/routes';
 import { Consultation } from '@/lib/interface/consultation';
+import { useModal } from '@/context/ModalContext';
+import BookDoctor from './BookDoctor';
 
 const getConsultationIcon = (type: string) => {
   if (type === 'video_call') {
@@ -15,7 +15,9 @@ const getConsultationIcon = (type: string) => {
   }
 
   if (type === 'audio_call') {
-    return <MaterialIcons name="multitrack-audio" size={14} color={colors.gray} />;
+    return (
+      <MaterialIcons name="multitrack-audio" size={14} color={colors.gray} />
+    );
   }
 
   return <Ionicons name="walk" size={14} color={colors.gray} />;
@@ -30,6 +32,7 @@ const formatConsultationType = (type: string) => {
 };
 
 const About = ({ consultation }: { consultation: any }) => {
+  const { openModal } = useModal();
   return (
     <View
       style={{
@@ -40,7 +43,10 @@ const About = ({ consultation }: { consultation: any }) => {
         marginBottom: 50,
       }}
     >
-      <MinCard title="About" value={consultation?.profile?.bio || 'No bio available'} />
+      <MinCard
+        title="About"
+        value={consultation?.profile?.bio || 'No bio available'}
+      />
 
       <View style={{ marginTop: 28 }}>
         <SubTitle>Availability</SubTitle>
@@ -158,7 +164,13 @@ const About = ({ consultation }: { consultation: any }) => {
           marginTop: 28,
         }}
         activeOpacity={0.8}
-        onPress={() => router.push(ROUTES.bookDoctors)}
+        onPress={() =>
+          openModal(<BookDoctor consultation={consultation} />, {
+            title: 'Book Doctor',
+            description: '',
+            onClose: () => {},
+          })
+        }
       >
         <Text
           style={{
@@ -200,7 +212,13 @@ const Chip = ({ label }: { label: string }) => (
   </View>
 );
 
-const IconChip = ({ label, icon }: { label: string; icon: React.ReactNode }) => (
+const IconChip = ({
+  label,
+  icon,
+}: {
+  label: string;
+  icon: React.ReactNode;
+}) => (
   <View
     style={{
       flexDirection: 'row',
