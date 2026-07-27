@@ -32,7 +32,7 @@ const getDoctorName = (doctor: GetAppointment['doctor']) => {
     .filter((value): value is string => Boolean(value))
     .map((value) => value.charAt(0).toUpperCase() + value.slice(1).toLocaleLowerCase())
     .join(' ');
-  return name || 'Doctor unavailable';
+  return `Dr. ${name}`  || 'Doctor unavailable';
 };
 
 const getDoctorImage = (doctor: GetAppointment['doctor']) => {

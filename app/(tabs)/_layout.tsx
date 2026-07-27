@@ -72,7 +72,7 @@ export default function TabsLayout() {
             ),
           }}
         />
-        <Tabs.Screen
+        {/* <Tabs.Screen
           name="messages"
           options={{
             title: 'Messages',
@@ -84,7 +84,7 @@ export default function TabsLayout() {
               />
             ),
           }}
-        />
+        /> */}
         <Tabs.Screen
           name="support"
           options={{

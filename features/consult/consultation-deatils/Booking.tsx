@@ -13,7 +13,7 @@ import CustomCalendar from '@/components/calendar/CustomCalendar';
 import TextAreaInput from '@/components/Input/TextAreaInput';
 import { useRouter } from 'expo-router';
 import { ROUTES } from '@/lib/routes';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { patientService } from '@/service/patientService';
 import { Appointment } from '@/lib/interface/createAppointment';
 import Toast from 'react-native-toast-message';
@@ -23,7 +23,7 @@ const date = {
   placeholder: '10/05/1997',
 };
 
-const Booking = ({consultation}: {consultation: any}) => {
+const Booking = ({ consultation }: { consultation: any }) => {
   const router = useRouter();
   const [inputValue, setInputValue] = useState({
     date: new Date().toISOString().split('T')[0], // Initialize with today's date in YYYY-MM-DD format
@@ -32,9 +32,11 @@ const Booking = ({consultation}: {consultation: any}) => {
     healthConcern: '',
     doctorId: '',
     hospitalId: '',
-    amount: ''
+    amount: '',
   });
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const queryClient = useQueryClient();
+
   const handleChange = (key: string, value: string) => {
     setInputValue((prev) => ({
       ...prev,
@@ -63,25 +65,34 @@ const Booking = ({consultation}: {consultation: any}) => {
     '4:00pm',
     '5:00pm',
   ];
-  const consultationType = [{label:'Video Call', value:'video_call'}, {label:'Audio Call', value:"audio_call"}, {label:'Physical Appointment', value: 'in_person'}];
-  
+  const consultationType = [
+    { label: 'Video Call', value: 'video_call' },
+    { label: 'Audio Call', value: 'audio_call' },
+    { label: 'Physical Appointment', value: 'in_person' },
+  ];
+
   const mutation = useMutation({
     mutationKey: ['createConsultation'],
-    mutationFn: (payload: Appointment) => patientService.createConsultation(payload),
+    mutationFn: (payload: Appointment) =>
+      patientService.createConsultation(payload),
     onSuccess: (response) => {
-      console.log('19292',response)
-      router.push(ROUTES.consultationPayment)
+      console.log('19292', response);
+      console.log('19292MMM', response.data);
+      queryClient.invalidateQueries({
+        queryKey: ['getAppointments']
+      })
+      router.push(ROUTES.consultationPayment);
     },
     onError: (error: any) => {
       Toast.show({
-          type: 'error',
-          text1: error.response.data.message
-      })
-      console.log('TEMA',error.response.data.message)
-    }
-  })
+        type: 'error',
+        text1: error.response.data.message,
+      });
+      console.log('TEMA', error.response.data.message);
+    },
+  });
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     const data = {
       date: inputValue.date,
       time: inputValue.time,
@@ -89,11 +100,11 @@ const Booking = ({consultation}: {consultation: any}) => {
       healthConcern: inputValue.healthConcern,
       doctorId: consultation?.id,
       hospitalId: consultation?.hospital?.id,
-      amount: consultation?.profile?.consultationFee
-    }
-    console.log("submit_daata", data)
-    await mutation.mutate(data)
-  }
+      amount: consultation?.profile?.consultationFee,
+    };
+    console.log('submit_daata', data);
+     mutation.mutate(data);
+  };
   const isDisabled =
     !inputValue.date ||
     !inputValue.time ||
@@ -238,7 +249,7 @@ const Booking = ({consultation}: {consultation: any}) => {
             fontSize: 16,
           }}
         >
-         {mutation.isPending ? "processing.." : " Proceed to payment"}
+          {mutation.isPending ? 'processing..' : ' Proceed to payment'}
         </Text>
       </TouchableOpacity>
     </View>

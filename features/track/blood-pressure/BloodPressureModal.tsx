@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
+// import { AxiosError } from 'axios';
 import CustomCalendar from '@/components/calendar/CustomCalendar';
 import DateInput from '@/components/Input/DateInput';
 import NumberInput from '@/components/Input/NumberInput';
@@ -10,6 +10,7 @@ import { useModal } from '@/context/ModalContext';
 import { bloodPressureData } from '@/lib/data';
 import { BloodPressure } from '@/lib/interface/blood-pressure';
 import { patientService } from '@/service/patientService';
+import Toast from 'react-native-toast-message';
 
 type BloodPressureInputType = {
   date: string;
@@ -48,13 +49,19 @@ const BloodPressureModal = () => {
     mutationFn: (payload: BloodPressure) =>
       patientService.createBloodPressue(payload),
     onSuccess: async () => {
+      Toast.show({
+        type: 'success',
+        text1: 'Blood Pressure created successfully',
+      });
       await queryClient.invalidateQueries({ queryKey: ['bloodPressure'] });
       closeModal();
     },
-    onError: (error: AxiosError) => {
+    onError: (error: any) => {
       console.log('Error!!', error);
-      console.log('STATUS:', error.response?.status);
-      console.log('ERROR DATA:', error.response?.data);
+      Toast.show({
+        type: 'error',
+        text1: error.response.data.message,
+      });
     },
   });
 

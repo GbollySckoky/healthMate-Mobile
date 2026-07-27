@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
-import { Keyboard, Pressable, StyleSheet, Text, View } from 'react-native';
+import { View } from 'react-native';
 import DateInput from '@/components/Input/DateInput';
 import { weightData } from '@/lib/data';
 import CustomCalendar from '@/components/calendar/CustomCalendar';
 import DecimalInput from '@/components/Input/DecimalInput';
 import { SubmitButton } from '@/components/typography/Typography';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { patientService } from '@/service/patientService';
-import { AxiosError } from 'axios';
+// import { AxiosError } from 'axios';
 import { Weight } from '@/lib/interface/weight';
 import { useModal } from '@/context/ModalContext';
+import Toast from 'react-native-toast-message';
 
 type WeightInputType = Record<string, string>;
 const WeightModal = () => {
   const { date, weight } = weightData;
+  const queryClient = useQueryClient();
   const { closeModal } = useModal();
   const [inputValue, setInputValue] = useState<WeightInputType>({
     weight: '',
@@ -42,15 +44,20 @@ const WeightModal = () => {
   console.log(handleDateSelect);
   const mutation = useMutation({
     mutationFn: (payload: Weight) => patientService.createWeight(payload),
-    onSuccess: (response) => {
-      console.log(response)
-      closeModal()
-    },
-    onError:(error: AxiosError) => {
-      console.log("Error!!",error)
-     console.log("STATUS:", error.response?.status);
-    console.log("ERROR DATA:", error.response?.data);
-    }
+     onSuccess: async () => {
+        Toast.show({
+          type: 'success',
+          text1: 'Weight created successfully',
+        });
+        await queryClient.invalidateQueries({ queryKey: ['weight'] });
+        closeModal()
+      },
+      onError:(error: any) => {
+        Toast.show({
+          type: 'error',
+          text1: error.response.data.message,
+        });
+      }
   })
     
   const handleCreateWeight = async () => {
@@ -91,17 +98,3 @@ const WeightModal = () => {
 
 export default WeightModal;
 
-const styles = StyleSheet.create({
-  button: {
-    backgroundColor: '#DD2590',
-    paddingVertical: 12,
-    borderRadius: 10,
-    marginTop: 25,
-  },
-  buttonText: {
-    color: 'white',
-    textAlign: 'center',
-    fontWeight: '600',
-    fontSize: 16,
-  },
-});

@@ -9,7 +9,7 @@ import {
 import { router } from 'expo-router';
 import { colors } from '@/lib/colors';
 import { useState } from 'react';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import Modal from '@/components/modal/Modal';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -41,9 +41,9 @@ const URL_REGEX = /^(https?:\/\/)[^\s$.?#].[^\s]*$/i;
 
 const CreateSupportTicket = ({appointmentId}:{appointmentId: string}) => {
   const { openModal, handleDisplay } = useDisplay();
-  // const { id } = useLocalSearchParams();
+  const queryClient = useQueryClient();
+
   console.log('ID@@', appointmentId)
-  // const appointmentId = Array.isArray(id) ? id[0] : id;
   const [inputValue, setInputValue] = useState<InputValue>({
     subject: '',
     description: '',
@@ -66,9 +66,9 @@ const CreateSupportTicket = ({appointmentId}:{appointmentId: string}) => {
   
     const appointmentDetails = appointmentResponse?.data ?? null;
     console.log('DETAILS!!!', appointmentDetails)
-  const handleChange = (key: keyof InputValue, value: string) => {
-    setInputValue((prev) => ({ ...prev, [key]: value }));
-  };
+    const handleChange = (key: keyof InputValue, value: string) => {
+      setInputValue((prev) => ({ ...prev, [key]: value }));
+    };
 
   const handleSelectCategory = (option: string) => {
     setInputValue((prev) => ({
@@ -82,6 +82,9 @@ const CreateSupportTicket = ({appointmentId}:{appointmentId: string}) => {
       patientService.createSupportTicket(payload),
     onSuccess: (response) => {
       console.log(response)
+      queryClient.invalidateQueries({
+        queryKey: ['getSupportTicket']
+      })
       handleDisplay();
     },
     onError: (error: AxiosError<{ message: string }>) => {

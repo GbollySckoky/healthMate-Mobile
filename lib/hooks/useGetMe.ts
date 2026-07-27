@@ -7,7 +7,7 @@ const useGetMe= () => {
         queryKey: ["me"],
         queryFn: () => patientService.getMe(),
     });
-    const patient = data?.data ?? []
+    const patient = data?.data 
   return {patient, isLoading, isError, error, refetch, isRefetching}
 }
 
