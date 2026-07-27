@@ -1,1 +1,1 @@
-export { default } from '@/features/consult/consultation-deatils/book-doctor';
+export { default } from '@/features/consult/consultation-deatils/BookDoctor';

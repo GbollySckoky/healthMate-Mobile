@@ -1,12 +1,12 @@
 import { Link } from 'expo-router';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   View,
   Text,
   Image,
   StyleSheet,
   Pressable,
-  ActivityIndicator,
+  Animated,
 } from 'react-native';
 import { ScrollViewHorizontal } from '@/components/scrollView/ScrollViewHorizontal';
 import { SubTitle } from '@/components/typography/Typography';
@@ -35,6 +35,74 @@ const getHospitalImageSource = (profile?: string | null) => {
   return profile ? { uri: profile } : defaultHospitalImage;
 };
 
+// ---------- Skeleton primitives ----------
+
+const useShimmer = () => {
+  const opacity = useRef(new Animated.Value(0.35)).current;
+
+  useEffect(() => {
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(opacity, {
+          toValue: 1,
+          duration: 700,
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacity, {
+          toValue: 0.35,
+          duration: 700,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [opacity]);
+
+  return opacity;
+};
+
+const SkeletonBlock = ({
+  width,
+  height,
+  borderRadius = 6,
+  style: extraStyle,
+}: {
+  width: number | `${number}%`;
+  height: number;
+  borderRadius?: number;
+  style?: object;
+}) => {
+  const opacity = useShimmer();
+
+  return (
+    <Animated.View
+      style={[
+        {
+          width,
+          height,
+          borderRadius,
+          backgroundColor: '#E5E7EB',
+          opacity,
+        },
+        extraStyle,
+      ]}
+    />
+  );
+};
+
+const HospitalCardSkeleton = () => (
+  <View style={styles.card}>
+    <SkeletonBlock width="100%" height={180} borderRadius={10} />
+    <View style={styles.content}>
+      <SkeletonBlock width="70%" height={14} style={{ marginBottom: 8 }} />
+      <SkeletonBlock width="55%" height={12} style={{ marginBottom: 8 }} />
+      <SkeletonBlock width="45%" height={12} style={{ marginBottom: 12 }} />
+      <SkeletonBlock width="100%" height={44} borderRadius={10} />
+    </View>
+  </View>
+);
+
 const Consultation = ({
   data,
   isLoading,
@@ -47,8 +115,15 @@ const Consultation = ({
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <SubTitle>Featured Hospitals</SubTitle>
+        </View>
+        <ScrollViewHorizontal>
+          {[1, 2, 3].map((key) => (
+            <HospitalCardSkeleton key={key} />
+          ))}
+        </ScrollViewHorizontal>
       </View>
     );
   }

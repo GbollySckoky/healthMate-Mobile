@@ -1,6 +1,6 @@
 import { SubTitle } from '@/components/typography/Typography';
 import { colors } from '@/lib/colors';
-import React, { FormEvent, useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -23,11 +23,7 @@ const date = {
   placeholder: '10/05/1997',
 };
 
-type ShowPickerState = {
-  datePicker: boolean,
-  timePicker: boolean
-}
-const Booking = () => {
+const Booking = ({consultation}: {consultation: any}) => {
   const router = useRouter();
   const [inputValue, setInputValue] = useState({
     date: new Date().toISOString().split('T')[0], // Initialize with today's date in YYYY-MM-DD format
@@ -39,7 +35,6 @@ const Booking = () => {
     amount: ''
   });
   const [showDatePicker, setShowDatePicker] = useState(false);
-
   const handleChange = (key: string, value: string) => {
     setInputValue((prev) => ({
       ...prev,
@@ -92,13 +87,22 @@ const Booking = () => {
       time: inputValue.time,
       consultationType: inputValue.consultationType,
       healthConcern: inputValue.healthConcern,
-      doctorId: "cmrhgvd780003fe1gjjhtlkif",
-      hospitalId: "cmrfzcxki0000hr1ygohewps4",
-      amount: 200000
+      doctorId: consultation?.id,
+      hospitalId: consultation?.hospital?.id,
+      amount: consultation?.profile?.consultationFee
     }
     console.log("submit_daata", data)
     await mutation.mutate(data)
   }
+  const isDisabled =
+    !inputValue.date ||
+    !inputValue.time ||
+    !inputValue.consultationType ||
+    !inputValue.healthConcern.trim() ||
+    !consultation?.id ||
+    !consultation?.hospital?.id ||
+    mutation.isPending;
+
   return (
     <View style={{ marginBottom: 50 }}>
       <View style={{ marginBottom: 15 }}>
@@ -209,18 +213,22 @@ const Booking = () => {
       >
         <SubTitle>Total</SubTitle>
         <Text style={[style.buttonTexts, { color: colors.green }]}>
-          ₦10,000
+          ₦{consultation?.profile?.consultationFee?.toLocaleString()}
         </Text>
       </View>
       <TouchableOpacity
-        style={{
-          backgroundColor: '#DD2590',
-          paddingVertical: 12,
-          borderRadius: 10,
-          marginTop: 25,
-        }}
+        style={[
+          {
+            backgroundColor: '#DD2590',
+            paddingVertical: 12,
+            borderRadius: 10,
+            marginTop: 25,
+          },
+          isDisabled && style.disabledButton,
+        ]}
         activeOpacity={0.8}
         onPress={handleSubmit}
+        disabled={isDisabled}
       >
         <Text
           style={{
@@ -244,5 +252,8 @@ const style = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     fontFamily: 'LibreFranklin_600SemiBold',
+  },
+  disabledButton: {
+    opacity: 0.5,
   },
 });

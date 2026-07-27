@@ -71,9 +71,10 @@ const Badge = ({
 
 
 const SupportTicketDetailScreen = () => {
-  const { slug } = useLocalSearchParams();
-   const appointmentId = Array.isArray(slug) ? slug[0] : slug;
-  const id = String(slug);
+  const { id } = useLocalSearchParams();
+   const appointmentId = Array.isArray(id) ? id[0] : id;
+  const slug = String(id);
+  console.log('SLUG!', slug)
   console.log('ID', appointmentId)
   const queryClient = useQueryClient();
 
@@ -88,12 +89,12 @@ const SupportTicketDetailScreen = () => {
     data: SupportTicketDetail;
   }>({
     queryKey: ['getSupportDetails', id],
-    queryFn: () => patientService.getSupportDetails(id),
+    queryFn: () => patientService.getSupportDetails(slug),
     enabled: !!id,
   });
 
   const replyMutation = useMutation({
-    mutationFn: (payload: ReplyToTicket) => patientService.replyToTicket(id, payload),
+    mutationFn: (payload: ReplyToTicket) => patientService.replyToTicket(slug, payload),
     onSuccess: () => {
       setInputValue({ message: '', attachmentUrl: '', attachmentName: '' });
       setUrlTouched(false);

@@ -1,8 +1,6 @@
 import { useEffect, useRef } from "react";
-import { Animated } from "react-native";
-import { View } from "react-native";
+import { Animated, View, StyleSheet} from "react-native";
 import { colors } from "../colors";
-import { StyleSheet } from "react-native";
 
 const useShimmer = () => {
   const opacity = useRef(new Animated.Value(0.35)).current;
